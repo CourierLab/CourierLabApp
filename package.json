@@ -1,0 +1,40 @@
+{
+  "name": "CourierLab",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^16.3.1",
+    "react-native": "0.55.4",
+    "react-native-camera": "^1.1.4",
+    "react-native-datepicker": "^1.7.2",
+    "react-native-device-info": "^0.21.5",
+    "react-native-elements": "^1.0.0-beta5",
+    "react-native-geocoding": "^0.3.0",
+    "react-native-multiple-select": "^0.4.4",
+    "react-native-progress": "^3.5.0",
+    "react-native-spinkit": "^1.1.1",
+    "react-native-vector-icons": "^4.6.0",
+    "react-navigation": "^2.9.3",
+    "react-redux": "^5.0.7",
+    "realm": "^2.14.0",
+    "redux": "^4.0.0"
+  },
+  "devDependencies": {
+    "babel-jest": "23.0.0",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "23.0.0",
+    "react-test-renderer": "16.3.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./app/assets/fonts/"
+    ]
+  }
+}
