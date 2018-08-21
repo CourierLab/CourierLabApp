@@ -37,10 +37,16 @@ export default class History extends Component{
         setTimeout(() => {
             this.checkInternetConnection();
         }, 500);
+        // this.getDriverOrder();
+
         this._navListener = this.props.navigation.addListener('didFocus', (playload) => {
             this.getDriverOrder();
             console.log('payload page 2: ', playload);
         });
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
     }
 
     async checkInternetConnection() {

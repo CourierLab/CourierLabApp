@@ -387,13 +387,13 @@ export default class ConfirmedOrderDetail extends Component{
                 {(this.state.orderSummary.currentTrackingStatus === "Accepted") ? <View style={{backgroundColor: '#3c4c96', paddingLeft: 10, paddingRight: 10, marginLeft: 20, marginRight: 20, marginBottom: 40,}}>
                         <TouchableOpacity
                             style={styles.buttonContainer}
-                            onPress={() => this.props.navigation.navigate('Scanner')}>
+                            onPress={() => this.props.navigation.navigate('Scanner', { rerenderFunction : () => this.getOrderSummary() })}>
                             <Text style={styles.buttonText}>Scan</Text>
                         </TouchableOpacity>
                     </View> : (this.state.orderSummary.currentTrackingStatus === "Shipping") ? <View style={{backgroundColor: '#3c4c96', paddingLeft: 10, paddingRight: 10, marginLeft: 20, marginRight: 20, marginBottom: 40,}}>
                         <TouchableOpacity
                             style={styles.buttonContainer}
-                            onPress={() => this.props.navigation.navigate('Verification')}>
+                            onPress={() => this.props.navigation.navigate('Verification', { shipperOrderId: this.state.orderSummary.shipperOrder.shipperOrderId, rerenderFunction : () => this.getOrderSummary() })}>
                             <Text style={styles.buttonText}>Delivered</Text>
                         </TouchableOpacity>
                     </View> : <View/>

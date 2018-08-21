@@ -26,6 +26,7 @@ export default class Register extends Component{
             confirmPassword: '',
             spinnerVisible: false,
             isClicked: false,
+            isSubmit: false,
         }
     }
 
@@ -65,6 +66,7 @@ export default class Register extends Component{
         this.setState({
             spinnerVisible: true,
             isClicked: true,
+            isSubmit: true,
         })
 
         if(this.state.email === "" || this.state.username === "" || this.state.password == "" || this.state.confirmPassword === ""){
@@ -75,6 +77,7 @@ export default class Register extends Component{
             this.setState({
                 spinnerVisible: false,
                 isClicked: false,
+                isSubmit: false,
             })
         }else{
             if(this.state.password !== this.state.confirmPassword){
@@ -85,6 +88,7 @@ export default class Register extends Component{
                 this.setState({
                     spinnerVisible: false,
                     isClicked: false,
+                    isSubmit: false,
                 })
             }else{
                 fetch(`${myApiUrl}/${registerPath}`, {
@@ -106,6 +110,7 @@ export default class Register extends Component{
                         this.setState({
                             spinnerVisible: false,
                             isClicked: false,
+                            isSubmit: false,
                         })
                         Alert.alert('Successfully Registered', json.message, [{
                             text: 'OK',
@@ -120,6 +125,7 @@ export default class Register extends Component{
                         this.setState({
                             spinnerVisible: false,
                             isClicked: false,
+                            isSubmit: false,
                         })
                     }
                 }).catch(err => {
@@ -127,6 +133,7 @@ export default class Register extends Component{
                     this.setState({
                         spinnerVisible: false,
                         isClicked: false,
+                        isSubmit: false,
                     })
                 })
             }
@@ -196,7 +203,8 @@ export default class Register extends Component{
                     {spinnerView}
                     <View style={{paddingTop: 10,}}>
                         <TouchableOpacity
-                            style={styles.buttonContainer}
+                            disabled={this.state.isSubmit}
+                            style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
                             onPress={(e) => this.register(e)}>
                             <Text style={styles.buttonText}>Register</Text>
                         </TouchableOpacity>

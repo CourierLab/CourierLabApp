@@ -23,6 +23,7 @@ export default class ForgotPassword extends Component{
             email: '',
             spinnerVisible: false,
             isClicked: false,
+            isSubmit: false,
         }
     }
 
@@ -62,6 +63,7 @@ export default class ForgotPassword extends Component{
         this.setState({
             spinnerVisible: true,
             isClicked: true,
+            isSubmit: true,
         })
 
         if(this.state.email === ""){
@@ -72,17 +74,15 @@ export default class ForgotPassword extends Component{
             this.setState({
                 spinnerVisible: false,
                 isClicked: false,
+                isSubmit: false,
             })
         }else{
-            fetch(`${myApiUrl}/${forgotPasswordPath}`, {
-                method: 'POST',
+            fetch(`${myApiUrl}/${forgotPasswordPath}?emailAddress=` + this.state.email, {
+                method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    email: this.state.email,
-                }),
             })
             .then((response) => response.json())
             .then((json) => {
@@ -91,6 +91,7 @@ export default class ForgotPassword extends Component{
                     this.setState({
                         spinnerVisible: false,
                         isClicked: false,
+                        isSubmit: false,
                     })
                     Alert.alert('Successfully Forgot Password', json.message, [{
                         text: 'OK',
@@ -105,6 +106,7 @@ export default class ForgotPassword extends Component{
                     this.setState({
                         spinnerVisible: false,
                         isClicked: false,
+                        isSubmit: false,
                     })
                 }
             }).catch(err => {
@@ -112,6 +114,7 @@ export default class ForgotPassword extends Component{
                 this.setState({
                     spinnerVisible: false,
                     isClicked: false,
+                    isSubmit: false,
                 })
             })
             e.preventDefault();
@@ -146,7 +149,8 @@ export default class ForgotPassword extends Component{
                     {spinnerView}
                     <View style={{paddingTop: 10,}}>
                         <TouchableOpacity
-                            style={styles.buttonContainer}
+                            disabled={this.state.isSubmit}
+                            style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
                             onPress={(e) => this.forgotPassword(e)}>
                             <Text style={styles.buttonText}>Forgot Password</Text>
                         </TouchableOpacity>

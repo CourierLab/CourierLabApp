@@ -10,6 +10,7 @@ import { ListItem, Card, } from 'react-native-elements';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let orderPendingPath = 'ViewPendingShipper';
+let deleteOrderPath = 'DeleteDriverOrder';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
@@ -121,7 +122,52 @@ export default class HistoryOrderDetails extends Component{
     }
 
     deleteOrder(){
-
+        this.setState({
+            spinnerVisible: true,
+        })
+        Alert.alert(
+            'Delete Driver Order',
+            'Are you sure you want to delete this driver order?',
+            [
+              {text: 'Cancel', onPress: () => {}},
+              {text: 'Yes, Delete it', onPress: () => {
+                fetch(`${myApiUrl}/${deleteOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&driverOrderId=` + this.props.navigation.getParam('driverOrderId'), {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].accessToken,
+                    },
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    if(json.succeeded){
+                        Alert.alert('Successfully Deleted', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {}
+                        }], {cancelable: false})
+                        this.props.navigation.state.params.rerenderFunction();
+                        this.props.navigation.goBack();
+                    }else{
+                        Alert.alert('Cannot Delete', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {}
+                        }], {cancelable: false})
+                    }
+                    this.setState({
+                        spinnerVisible: false,
+                    }) 
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        spinnerVisible: false,
+                    })
+                });
+              }},
+            ],{ cancelable: false }
+        )
     }
 
     render(){

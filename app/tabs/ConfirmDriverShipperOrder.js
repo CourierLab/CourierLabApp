@@ -28,6 +28,7 @@ export default class ConfirmedOrderDetail extends Component{
             isClicked: false,
             driverDetails: [],
             shipperDetails: [],
+            isSubmit: false,
         };
     }
 
@@ -88,6 +89,7 @@ export default class ConfirmedOrderDetail extends Component{
         this.setState({
             spinnerVisible: true,
             isClicked: true,
+            isSubmit: true,
         })
         fetch(`${myApiUrl}/${submitOrderPath}`, {
             method: 'POST',
@@ -125,12 +127,14 @@ export default class ConfirmedOrderDetail extends Component{
             this.setState({
                 spinnerVisible: false,
                 isClicked: false,
+                isSubmit: false,
             }) 
         }).catch(err => {
             console.log(err);
             this.setState({
                 spinnerVisible: false,
                 isClicked: false,
+                isSubmit: false,
             })
         });
     }
@@ -290,7 +294,8 @@ export default class ConfirmedOrderDetail extends Component{
                 </View>
                 <View style={{backgroundColor: '#fff', paddingLeft: 10, paddingRight: 10, marginLeft: 20, marginRight: 20, marginBottom: 40,}}>
                     <TouchableOpacity
-                        style={styles.buttonContainer}
+                        disabled={this.state.isSubmit}
+                        style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
                         onPress={() => this.confirmOrder()}>
                         <Text style={styles.buttonText}>Confirm</Text>
                     </TouchableOpacity>

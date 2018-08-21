@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, TextInput, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Spinner from 'react-native-spinkit';
 import { connect } from 'react-redux';
 import { login, logout } from '../utils/Actions';
+import OneSignal from 'react-native-onesignal';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let logOutPath = 'Logout';
@@ -20,19 +21,28 @@ let deviceVersion = DeviceInfo.getVersion();
 class Profile extends Component{
     static navigationOptions = {
         title: 'Profile',
+        headerRight: (
+            <Icon onPress={() => _this.props.navigation.navigate('UpdateProfile', { rerenderFunction : () => _this.getProfile() })} name={'pencil'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
+        ),
     };
     
     constructor(props){
         super(props);
         this.state = {
             spinnerVisible: false,
+            isSubmit: false,
+            name: '',
+            nric: '',
+            phoneNumber: '',
         };
+        _this = this;
     }
 
     componentDidMount() {
         setTimeout(() => {
             this.checkInternetConnection();
         }, 500);
+        this.getProfile();
     }
 
     async checkInternetConnection() {
@@ -61,9 +71,18 @@ class Profile extends Component{
         }], {cancelable: false})
     }
 
+    getProfile(){
+        this.setState({
+            name: loginAsset[0].driverName,
+            nric: loginAsset[0].driverNRIC,
+            phoneNumber: loginAsset[0].driverPhoneNumber,
+        })
+    }
+
     userLogout(e){
         this.setState({
             spinnerVisible: true,
+            isSubmit: true,
         })
         console.log(loginAsset[0]);
         fetch(`${myApiUrl}/${logOutPath}`, {
@@ -87,7 +106,9 @@ class Profile extends Component{
                 })
                 this.setState({ 
                     spinnerVisible: false,
+                    isSubmit: false,
                 });
+                OneSignal.deleteTag("userId");
                 this.props.onLogout();
             }else{
                 Alert.alert('Cannot Logout', json.message, [{
@@ -97,10 +118,15 @@ class Profile extends Component{
                 }], {cancelable: false});
                 this.setState({ 
                     spinnerVisible: false, 
+                    isSubmit: false,
                 });
             }
         }).catch(err => {
             console.log(err);
+            this.setState({ 
+                spinnerVisible: false, 
+                isSubmit: false,
+            });
         });
         e.preventDefault();
     }
@@ -108,43 +134,20 @@ class Profile extends Component{
     render(){
         return(
             <ScrollView style={styles.container}>
-                <View style={{justifyContent:'center', alignItems: 'center',}}>
-                    <Avatar
-                    size="xlarge"
-                    rounded
-                    source={{uri: "https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg"}}
-                    onPress={() => console.log("Works!")}
-                    activeOpacity={0.7}
-                    />
-                    <Text style={{fontSize: 20, paddingTop: 10, paddingBottom: 10, color: '#3c4c96', fontFamily: 'Raleway-Bold', }}>Jeffery Leo</Text>
-                    <Text style={{fontSize: 15, paddingTop: 0, paddingBottom: 10, color: '#3c4c96', fontFamily: 'Raleway-Regular', }}>012-1234567</Text>
+                <View>
+                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Name: </Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.name}</Text>
+
+                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.nric}</Text>
+
+                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.phoneNumber}</Text>
                 </View>
-                
-                <View style={{justifyContent:'center', alignItems: 'flex-start', paddingTop: 40, marginLeft: 10, marginRight: 10,}}>
-                    <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10,}}>
-                        <Icon name={'envelope'} size={18} color={'#3c4c96'} />
-                        <Text style={{fontSize: 18, color: '#3c4c96', fontFamily: 'Raleway-BoldItalic', }}>   jefferyleo@gmail.com</Text>
-                    </View>
-                    <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10,}}>
-                        <Icon name={'automobile'} size={18} color={'#3c4c96'} />
-                        <Text style={{fontSize: 18, color: '#3c4c96', fontFamily: 'Raleway-BoldItalic', }}>  Silver Honda Civic Turbo</Text>
-                    </View>
-                    <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10,}}>
-                        <Icon name={'road'} size={18} color={'#3c4c96'} />
-                        <Text style={{fontSize: 18, color: '#3c4c96', fontFamily: 'Raleway-BoldItalic', }}>  ABC 1234</Text>
-                    </View>
-                    <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10,}}>
-                        <Icon name={'id-card'} size={18} color={'#3c4c96'} />
-                        <Text style={{fontSize: 18, color: '#3c4c96', fontFamily: 'Raleway-BoldItalic', }}>  930101-10-1111</Text>
-                    </View>
-                    <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10,}}>
-                        <Icon name={'calendar'} size={18} color={'#3c4c96'} />
-                        <Text style={{fontSize: 18, color: '#3c4c96', fontFamily: 'Raleway-BoldItalic', }}>  1 May 2018</Text>
-                    </View>
-                </View>
-                <View style={{backgroundColor: '#3c4c96', paddingLeft: 10, paddingRight: 10, marginTop: 40, marginLeft: 0, marginRight: 0, marginBottom: 10,}}>
+                <View style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingLeft: 10, paddingRight: 10, marginTop: 40, marginLeft: 0, marginRight: 0, marginBottom: 10,} : {backgroundColor: '#3c4c96', paddingLeft: 10, paddingRight: 10, marginTop: 40, marginLeft: 0, marginRight: 0, marginBottom: 10,}}>
                     <TouchableOpacity
-                        style={styles.buttonContainer}
+                        disabled={this.state.isSubmit}
+                        style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
                         onPress={(e) => this.userLogout(e)}>
                         <Text style={styles.buttonText}>Log Out</Text>
                     </TouchableOpacity>

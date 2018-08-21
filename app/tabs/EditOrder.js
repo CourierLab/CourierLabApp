@@ -41,6 +41,7 @@ export default class EditOrder extends Component{
             vehicleSpecString: '',
             vehicleSpec: [],
             vehicleSpecList: [],
+            isSubmit: false,
         }
     }
 
@@ -54,7 +55,8 @@ export default class EditOrder extends Component{
         }, 500);
         this.getDriverOrder();
         this.getVehicleSpec();
-        Geocoder.init('AIzaSyAfqLd5k68W11gB03CqwNq5ikAjNpAle2c');
+        // Geocoder.init('AIzaSyAfqLd5k68W11gB03CqwNq5ikAjNpAle2c');
+        Geocoder.init('AIzaSyCgGvYKsFv6HeUdTF-8FdE389pYjBOolvc');
     }
 
     async checkInternetConnection() {
@@ -184,6 +186,7 @@ export default class EditOrder extends Component{
         this.setState({
             spinnerVisible: true,
             isClicked: true,
+            isSubmit: true,
         })
         if(this.state.departLocation === "" || this.state.arriveLocation === "" || this.state.carLength === "" || this.state.carWeight === "" || this.state.carPlateNumber === "" || this.state.expectedDepartureDate === "" || this.state.expectedArrivalDate === "" || this.state.vehicleSpec === ""){
             Alert.alert('Cannot Edit', "Please key in Depart Location, Arrive Location, Car Length(m), Car Weight(kg), Car Plate Number, Expected Departure Date, Expected Arrival Date and Vechicle Specification", [{
@@ -193,6 +196,7 @@ export default class EditOrder extends Component{
             this.setState({
                 spinnerVisible: false,
                 isClicked: false,
+                isSubmit: false,
             })
         }else{
             console.log(this.state.expectedDepartureDate);
@@ -229,6 +233,7 @@ export default class EditOrder extends Component{
                     this.setState({
                         spinnerVisible: false,
                         isClicked: false,
+                        isSubmit: false,
                     })
                     Alert.alert('Successfully Edited', json.message, [
                     {
@@ -246,6 +251,7 @@ export default class EditOrder extends Component{
                     this.setState({
                         spinnerVisible: false,
                         isClicked: false,
+                        isSubmit: false,
                     })
                 }
             }).catch(err => {
@@ -253,6 +259,7 @@ export default class EditOrder extends Component{
                 this.setState({
                     spinnerVisible: false,
                     isClicked: false,
+                    isSubmit: false,
                 })
             });
         }
@@ -459,7 +466,8 @@ export default class EditOrder extends Component{
                             </View>
                             <View style={{paddingTop: 10,}}>
                                 <TouchableOpacity
-                                    style={styles.buttonContainer}
+                                    disabled={this.state.isSubmit}
+                                    style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
                                     onPress={(e) => this.editOrder()}>
                                     <Text style={styles.buttonText}>Edit Order</Text>
                                 </TouchableOpacity>

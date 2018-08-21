@@ -18,6 +18,9 @@ import ConfirmDriverShipperOrderScreen from './ConfirmDriverShipperOrder';
 import SelectShipperOrderScreen from './SelectShipperOrder';
 import EditOrderScreen from './EditOrder';
 import AddDriverOrderScreen from './AddDriverOrder';
+import PendingConfirmationScreen from './PendingConfirmation';
+import PendingConfirmationDetailScreen from './PendingConfirmationDetail';
+import UpdateProfileScreen from './UpdateProfile';
 
 const tabOneStack = createStackNavigator({
     Home: { screen: HomeScreen },
@@ -40,6 +43,23 @@ const tabOneStack = createStackNavigator({
 });
 
 const tabTwoStack = createStackNavigator({
+    PendingConfirmation : { screen: PendingConfirmationScreen },
+    PendingConfirmationDetail : { screen: PendingConfirmationDetailScreen },
+},
+{
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: '#3c4c96',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+            fontFamily: 'Raleway-Bold',
+        },
+    }
+});
+
+const tabThreeStack = createStackNavigator({
     History : { screen: HistoryScreen },
     AddDriverOrder: { screen: AddDriverOrderScreen },
     HistoryOrderDetails: { screen: HistoryOrderDetailsScreen },
@@ -62,8 +82,9 @@ const tabTwoStack = createStackNavigator({
     }
 });
 
-const tabThreeStack = createStackNavigator({
+const tabFourStack = createStackNavigator({
     Profile : { screen: ProfileScreen },
+    UpdateProfile : { screen: UpdateProfileScreen },
 },
 {
     navigationOptions: {
@@ -80,8 +101,9 @@ const tabThreeStack = createStackNavigator({
 
 export default createBottomTabNavigator({
     "Shipper Order" : { screen: tabOneStack },
-    "Driver Order" : { screen: tabTwoStack },
-    "Profile" : { screen: tabThreeStack },
+    "Pending Confirmation" : { screen: tabTwoStack },
+    "Driver Order" : { screen: tabThreeStack },
+    "Profile" : { screen: tabFourStack },
 },
 {
     navigationOptions: ({ navigation }) => ({
@@ -89,9 +111,11 @@ export default createBottomTabNavigator({
             const { routeName } = navigation.state;
             let iconName;
             if(routeName === 'Shipper Order'){
+                iconName = 'shopping-cart';
+            }else if(routeName === 'Pending Confirmation'){
                 iconName = 'tasks';
             }else if(routeName === 'Driver Order'){
-                iconName = 'list-alt';
+                iconName = 'truck';
             }else if(routeName === 'Profile'){
                 iconName = 'user';
             }

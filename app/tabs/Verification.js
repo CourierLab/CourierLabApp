@@ -8,7 +8,7 @@ import { styles } from '../utils/Style';
 import Spinner from 'react-native-spinkit';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
-let verificationPath = '';
+let verificationPath = 'DeliveredVerificationCode';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
@@ -24,6 +24,7 @@ export default class Verification extends Component{
             spinnerVisible: false,
             isClicked: false,
             pin: '',
+            isSubmit: false,
         }
     }
 
@@ -63,77 +64,63 @@ export default class Verification extends Component{
         this.setState({
             spinnerVisible: true,
             isClicked: true,
+            isSubmit: true,
         })
 
-        // if(this.state.pac === ""){
-        //     Alert.alert('Cannot Verify', 'Please key in PAC code', [{
-        //         text: 'OK',
-        //         onPress: () => {},
-        //     }], {cancelable: false});
-        //     this.setState({
-        //         spinnerVisible: false,
-        //         isClicked: false,
-        //     })
-        // }else{
-        //     fetch(`${myApiUrl}/${verifyPACPath}`, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({
-        //             verification_id: this.state.verificationId,
-        //             verification_code: this.state.pac,
-        //         }),
-        //     })
-        //     .then((response) => response.json())
-        //     .then((json) => {
-        //         console.log(json);
-        //         if(json.status === "0"){
-        //             Alert.alert('Cannot Verify', json.message, [{
-        //                 text: 'OK',
-        //                 onPress: () => {},
-        //             }], {cancelable: false});
-        //             this.setState({
-        //                 spinnerVisible: false,
-        //                 isClicked: false,
-        //             })
-        //         }else if(json.status === "1"){
-        //             console.log(json);
-        //             this.setState({
-        //                 spinnerVisible: false,
-        //                 isClicked: false,
-        //                 code: json.code,
-        //                 message: json.message,
-        //             })
-        //             this.props.navigation.navigate('Verification', {
-        //                 'code': this.state.code,
-        //                 'message': this.state.message,
-        //             });
-        //         }else{
-        //             console.log(json);
-        //             const popAction = StackActions.pop({
-        //                 n: 2,
-        //             });
-        //             this.props.navigation.dispatch(popAction);
-        //             Alert.alert('Cannot Verify', json.message, [{
-        //                 text: 'OK',
-        //                 onPress: () => {},
-        //             }], {cancelable: false});
-        //         }
-        //     }).catch(err => {
-        //         console.log(err);
-        //         this.setState({
-        //             spinnerVisible: false,
-        //             isClicked: false,
-        //         })
-        //     })
-        //     e.preventDefault();
-        // }
+        if(this.state.pin === ""){
+            Alert.alert('Cannot Verify', 'Please key in Pin Number', [{
+                text: 'OK',
+                onPress: () => {},
+            }], {cancelable: false});
+            this.setState({
+                spinnerVisible: false,
+                isClicked: false,
+                isSubmit: false,
+            })
+        }else{
+            fetch(`${myApiUrl}/${verificationPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&shipperOrderId=` + this.props.navigation.getParam('shipperOrderId') + `&pin=` + this.state.pin, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': loginAsset[0].accessToken,
+                },
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log(json);
+                if(json.succeeded){
+                    Alert.alert('Successfully Verified', json.message, [{
+                        text: 'OK',
+                        onPress: () => {},
+                    }], {cancelable: false});
+                    this.props.navigation.state.params.rerenderFunction();
+                    this.props.navigation.goBack();
+                }else{
+                    Alert.alert('Cannot Verify', json.message, [{
+                        text: 'OK',
+                        onPress: () => {},
+                    }], {cancelable: false});
+                }
+                this.setState({
+                    spinnerVisible: false,
+                    isClicked: false,
+                    isSubmit: false,
+                })
+            }).catch(err => {
+                console.log(err);
+                this.setState({
+                    spinnerVisible: false,
+                    isClicked: false,
+                    isSubmit: false,
+                })
+            })
+            e.preventDefault();
+        }
     }
 
     render(){
-        let spinnerView = this.state.isClicked ? <View style={styles.formSpinner}> 
+        let spinnerView = this.state.isClicked ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20,}}> 
                     <Spinner
                         isVisible={this.state.spinnerVisible}
                         type={'9CubeGrid'}
@@ -163,7 +150,8 @@ export default class Verification extends Component{
                 {spinnerView}
                 <View style={{paddingTop: 10,}}>
                     <TouchableOpacity
-                        style={styles.buttonContainer}
+                        disabled={this.state.isSubmit}
+                        style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
                         onPress={(e) => this.submit(e)}>
                         <Text style={styles.buttonText}>Submit</Text>
                     </TouchableOpacity>

@@ -7,6 +7,7 @@ import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
+import OneSignal from 'react-native-onesignal';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let loginPath = 'Login';
@@ -28,6 +29,7 @@ class Login extends Component{
             email: '',
             password: '',
             spinnerVisible: false,
+            isSubmit: false,
         };
     }
 
@@ -114,6 +116,7 @@ class Login extends Component{
     userLogin(e){
         this.setState({
             spinnerVisible: true,
+            isSubmit: true,
         })
         if(this.state.email === "" || this.state.password === ""){
             Alert.alert('Cannot Sign In', 'Please key in Username/Email Address and Password', [{
@@ -123,6 +126,7 @@ class Login extends Component{
             }], {cancelable: false});
             this.setState({
                 spinnerVisible: false,
+                isSubmit: false,
             })
         }else{
             fetch(`${myApiUrl}/${loginPath}`, {
@@ -155,9 +159,11 @@ class Login extends Component{
                             driverPhoneNumber: json.results.driver.driverPhoneNumber,
                         })
                     })
+                    OneSignal.sendTag("userId", json.results.userId.toString());
                     console.log(json);
                     this.setState({ 
                         spinnerVisible: false,
+                        isSubmit: false,
                     });
                     this.props.onLogin(this.state.email);
                 }else{
@@ -168,6 +174,7 @@ class Login extends Component{
                     }], {cancelable: false});
                     this.setState({ 
                         spinnerVisible: false, 
+                        isSubmit: false,
                     });
                 }
             }).catch(err => {
@@ -219,7 +226,8 @@ class Login extends Component{
                         onChangeText={(text) => this.setState({ password: text })} />
                     <View style={{margin: 7}}/>
                     <TouchableOpacity
-                        style={styles.buttonContainer}
+                        disabled={this.state.isSubmit}
+                        style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
                         onPress={(e) => this.userLogin(e)}>
                         <Text style={styles.buttonText}>{this.state.route}</Text>
                     </TouchableOpacity>

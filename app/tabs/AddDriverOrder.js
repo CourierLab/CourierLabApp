@@ -39,6 +39,7 @@ export default class AddDriverOrder extends Component{
             vehicleSpec: [],
             vehicleSpecList: [],
             currentDate: new Date(),
+            isSubmit: false,
         }
     }
 
@@ -51,7 +52,8 @@ export default class AddDriverOrder extends Component{
             this.checkInternetConnection();
         }, 500);
         this.getVehicleSpec();
-        Geocoder.init('AIzaSyAfqLd5k68W11gB03CqwNq5ikAjNpAle2c');
+        //Geocoder.init('AIzaSyAfqLd5k68W11gB03CqwNq5ikAjNpAle2c');
+        Geocoder.init('AIzaSyCgGvYKsFv6HeUdTF-8FdE389pYjBOolvc');
     }
 
     async checkInternetConnection() {
@@ -118,6 +120,7 @@ export default class AddDriverOrder extends Component{
         this.setState({
             spinnerVisible: true,
             isClicked: true,
+            isSubmit: true,
         })
         if(this.state.departLocation === "" || this.state.arriveLocation === "" || this.state.carLength === "" || this.state.carWeight === "" || this.state.carPlateNumber === "" || this.state.expectedDepartureDate === "" || this.state.expectedArrivalDate === "" || this.state.vehicleSpec === ""){
             Alert.alert('Cannot Add', "Please key in Depart Location, Arrive Location, Car Length(m), Car Weight(kg), Car Plate Number, Expected Departure Date, Expected Arrival Date and Vechicle Specification", [{
@@ -127,6 +130,7 @@ export default class AddDriverOrder extends Component{
             this.setState({
                 spinnerVisible: false,
                 isClicked: false,
+                isSubmit: false,
             })
         }else{
             fetch(`${myApiUrl}/${addOrderPath}`, {
@@ -160,6 +164,7 @@ export default class AddDriverOrder extends Component{
                     this.setState({
                         spinnerVisible: false,
                         isClicked: false,
+                        isSubmit: false,
                     })
                     this.props.navigation.navigate('HistoryOrderDetails', {
                         driverOrderId: json.results.driverOrderId,
@@ -173,6 +178,7 @@ export default class AddDriverOrder extends Component{
                     this.setState({
                         spinnerVisible: false,
                         isClicked: false,
+                        isSubmit: false,
                     })
                 }
             }).catch(err => {
@@ -180,6 +186,7 @@ export default class AddDriverOrder extends Component{
                 this.setState({
                     spinnerVisible: false,
                     isClicked: false,
+                    isSubmit: false,
                 })
             });
         }
@@ -387,7 +394,8 @@ export default class AddDriverOrder extends Component{
                     {spinnerView}
                     <View style={{paddingTop: 10,}}>
                         <TouchableOpacity
-                            style={styles.buttonContainer}
+                            disabled={this.state.isSubmit}
+                            style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
                             onPress={(e) => this.addOrder()}>
                             <Text style={styles.buttonText}>Add Order</Text>
                         </TouchableOpacity>
