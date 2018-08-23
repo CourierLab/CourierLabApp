@@ -20,7 +20,7 @@ let loginAsset = realm.objects('LoginAsset');
 
 export default class PendingConfirmationDetail extends Component{
     static navigationOptions = {
-        title: 'Order Confirmation',
+        title: 'Order Details',
     };
     
     constructor(props){

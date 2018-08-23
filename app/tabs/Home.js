@@ -6,14 +6,16 @@ import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import { ListItem } from 'react-native-elements';
 import { styles } from '../utils/Style';
-import PendingOrderDetails from './PendingOrderDetails';
 import Spinner from 'react-native-spinkit';
+import OneSignal from 'react-native-onesignal';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let pendingOrderPath = 'ViewPendingShipper';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
+let isPending = '';
+let orderId = '';
 
 export default class Home extends Component{
     static navigationOptions = {
@@ -26,6 +28,7 @@ export default class Home extends Component{
             pendingOrderData: [],
             spinnerVisible: false,
         };
+        _this = this;
     }
 
     componentDidMount() {
@@ -40,10 +43,45 @@ export default class Home extends Component{
             this.getPendingOrder();
             console.log('payload: ', playload);
         });
+        OneSignal.init("8fcca8d9-ca8d-4bbf-907f-261a1a8324f5");
+        OneSignal.addEventListener('received', this.onReceived);
+        OneSignal.addEventListener('opened', this.onOpened);
+        OneSignal.addEventListener('ids', this.onIds);
     }
 
     componentWillUnmount() {
         this._navListener.remove();
+        OneSignal.removeEventListener('received', this.onReceived);
+        OneSignal.removeEventListener('opened', this.onOpened);
+        OneSignal.removeEventListener('ids', this.onIds);
+    }
+
+    onReceived(notification) {
+        console.log("Notification received: ", notification);
+    }
+
+    onOpened(openResult) {
+        console.log('Message: ', openResult.notification.payload.body);
+        console.log('Data: ', openResult.notification.payload.additionalData);
+        console.log('isActive: ', openResult.notification.isAppInFocus);
+        console.log('openResult: ', openResult);
+        console.log('url: ', openResult.notification.payload.launchURL);
+        isPending = openResult.notification.payload.additionalData.IsPending;
+        orderId = openResult.notification.payload.additionalData.OrderID;
+        console.log(isPending);
+        if(isPending){
+            _this.props.navigation.navigate('PendingConfirmationDetail', {
+                driverOrderId: orderId,
+            })
+        }else{
+            _this.props.navigation.navigate('ConfirmedOrderDetail', {
+                driverOrderId: orderId,
+            })
+        }
+    }
+
+    onIds(device) {
+		console.log('Device info: ', device);
     }
 
     async checkInternetConnection() {

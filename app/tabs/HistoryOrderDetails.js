@@ -147,7 +147,6 @@ export default class HistoryOrderDetails extends Component{
                             text: 'OK',
                             onPress: () => {}
                         }], {cancelable: false})
-                        this.props.navigation.state.params.rerenderFunction();
                         this.props.navigation.goBack();
                     }else{
                         Alert.alert('Cannot Delete', json.message, [
