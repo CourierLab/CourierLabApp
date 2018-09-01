@@ -5,7 +5,6 @@ import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
-import OneSignal from 'react-native-onesignal';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let updateProfilePath = 'UpdateProfile';
@@ -27,6 +26,9 @@ export default class UpdateProfile extends Component{
             name: '',
             nric: '',
             phoneNumber: '',
+            shipperState: '',
+            address: '',
+            postcode: '',
         };
     }
 
@@ -38,6 +40,9 @@ export default class UpdateProfile extends Component{
             name: loginAsset[0].loginUserName,
             nric: loginAsset[0].loginUserNRIC,
             phoneNumber: loginAsset[0].loginUserPhoneNumber,
+            shipperState: loginAsset[0].loginUserState,
+            address: loginAsset[0].loginUserAddress,
+            postcode: loginAsset[0].loginUserPostcode.toString(),
         })
     }
 
@@ -74,8 +79,8 @@ export default class UpdateProfile extends Component{
             isSubmit: true,
         })
         console.log(loginAsset[0]);
-        if(this.state.name === '' || this.state.nric === '' || this.state.phoneNumber === ''){
-            Alert.alert('Cannot Update', "Please key in Name, NRIC and Phone Number", [{
+        if(this.state.name === '' || this.state.nric === '' || this.state.phoneNumber === '' || this.state.shipperState === '' || this.state.address === '' || this.state.postcode === ''){
+            Alert.alert('Cannot Update', "Please key in Name, NRIC, Phone Number, Address, State and Postcode", [{
                 text: 'OK',
                 onPress: () => {},
             }], {cancelable: false});
@@ -95,11 +100,14 @@ export default class UpdateProfile extends Component{
                 body: JSON.stringify({
                     userId: loginAsset[0].userId,
                     deviceId: deviceId,
-                    driverId: loginAsset[0].loginUserId,
+                    shipperId: loginAsset[0].loginUserId,
                     roleId: loginAsset[0].roleId,
                     name: this.state.name,
                     nRIC: this.state.nric,
                     phoneNumber: this.state.phoneNumber,
+                    address: this.state.address,
+                    state: this.state.shipperState,
+                    postCode: this.state.postcode,
                 }),
             })
             .then((response) => response.json())
@@ -110,6 +118,9 @@ export default class UpdateProfile extends Component{
                         loginAsset[0].loginUserName = this.state.name;
                         loginAsset[0].loginUserNRIC = this.state.nric;
                         loginAsset[0].loginUserPhoneNumber = this.state.phoneNumber;
+                        loginAsset[0].loginUserAddress = this.state.address;
+                        loginAsset[0].loginUserState = this.state.shipperState;
+                        loginAsset[0].loginUserPostcode = parseInt(this.state.postcode);
                     })
                     this.setState({ 
                         spinnerVisible: false,
@@ -179,6 +190,36 @@ export default class UpdateProfile extends Component{
                         placeholderTextColor='#8E9495'
                         value={this.state.phoneNumber}
                         onChangeText={(text) => this.setState({ phoneNumber: text })}  />
+                    <TextInput
+                        style={styles.input}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        underlineColorAndroid={'transparent'}
+                        keyboardType='default'
+                        placeholder='Address'
+                        placeholderTextColor='#8E9495'
+                        value={this.state.address}
+                        onChangeText={(text) => this.setState({ address: text })}  />
+                    <TextInput
+                        style={styles.input}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        underlineColorAndroid={'transparent'}
+                        keyboardType='default'
+                        placeholder='State'
+                        placeholderTextColor='#8E9495'
+                        value={this.state.shipperState}
+                        onChangeText={(text) => this.setState({ shipperState: text })}  />
+                    <TextInput
+                        style={styles.input}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        underlineColorAndroid={'transparent'}
+                        keyboardType='number-pad'
+                        placeholder='PostCode'
+                        placeholderTextColor='#8E9495'
+                        value={this.state.postcode}
+                        onChangeText={(text) => this.setState({ postcode: text })}  />
                 </View>
                 {
                     (this.state.isClicked) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20,}}> 

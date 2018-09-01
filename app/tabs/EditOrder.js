@@ -221,7 +221,7 @@ export default class EditOrder extends Component{
                     expectedDepartureDate: this.state.expectedDepartureDate,
                     expectedArrivalDate: this.state.expectedArrivalDate,
                     vehicleSpecificationId: this.state.vehicleSpec,
-                    driverId: loginAsset[0].driverId,
+                    driverId: loginAsset[0].loginUserId,
                     deviceId: deviceId,
                     userId: loginAsset[0].userId,
                 }),
@@ -290,7 +290,7 @@ export default class EditOrder extends Component{
                                 keyboardType='default'
                                 returnKeyLabel="next"
                                 placeholder='Depart Location'
-                                placeholderTextColor='#3c4c96'
+                                placeholderTextColor='#939ABA'
                                 value={this.state.departLocation}
                                 onChangeText={(text) => {this.setState({ departLocation: text }); this.getCoordination();}}  />
                             {/* <Text 
@@ -304,7 +304,7 @@ export default class EditOrder extends Component{
                                 keyboardType='default'
                                 returnKeyLabel="next"
                                 placeholder='Arrive Location'
-                                placeholderTextColor='#3c4c96'
+                                placeholderTextColor='#939ABA'
                                 value={this.state.arriveLocation}
                                 onChangeText={(text) => this.setState({ arriveLocation: text })}  />
                             {/* <Text 
@@ -318,7 +318,7 @@ export default class EditOrder extends Component{
                                 returnKeyLabel="next"
                                 placeholder='Car Length(m)'
                                 keyboardType={'numeric'}
-                                placeholderTextColor='#3c4c96'
+                                placeholderTextColor='#939ABA'
                                 value={this.state.carLength}
                                 onChangeText={(text) => this.setState({ carLength: text })} />
                             <TextInput
@@ -329,7 +329,7 @@ export default class EditOrder extends Component{
                                 returnKeyLabel="next"
                                 keyboardType={'numeric'}
                                 placeholder='Car Weight(kg)'
-                                placeholderTextColor='#3c4c96'
+                                placeholderTextColor='#939ABA'
                                 value={this.state.carWeight}
                                 onChangeText={(text) => this.setState({ carWeight: text })} />
                             <TextInput
@@ -340,7 +340,7 @@ export default class EditOrder extends Component{
                                 keyboardType='default'
                                 returnKeyLabel="next"
                                 placeholder='Car Plate Number'
-                                placeholderTextColor='#3c4c96'
+                                placeholderTextColor='#939ABA'
                                 value={this.state.carPlateNumber}
                                 onChangeText={(text) => this.setState({ carPlateNumber: text })}  />
                             <TextInput
@@ -351,7 +351,7 @@ export default class EditOrder extends Component{
                                 keyboardType='default'
                                 returnKeyLabel="next"
                                 placeholder='Order Description'
-                                placeholderTextColor='#3c4c96'
+                                placeholderTextColor='#939ABA'
                                 value={this.state.orderDescription}
                                 onChangeText={(text) => this.setState({ orderDescription: text })}  />
                             <DatePicker
@@ -368,7 +368,7 @@ export default class EditOrder extends Component{
                                     },
                                     placeholderText: {
                                         fontFamily: 'Raleway-Bold',
-                                        color: '#3c4c96',
+                                        color: '#939ABA',
                                         fontSize: 20,
                                         textAlign: 'left',
                                     },
@@ -409,7 +409,7 @@ export default class EditOrder extends Component{
                                     },
                                     placeholderText: {
                                         fontFamily: 'Raleway-Bold',
-                                        color: '#3c4c96',
+                                        color: '#939ABA',
                                         fontSize: 20,
                                         textAlign: 'left',
                                     },

@@ -16,10 +16,13 @@ class MyRealm {
                     roleId: {type: 'int'},
                     roleName: 'string',
                     email: 'string',
-                    driverId: {type: 'int'},
-                    driverName: 'string',
-                    driverNRIC: 'string',
-                    driverPhoneNumber: 'string',
+                    loginUserId: {type: 'int'},
+                    loginUserName: 'string',
+                    loginUserNRIC: 'string',
+                    loginUserPhoneNumber: 'string',
+                    loginUserAddress: 'string',
+                    loginUserState: 'string',
+                    loginUserPostcode: {type: 'int'},
                 }
             };
 

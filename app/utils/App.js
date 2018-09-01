@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
+import { Alert } from 'react-native';
 import { connect } from 'react-redux';
 import LoginContainer from '../tabs/LoginContainer';
 import Container from '../tabs/Container';
+import ShipperContainer from '../shipperTabs/Container';
+import MyRealm from './Realm';
+
+let realm = new MyRealm();
+let loginAsset = realm.objects('LoginAsset');
 
 class App extends Component{
     render(){
         console.log(this.props.isLoggedIn);
         if(this.props.isLoggedIn){
-            return <Container />;
+            if(loginAsset[0].roleName === "Driver"){
+                return <Container />;
+            }else{
+                return <ShipperContainer />;
+            }
         }else{
             return <LoginContainer />;
         }

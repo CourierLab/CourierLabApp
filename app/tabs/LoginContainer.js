@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginScreen from './Login';
 import ForgotPasswordScreen from './ForgotPassword';
 import RegisterScreen from './Register';
-import UpdateProfileFirstScreen from './UpdateProfileFirst';
+import UpdateProfileFirstScreen from '../shipperTabs/UpdateProfileFirst';
 
 export default createStackNavigator({
     Login: { screen: LoginScreen },

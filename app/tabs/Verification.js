@@ -143,7 +143,7 @@ export default class Verification extends Component{
                         keyboardType='default'
                         returnKeyLabel="go"
                         placeholder='Pin Number'
-                        placeholderTextColor='#3c4c96'
+                        placeholderTextColor='#939ABA'
                         value={this.state.pin}
                         onChangeText={(text) => this.setState({ pin: text })}  />
                 </View>

@@ -144,28 +144,65 @@ class Login extends Component{
             .then((response) => response.json())
             .then((json) => {
                 if(json.succeeded){
-                    realm.write(() => {
-                        realm.create('LoginAsset', {
-                            userId: json.results.userId,
-                            accessToken: json.results.accessToken,
-                            accessTokenExpiredDate: json.results.accessTokenExpiredDate,
-                            refreshToken: json.results.refreshToken,
-                            roleId: json.results.roleId,
-                            roleName: json.results.roleName,
-                            email: this.state.email,
-                            driverId: json.results.driver.driverId,
-                            driverName: json.results.driver.driverName,
-                            driverNRIC: json.results.driver.driverNRIC,
-                            driverPhoneNumber: json.results.driver.driverPhoneNumber,
-                        })
-                    })
-                    OneSignal.sendTag("userId", json.results.userId.toString());
                     console.log(json);
+                    if(json.results.driver !== null){
+                        realm.write(() => {
+                            realm.create('LoginAsset', {
+                                userId: json.results.userId,
+                                accessToken: json.results.accessToken,
+                                accessTokenExpiredDate: json.results.accessTokenExpiredDate,
+                                refreshToken: json.results.refreshToken,
+                                roleId: json.results.roleId,
+                                roleName: json.results.roleName,
+                                email: this.state.email,
+                                loginUserId: json.results.driver.driverId,
+                                loginUserName: json.results.driver.driverName,
+                                loginUserNRIC: json.results.driver.driverNRIC,
+                                loginUserPhoneNumber: json.results.driver.driverPhoneNumber,
+                                loginUserAddress: '',
+                                loginUserState: '',
+                                loginUserPostcode: 0,
+                            })
+                        })
+                        this.props.onLogin(this.state.email);
+                    }else{
+                        if(json.results.shipper !== null){
+                            realm.write(() => {
+                                realm.create('LoginAsset', {
+                                    userId: json.results.userId,
+                                    accessToken: json.results.accessToken,
+                                    accessTokenExpiredDate: json.results.accessTokenExpiredDate,
+                                    refreshToken: json.results.refreshToken,
+                                    roleId: json.results.roleId,
+                                    roleName: json.results.roleName,
+                                    email: this.state.email,
+                                    loginUserId: json.results.shipper.shipperId,
+                                    loginUserName: json.results.shipper.shipperName,
+                                    loginUserNRIC: json.results.shipper.shipperNRIC,
+                                    loginUserPhoneNumber: json.results.shipper.shipperPhoneNumber,
+                                    loginUserAddress: json.results.shipper.shipperAddress,
+                                    loginUserState: json.results.shipper.shipperState,
+                                    loginUserPostcode: json.results.shipper.shipperPostCode,
+                                })
+                            })
+                            this.props.onLogin(this.state.email);
+                        }else{
+                            this.props.navigation.navigate('UpdateProfileFirst', {
+                                userId: json.results.userId,
+                                accessToken: json.results.userId,
+                                accessTokenExpiredDate: json.results.accessTokenExpiredDate,
+                                refreshToken: json.results.refreshToken,
+                                roleId: json.results.roleId,
+                                roleName: json.results.roleName,
+                                email: this.state.email,
+                            });
+                        }
+                    }
+                    OneSignal.sendTag("userId", json.results.userId.toString());
                     this.setState({ 
                         spinnerVisible: false,
                         isSubmit: false,
                     });
-                    this.props.onLogin(this.state.email);
                 }else{
                     Alert.alert('Cannot Sign In', json.message, [{
                         text: 'OK',
@@ -210,7 +247,7 @@ class Login extends Component{
                         keyboardType='email-address'
                         returnKeyLabel="next"
                         placeholder='Username'
-                        placeholderTextColor='#3c4c96'
+                        placeholderTextColor='#939ABA'
                         value={this.state.email}
                         onChangeText={(text) => this.setState({ email: text })}  />
                     <TextInput
@@ -220,7 +257,7 @@ class Login extends Component{
                         autoCorrect={false}
                         returnKeyLabel="go"
                         placeholder='Password'
-                        placeholderTextColor='#3c4c96'
+                        placeholderTextColor='#939ABA'
                         secureTextEntry={true}
                         value={this.state.password}
                         onChangeText={(text) => this.setState({ password: text })} />

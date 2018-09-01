@@ -142,7 +142,7 @@ export default class ForgotPassword extends Component{
                             keyboardType='email-address'
                             returnKeyLabel="next"
                             placeholder='Email Address'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.email}
                             onChangeText={(text) => this.setState({ email: text })}  />
                     </View>

@@ -9,23 +9,23 @@ import { SearchBar, ListItem, Badge, } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
-let driverOrderPath = 'ViewDriverOrder';
+let shipperOrderPath = 'ViewShipperOrder';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 
 export default class History extends Component{
     static navigationOptions = {
-        title: 'Order History',
+        title: 'Shipper History',
         headerRight: (
-            <Icon onPress={() => _this.props.navigation.navigate('AddDriverOrder')} name={'plus'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
+            <Icon onPress={() => _this.props.navigation.navigate('AddShipperOrder')} name={'plus'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
         ),
     };
     
     constructor(props){
         super(props);
         this.state = {
-            driverOrderData: [],
+            shipperOrderData: [],
             spinnerVisible: false,
             searchItem: '',
             filterData: [],
@@ -37,10 +37,8 @@ export default class History extends Component{
         setTimeout(() => {
             this.checkInternetConnection();
         }, 500);
-        // this.getDriverOrder();
-
         this._navListener = this.props.navigation.addListener('didFocus', (playload) => {
-            this.getDriverOrder();
+            this.getShipperOrder();
             console.log('payload page 2: ', playload);
         });
     }
@@ -75,11 +73,11 @@ export default class History extends Component{
         }], {cancelable: false})
     }
 
-    getDriverOrder(){
+    getShipperOrder(){
         this.setState({
             spinnerVisible: true,
         })
-        fetch(`${myApiUrl}/${driverOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&driverId=` + loginAsset[0].loginUserId, {
+        fetch(`${myApiUrl}/${shipperOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&shipperId=` + loginAsset[0].loginUserId, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -92,7 +90,7 @@ export default class History extends Component{
             console.log('getResult: ', json);
             if(json.succeeded){
                 this.setState({
-                    driverOrderData: json.results,
+                    shipperOrderData: json.results,
                 });
             }
             this.setState({
@@ -107,19 +105,19 @@ export default class History extends Component{
     }
 
     searchFilterFunction(text){
-        const newData = this.state.driverOrderData.filter(function(item){
+        const newData = this.state.shipperOrderData.filter(function(item){
             const orderDescription = item.orderDescription.toUpperCase();
-            const departLocation = item.departLocation.toUpperCase();
-            const arriveLocation = item.arriveLocation.toUpperCase();
-            const expectedDepartureDate = item.expectedDepartureDate.toUpperCase();
+            const pickUpLocation = item.pickUpLocation.toUpperCase();
+            const recipientName = item.recipientName.toUpperCase();
+            const recipientAddress = item.recipientAddress.toUpperCase();
             const expectedArrivalDate = item.expectedArrivalDate.toUpperCase();
             const isMatchDescription = item.isMatchDescription.toUpperCase();
             const orderNumber = item.orderNumber.toUpperCase();
             const textData = text.toUpperCase();
             return orderDescription.indexOf(textData) > -1 || 
-                departLocation.indexOf(textData) > -1 || 
-                arriveLocation.indexOf(textData) > -1 || 
-                expectedDepartureDate.indexOf(textData) > -1 || 
+                pickUpLocation.indexOf(textData) > -1 || 
+                recipientName.indexOf(textData) > -1 || 
+                recipientAddress.indexOf(textData) > -1 || 
                 expectedArrivalDate.indexOf(textData) > -1 || 
                 isMatchDescription.indexOf(textData) > -1 || 
                 orderNumber.indexOf(textData) > -1;
@@ -132,7 +130,7 @@ export default class History extends Component{
 
     render(){
         var acceptedView = <View style={styles.noListContainer}>
-                            <Text style={styles.noListText}>No Driver Order</Text> 
+                            <Text style={styles.noListText}>No Shipper Order</Text> 
                           </View>;
         if(this.state.searchItem !== ''){
             if(this.state.filterData.length != 0){
@@ -145,6 +143,10 @@ export default class History extends Component{
                         subtitle={
                             <View style={{paddingTop: 5,}}>
                                 <View style={styles.iconView}>
+                                    <Icon name={'user'} size={17} color={'#3c4c96'} />
+                                    <Text style={styles.listItemText}>  {item.recipientName}</Text>
+                                </View>
+                                <View style={styles.iconView}>
                                 {(item.orderDescription !== "") ? <View style={styles.iconView}>
                                     <Icon name={'info'} size={15} color={'#3c4c96'} style={{marginLeft: 3, marginRight: 6}}/>
                                     <Text style={styles.listItemText}> {item.orderDescription}</Text>    
@@ -153,19 +155,15 @@ export default class History extends Component{
                                 </View>
                                 <View style={{flexDirection: 'row',}}>
                                     <Icon name={'map-pin'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.departLocation} </Text> 
+                                    <Text style={styles.listItemText}>  {item.pickUpLocation} </Text> 
                                 </View>
                                 <View style={{flexDirection: 'row', marginLeft: 20,}}>
                                     <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.arriveLocation}</Text>    
+                                    <Text style={styles.listItemText}>  {item.recipientAddress}</Text>    
                                 </View>
                                 <View style={styles.iconView}>
                                     <Icon name={'calendar'} size={15} color={'#3c4c96'} />
-                                    <Text style={styles.listItemText}> {item.expectedDepartureDate} </Text>
-                                </View>
-                                <View style={{flexDirection: 'row', marginLeft: 20,}}>
-                                    <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>   
+                                    <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>
                                 </View>
                                 <View style={styles.listItemView}>
                                     {(item.isMatch) ? <Badge
@@ -195,8 +193,8 @@ export default class History extends Component{
                               </View>;
             }
         }else{
-            if(this.state.driverOrderData !== [] && this.state.driverOrderData.length > 0){
-                acceptedView = this.state.driverOrderData.map((item, index) => (
+            if(this.state.shipperOrderData !== [] && this.state.shipperOrderData.length > 0){
+                acceptedView = this.state.shipperOrderData.map((item, index) => (
                     <ListItem 
                         key={index}
                         bottomDivider={true}
@@ -204,6 +202,10 @@ export default class History extends Component{
                         title={ <Text style={styles.listItemText}>{item.orderNumber}</Text> }
                         subtitle={
                             <View style={{paddingTop: 5, }}>
+                                <View style={styles.iconView}>
+                                    <Icon name={'user'} size={17} color={'#3c4c96'} />
+                                    <Text style={styles.listItemText}>  {item.recipientName}</Text>
+                                </View>
                                 <View style={styles.iconView}>
                                 {(item.orderDescription !== "") ? <View style={styles.iconView}>
                                     <Icon name={'info'} size={15} color={'#3c4c96'} style={{marginLeft: 3, marginRight: 6}}/>
@@ -213,19 +215,15 @@ export default class History extends Component{
                                 </View>
                                 <View style={{flexDirection: 'row',}}>
                                     <Icon name={'map-pin'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.departLocation} </Text> 
+                                    <Text style={styles.listItemText}>  {item.pickUpLocation} </Text> 
                                 </View>
                                 <View style={{flexDirection: 'row', marginLeft: 20,}}>
                                     <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.arriveLocation}</Text>    
+                                    <Text style={styles.listItemText}>  {item.recipientAddress}</Text>    
                                 </View>
                                 <View style={styles.iconView}>
                                     <Icon name={'calendar'} size={15} color={'#3c4c96'} />
-                                    <Text style={styles.listItemText}> {item.expectedDepartureDate} </Text>
-                                </View>
-                                <View style={{flexDirection: 'row', marginLeft: 20,}}>
-                                    <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>   
+                                    <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>
                                 </View>
                                 <View>
                                     {(item.isMatch) ? <Badge

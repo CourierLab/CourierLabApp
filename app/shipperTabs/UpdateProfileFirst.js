@@ -7,7 +7,7 @@ import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
-let registerPath = 'UpdateProfile';
+let updateProfilePath = 'UpdateProfile';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
@@ -69,8 +69,8 @@ export default class UpdateProfileFirst extends Component{
             isClicked: true,
         })
 
-        if(this.state.email === "" || this.state.username === "" || this.state.password == "" || this.state.confirmPassword === ""){
-            Alert.alert('Cannot Register', 'Please key in Username, Email Address, Password and Confirm Password', [{
+        if(this.state.name === "" || this.state.nric === "" || this.state.phoneNumber == "" || this.state.state === "" || this.state.address === "" || this.state.postcode === ""){
+            Alert.alert('Cannot Register', 'Please key in Name, NRIC, Phone Number, State, Address and Postcode', [{
                 text: 'OK',
                 onPress: () => {},
             }], {cancelable: false});
@@ -79,65 +79,76 @@ export default class UpdateProfileFirst extends Component{
                 isClicked: false,
             })
         }else{
-            if(this.state.password !== this.state.confirmPassword){
-                Alert.alert('Cannot Register', 'Password and Confirm Password are not matched', [{
-                    text: 'OK',
-                    onPress: () => {},
-                }], {cancelable: false});
-                this.setState({
-                    spinnerVisible: false,
-                    isClicked: false,
-                })
-            }else{
-                fetch(`${myApiUrl}/${registerPath}`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: this.state.username,
-                        password: this.state.password,
-                        email: this.state.email,
-                    }),
-                })
-                .then((response) => response.json())
-                .then((json) => {
-                    console.log(json);
-                    if(json.succeeded){
-                        this.setState({
-                            spinnerVisible: false,
-                            isClicked: false,
-                        })
-                        Alert.alert('Successfully Registered', json.message, [{
-                            text: 'OK',
-                            onPress: () => {},
-                        }], {cancelable: false});
-                        this.props.navigation.goBack();
-                    }else{
-                        Alert.alert('Cannot Register', json.message, [{
-                            text: 'OK',
-                            onPress: () => {},
-                        }], {cancelable: false});
-                        this.setState({
-                            spinnerVisible: false,
-                            isClicked: false,
-                        })
-                    }
-                }).catch(err => {
-                    console.log(err);
+            fetch(`${myApiUrl}/${updateProfilePath}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': this.props.navigation.getParam('accessToken'),
+                },
+                body: JSON.stringify({
+                    name: this.state.name,
+                    nRIC: this.state.nric,
+                    phoneNumber: this.state.phoneNumber,
+                    address: this.state.address,
+                    state: this.state.state,
+                    postCode: this.state.postcode,
+                    roleId: this.props.navigation.getParam('roleId'),
+                    deviceId: deviceId,
+                    userId: this.props.navigation.getParam('userId'),
+                }),
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log(json);
+                if(json.succeeded){
                     this.setState({
                         spinnerVisible: false,
                         isClicked: false,
                     })
+                    // realm.write(() => {
+                    //     realm.create('LoginAsset', {
+                    //         userId: json.results.userId,
+                    //         accessToken: json.results.accessToken,
+                    //         accessTokenExpiredDate: json.results.accessTokenExpiredDate,
+                    //         refreshToken: json.results.refreshToken,
+                    //         roleId: json.results.roleId,
+                    //         roleName: json.results.roleName,
+                    //         email: this.state.email,
+                    //         loginUserId: json.results.shipper.shipperId,
+                    //         loginUserName: json.results.shipper.shipperName,
+                    //         loginUserNRIC: json.results.shipper.shipperNRIC,
+                    //         loginUserPhoneNumber: json.results.shipper.shipperPhoneNumber,
+                    //     })
+                    // })
+                    Alert.alert('Successfully Updated', json.message, [{
+                        text: 'OK',
+                        onPress: () => {},
+                    }], {cancelable: false});
+                    // this.props.navigation.navigate('UpdateProfileFirst');
+                }else{
+                    Alert.alert('Cannot Update', json.message, [{
+                        text: 'OK',
+                        onPress: () => {},
+                    }], {cancelable: false});
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                    })
+                }
+            }).catch(err => {
+                console.log(err);
+                this.setState({
+                    spinnerVisible: false,
+                    isClicked: false,
                 })
-            }
+            })
             e.preventDefault();
         }
     }
 
     render(){
-        let spinnerView = this.state.isClicked ? <View style={styles.formSpinner}> 
+        let spinnerView = this.state.isClicked ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20,}}> 
                     <Spinner
                         isVisible={this.state.spinnerVisible}
                         type={'9CubeGrid'}
@@ -149,7 +160,7 @@ export default class UpdateProfileFirst extends Component{
             <KeyboardAvoidingView style={styles.container}>
                 <ScrollView>
                     <View>
-                    <Text style={styles.titleText}>NOTE: Please key in your information for first time setup.</Text>
+                    <Text style={{paddingBottom: 20, fontSize: 16, color: '#3c4c96', fontFamily: 'Raleway-Bold', }}>NOTE: Please key in your information for first time setup.</Text>
                         <TextInput
                             style={styles.input}
                             autoCapitalize="none"
@@ -158,7 +169,7 @@ export default class UpdateProfileFirst extends Component{
                             autoFocus={true}
                             keyboardType='default'
                             placeholder='Name'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.name}
                             onChangeText={(text) => this.setState({ name: text })}  />
                         <TextInput
@@ -168,7 +179,7 @@ export default class UpdateProfileFirst extends Component{
                             autoCorrect={false}
                             keyboardType='default'
                             placeholder='NRIC'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.nric}
                             onChangeText={(text) => this.setState({ nric: text })}  />
                         <TextInput
@@ -178,7 +189,7 @@ export default class UpdateProfileFirst extends Component{
                             underlineColorAndroid={'transparent'}
                             placeholder='Phone Number'
                             keyboardType='default'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.phoneNumber}
                             onChangeText={(text) => this.setState({ phoneNumber: text })} />
                         <TextInput
@@ -188,7 +199,7 @@ export default class UpdateProfileFirst extends Component{
                             autoCorrect={false}
                             placeholder='State'
                             keyboardType='default'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.state}
                             onChangeText={(text) => this.setState({ state: text })} />
                         <TextInput
@@ -198,7 +209,7 @@ export default class UpdateProfileFirst extends Component{
                             autoCorrect={false}
                             placeholder='Address'
                             keyboardType='default'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.address}
                             onChangeText={(text) => this.setState({ address: text })} />
                         <TextInput
@@ -208,7 +219,7 @@ export default class UpdateProfileFirst extends Component{
                             autoCorrect={false}
                             placeholder='Postcode'
                             keyboardType='numeric'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.postcode}
                             onChangeText={(text) => this.setState({ postcode: text })} />
                     </View>

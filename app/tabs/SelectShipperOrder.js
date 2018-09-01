@@ -93,7 +93,7 @@ export default class SelectShipperOrder extends Component{
             },
             body: JSON.stringify({
                 shipperId: this.state.shipperDetails.shipperId,
-                driverId: loginAsset[0].driverId,
+                driverId: loginAsset[0].loginUserId,
                 shipperOrderId: this.state.shipperDetails.shipperOrderId,
                 driverOrderId: this.state.driverDetails.driverOrderId,
                 deviceId: deviceId,

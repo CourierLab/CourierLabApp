@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, TextInput, } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
-import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Spinner from 'react-native-spinkit';
 import { connect } from 'react-redux';
 import { login, logout } from '../utils/Actions';
 import OneSignal from 'react-native-onesignal';
@@ -34,6 +32,9 @@ class Profile extends Component{
             name: '',
             nric: '',
             phoneNumber: '',
+            shipperState: '',
+            address: '',
+            postcode: '',
         };
         _this = this;
     }
@@ -76,6 +77,9 @@ class Profile extends Component{
             name: loginAsset[0].loginUserName,
             nric: loginAsset[0].loginUserNRIC,
             phoneNumber: loginAsset[0].loginUserPhoneNumber,
+            shipperState: loginAsset[0].loginUserState,
+            address: loginAsset[0].loginUserAddress,
+            postcode: loginAsset[0].loginUserPostcode,
         })
     }
 
@@ -143,6 +147,15 @@ class Profile extends Component{
 
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.phoneNumber}</Text>
+
+                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Address: </Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.address}</Text>
+
+                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>State: </Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.shipperState}</Text>
+
+                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Postcode: </Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.postcode}</Text>
                 </View>
                 <View style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingLeft: 10, paddingRight: 10, marginTop: 40, marginLeft: 0, marginRight: 0, marginBottom: 10,} : {backgroundColor: '#3c4c96', paddingLeft: 10, paddingRight: 10, marginTop: 40, marginLeft: 0, marginRight: 0, marginBottom: 10,}}>
                     <TouchableOpacity

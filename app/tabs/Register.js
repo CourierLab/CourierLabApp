@@ -7,7 +7,7 @@ import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
-let registerPath = 'Register';
+let registerPath = 'SignUp';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
@@ -91,6 +91,7 @@ export default class Register extends Component{
                     isSubmit: false,
                 })
             }else{
+                console.log(this.state.username, '   ', this.state.password, '   ', this.state.email, '   ', this.state.confirmPassword);
                 fetch(`${myApiUrl}/${registerPath}`, {
                     method: 'POST',
                     headers: {
@@ -98,9 +99,10 @@ export default class Register extends Component{
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        username: this.state.username,
+                        userName: this.state.username,
                         password: this.state.password,
-                        email: this.state.email,
+                        emailAddress: this.state.email,
+                        confirmPassword: this.state.confirmPassword,
                     }),
                 })
                 .then((response) => response.json())
@@ -163,7 +165,7 @@ export default class Register extends Component{
                             keyboardType='default'
                             returnKeyLabel="next"
                             placeholder='Username'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.username}
                             onChangeText={(text) => this.setState({ username: text })}  />
                         <TextInput
@@ -174,7 +176,7 @@ export default class Register extends Component{
                             keyboardType='email-address'
                             returnKeyLabel="next"
                             placeholder='Email Address'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             value={this.state.email}
                             onChangeText={(text) => this.setState({ email: text })}  />
                         <TextInput
@@ -184,7 +186,7 @@ export default class Register extends Component{
                             underlineColorAndroid={'transparent'}
                             returnKeyLabel="next"
                             placeholder='Password'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             secureTextEntry={true}
                             value={this.state.password}
                             onChangeText={(text) => this.setState({ password: text })} />
@@ -195,7 +197,7 @@ export default class Register extends Component{
                             autoCorrect={false}
                             returnKeyLabel="go"
                             placeholder='Confirm Password'
-                            placeholderTextColor='#3c4c96'
+                            placeholderTextColor='#939ABA'
                             secureTextEntry={true}
                             value={this.state.confirmPassword}
                             onChangeText={(text) => this.setState({ confirmPassword: text })} />
