@@ -148,6 +148,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-svg')
     implementation project(':react-native-onesignal')
     implementation project(':realm')
     implementation project(':react-native-vector-icons')

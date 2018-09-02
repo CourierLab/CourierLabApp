@@ -106,7 +106,7 @@ export default class History extends Component{
 
     searchFilterFunction(text){
         const newData = this.state.shipperOrderData.filter(function(item){
-            const orderDescription = item.orderDescription.toUpperCase();
+            const orderDescription = (item.orderDescription !== null) ? item.orderDescription.toUpperCase() : '';
             const pickUpLocation = item.pickUpLocation.toUpperCase();
             const recipientName = item.recipientName.toUpperCase();
             const recipientAddress = item.recipientAddress.toUpperCase();
@@ -180,9 +180,9 @@ export default class History extends Component{
                             </View>
                         }
                         onPress={() => { (item.isMatch) ? this.props.navigation.navigate('ConfirmedOrderDetail', {
-                                driverOrderId: item.driverOrderId,
+                                shipperOrderId: item.shipperOrderId,
                             }) : this.props.navigation.navigate('HistoryOrderDetails', {
-                                driverOrderId: item.driverOrderId,
+                                shipperOrderId: item.shipperOrderId,
                             })
                         }}
                     />
@@ -240,9 +240,9 @@ export default class History extends Component{
                             </View>
                         }
                         onPress={() => { (item.isMatch) ? this.props.navigation.navigate('ConfirmedOrderDetail', {
-                                driverOrderId: item.driverOrderId,
+                                shipperOrderId: item.shipperOrderId,
                             }) : this.props.navigation.navigate('HistoryOrderDetails', {
-                                driverOrderId: item.driverOrderId,
+                                shipperOrderId: item.shipperOrderId,
                             })
                         }}
                     />

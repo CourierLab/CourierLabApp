@@ -108,7 +108,7 @@ export default class History extends Component{
 
     searchFilterFunction(text){
         const newData = this.state.driverOrderData.filter(function(item){
-            const orderDescription = item.orderDescription.toUpperCase();
+            const orderDescription = (item.orderDescription !== null) ? item.orderDescription.toUpperCase() : '';
             const departLocation = item.departLocation.toUpperCase();
             const arriveLocation = item.arriveLocation.toUpperCase();
             const expectedDepartureDate = item.expectedDepartureDate.toUpperCase();

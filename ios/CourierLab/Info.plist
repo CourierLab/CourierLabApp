@@ -53,7 +53,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Used to scan the Order QR code for identify purpose</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Raleway-ThinItalic.ttf</string>
