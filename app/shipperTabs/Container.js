@@ -12,9 +12,16 @@ import HistoryOrderDetailsScreen from './HistoryOrderDetails';
 import SelectDriverOrderScreen from './SelectDriverOrder';
 import AddShipperOrderScreen from './AddShipperOrder';
 import EditOrderScreen from './EditOrder';
+import DriverOrderDetailsScreen from './DriverOrderDetails';
+import AddOrderScreen from './AddOrder';
+import ConfirmShipperDriverOrderScreen from './ConfirmShipperDriverOrder';
+import PendingConfirmationDetailScreen from './PendingConfirmationDetail';
 
 const tabOneStack = createStackNavigator({
     DriverOrder: { screen: DriverOrderScreen },
+    DriverOrderDetails: { screen: DriverOrderDetailsScreen },
+    AddOrder: { screen: AddOrderScreen },
+    ConfirmShipperDriverOrder: { screen: ConfirmShipperDriverOrderScreen },
 },
 {
     navigationOptions: {
@@ -31,6 +38,7 @@ const tabOneStack = createStackNavigator({
 
 const tabTwoStack = createStackNavigator({
     PendingConfirmation : { screen: PendingConfirmationScreen },
+    PendingConfirmationDetail : { screen: PendingConfirmationDetailScreen },
 },
 {
     navigationOptions: {

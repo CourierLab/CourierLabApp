@@ -3,18 +3,13 @@ package com.courierlab;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.realm.react.RealmReactPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
+import com.react.rnspinkit.RNSpinkitPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
-import io.realm.react.RealmReactPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.react.rnspinkit.RNSpinkitPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import org.reactnative.camera.RNCameraPackage;
-import io.realm.react.RealmReactPackage;
-import org.reactnative.camera.RNCameraPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.react.rnspinkit.RNSpinkitPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -35,11 +30,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SvgPackage(),
-            new ReactNativeOneSignalPackage(),
             new RealmReactPackage(),
             new VectorIconsPackage(),
+            new SvgPackage(),
             new RNSpinkitPackage(),
+            new ReactNativeOneSignalPackage(),
             new RNDeviceInfo(),
             new RNCameraPackage()
       );

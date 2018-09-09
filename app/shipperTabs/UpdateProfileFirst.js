@@ -84,7 +84,7 @@ export default class UpdateProfileFirst extends Component{
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': this.props.navigation.getParam('accessToken'),
+                    // 'Authorization': this.props.navigation.getParam('accessToken'),
                 },
                 body: JSON.stringify({
                     name: this.state.name,

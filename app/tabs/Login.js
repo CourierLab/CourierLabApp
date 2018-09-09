@@ -37,8 +37,9 @@ class Login extends Component{
         console.log(loginAsset[0]);
         let now = new Date();
         if(loginAsset[0] !== undefined){
-            if(loginAsset[0].accessTokenExpiredDate < now){
+            if(new Date(loginAsset[0].accessTokenExpiredDate) < now){
                 //refresh token
+                console.log('expired token calling');
                 fetch(`${myApiUrl}/${refreshTokenPath}?userId=` + loginAsset[0].userId + `&deviceId=` + deviceId, {
                     method: 'GET',
                     headers: {
@@ -50,6 +51,7 @@ class Login extends Component{
                 .then((response) => response.json())
                 .then((json) => {
                     console.log('getResult: ', json);
+                    console.log('update token successfully');
                     if(json.succeeded){
                         realm.write(() => {
                             loginAsset[0].accessToken = json.results.newAccessToken;
@@ -68,14 +70,11 @@ class Login extends Component{
                 }).catch(err => {
                     console.log(err);
                 });
-            }else if(loginAsset[0].accessTokenExpiredDate > now){
+            }else{
                 // console.log('not over, token: ', loginAsset[0].accessTokenExpiredDate, ' now: ', now);
                 //go to main page
+                console.log('not expired yet');
                 this.props.onLogin(loginAsset[0].email);                
-            }else{
-                // console.log('same, token: ', loginAsset[0].accessTokenExpiredDate, ' now: ', now);
-                //go to main page
-                this.props.onLogin(loginAsset[0].email);   
             }
         }
     }
@@ -167,6 +166,7 @@ class Login extends Component{
                         this.props.onLogin(this.state.email);
                     }else{
                         if(json.results.shipper !== null){
+                            console.log(json.results.accessTokenExpiredDate);
                             realm.write(() => {
                                 realm.create('LoginAsset', {
                                     userId: json.results.userId,

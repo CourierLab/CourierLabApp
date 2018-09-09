@@ -314,7 +314,7 @@ export default class SelectShipperOrder extends Component{
                         <View style={{backgroundColor: '#fff', paddingLeft: 10, paddingRight: 10, marginLeft: 20, marginRight: 20, marginBottom: 20,}}>
                             <TouchableOpacity
                                 style={{backgroundColor: '#fb3f33', paddingVertical: 15,}}
-                                onPress={() => this.props.navigation.dispatch(StackActions.popToTop())}>
+                                onPress={() => this.props.navigation.goBack()}>
                                 <Text style={styles.buttonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>

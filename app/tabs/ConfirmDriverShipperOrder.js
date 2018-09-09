@@ -16,7 +16,7 @@ let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 
-export default class ConfirmedOrderDetail extends Component{
+export default class ConfirmDriverShipperOrder extends Component{
     static navigationOptions = {
         title: 'Order Confirmation',
     };
@@ -282,7 +282,7 @@ export default class ConfirmedOrderDetail extends Component{
                     <TouchableOpacity
                         style={{backgroundColor: '#fb3f33', paddingVertical: 15,}}
                         onPress={() => {
-                            Alert.alert('Pending Driver Order', 'Your driver order is added successfully. Please complete the order from Driver Order page.', [
+                            Alert.alert('Pending Driver Order', 'Your driver order is added successfully. Please complete the order in Driver Order page.', [
                             {
                                 text: 'OK',
                                 onPress: () => {}

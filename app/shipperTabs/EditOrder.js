@@ -35,7 +35,15 @@ export default class EditOrder extends Component{
             pickUpLongitude: '',
             pickUpDate: '',
             expectedArrivalDate: '',
-            favRecipientList: [],
+            favRecipientList: [{
+                recipientName: "No Favourite Recipient",
+                recipientAddress: "",
+                recipientEmailAddress: "",
+                recipientPhoneNumber: "",
+                recipientPostCode: "",
+                recipientState: "",
+                id: 0,
+            }],
             favRecipientId: 0,
             favRecipientName: '',
             recipientName: '',
@@ -128,7 +136,10 @@ export default class EditOrder extends Component{
             console.log(json.results);
             if(json.succeeded){
                 this.setState({
-                    favRecipientList: json.results,
+                    favRecipientList: [
+                        ...this.state.favRecipientList, 
+                        ...json.results
+                    ]
                 });
             }
         }).catch(err => {
@@ -232,70 +243,81 @@ export default class EditOrder extends Component{
                 isSubmit: false,
             })
         }else{
-            fetch(`${myApiUrl}/${editOrderPath}`, {
-                method: 'POST',
-                headers: new Headers({
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': loginAsset[0].accessToken,
-                }),
-                body: JSON.stringify({
-                    pickUpLocation: this.state.pickUpLocation,
-                    pickUpLocationLatitude: this.state.pickUpLatitude,
-                    pickUpLocationLongitude: this.state.pickUpLongitude,
-                    orderDescription: this.state.orderDescription,
-                    orderWeight: this.state.orderWeight,
-                    pickUpDateTime: this.state.pickUpDate,
-                    arrivalDateTime: this.state.expectedArrivalDate,
-                    favouriteRecipientId: this.state.favRecipientId,
-                    recipientName: this.state.recipientName,
-                    recipientAddress: this.state.recipientAddress,
-                    recipientState: this.state.recipientState,
-                    recipientPostCode: this.state.recipientPostcode,
-                    recipientEmailAddress: this.state.recipientEmail,
-                    recipientPhoneNumber: this.state.recipientPhoneNumber,
-                    vehicleSpecificationId: this.state.vehicleSpec,
-                    deviceId: deviceId,
-                    userId: loginAsset[0].userId,
-                    shipperOrderId: this.props.navigation.getParam('shipperOrderId'),
-                }),
-            })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log('add driver order ', json);
-                if(json.succeeded){
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
-                    })
-                    Alert.alert('Successfully Edited', json.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => {},
-                    }], {cancelable: false})
-                    this.props.navigation.state.params.rerenderFunction();
-                    this.props.navigation.goBack();
-                }else{
-                    Alert.alert('Cannot Edit', json.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => {},
-                    }], {cancelable: false})
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
-                    })
-                }
-            }).catch(err => {
-                console.log(err);
+            Geocoder.from(this.state.pickUpLocation)
+            .then(json => {
+                var location = json.results[0].geometry.location;
+                console.log(location);
                 this.setState({
-                    spinnerVisible: false,
-                    isClicked: false,
-                    isSubmit: false,
+                    pickUpLatitude: location.lat,
+                    pickUpLongitude: location.lng,
                 })
-            });
+
+                fetch(`${myApiUrl}/${editOrderPath}`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].accessToken,
+                    }),
+                    body: JSON.stringify({
+                        pickUpLocation: this.state.pickUpLocation,
+                        pickUpLocationLatitude: this.state.pickUpLatitude,
+                        pickUpLocationLongitude: this.state.pickUpLongitude,
+                        orderDescription: this.state.orderDescription,
+                        orderWeight: this.state.orderWeight,
+                        pickUpDateTime: this.state.pickUpDate,
+                        arrivalDateTime: this.state.expectedArrivalDate,
+                        favouriteRecipientId: this.state.favRecipientId,
+                        recipientName: this.state.recipientName,
+                        recipientAddress: this.state.recipientAddress,
+                        recipientState: this.state.recipientState,
+                        recipientPostCode: this.state.recipientPostcode,
+                        recipientEmailAddress: this.state.recipientEmail,
+                        recipientPhoneNumber: this.state.recipientPhoneNumber,
+                        vehicleSpecificationId: this.state.vehicleSpec,
+                        deviceId: deviceId,
+                        userId: loginAsset[0].userId,
+                        shipperOrderId: this.props.navigation.getParam('shipperOrderId'),
+                    }),
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log('add driver order ', json);
+                    if(json.succeeded){
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                        Alert.alert('Successfully Edited', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.props.navigation.state.params.rerenderFunction();
+                        this.props.navigation.goBack();
+                    }else{
+                        Alert.alert('Cannot Edit', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                });
+            })
+            .catch(error => console.warn(error));
         }
     }
 
@@ -316,7 +338,7 @@ export default class EditOrder extends Component{
                                 placeholder='Pick Up Location'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.pickUpLocation}
-                                onChangeText={(text) => {this.setState({ pickUpLocation: text }); this.getCoordination()}}  />
+                                onChangeText={(text) => {this.setState({ pickUpLocation: text });}}  />
                             <DatePicker
                                 style={{width: '100%', height: 50, marginBottom: 10,}}
                                 customStyles={{
@@ -407,16 +429,31 @@ export default class EditOrder extends Component{
                                 accessible={true}
                                 scrollViewAccessibilityLabel={'Scrollable options'}
                                 cancelButtonAccessibilityLabel={'Cancel Button'}
-                                onChange={(option)=>{ this.setState({
-                                    recipientName: option.recipientName,
-                                    favRecipientName: option.recipientName,
-                                    recipientAddress: option.recipientAddress,
-                                    recipientEmail: option.recipientEmailAddress,
-                                    recipientPhoneNumber: option.recipientPhoneNumber,
-                                    recipientPostcode: option.recipientPostCode.toString(),
-                                    recipientState: option.recipientState,
-                                    favRecipientId: option.id
-                                })}}>
+                                onChange={(option)=>{ 
+                                    if(option.id === 0){
+                                        this.setState({
+                                            recipientName: "",
+                                            favRecipientName: option.recipientName,
+                                            recipientAddress: option.recipientAddress,
+                                            recipientEmail: option.recipientEmailAddress,
+                                            recipientPhoneNumber: option.recipientPhoneNumber,
+                                            recipientPostcode: option.recipientPostCode.toString(),
+                                            recipientState: option.recipientState,
+                                            favRecipientId: option.id
+                                        })
+                                    }else{
+                                        this.setState({
+                                            recipientName: option.recipientName,
+                                            favRecipientName: option.recipientName,
+                                            recipientAddress: option.recipientAddress,
+                                            recipientEmail: option.recipientEmailAddress,
+                                            recipientPhoneNumber: option.recipientPhoneNumber,
+                                            recipientPostcode: option.recipientPostCode.toString(),
+                                            recipientState: option.recipientState,
+                                            favRecipientId: option.id
+                                        })     
+                                    }
+                            }}>
                                 <TextInput
                                     style={styles.input}
                                     editable={false}

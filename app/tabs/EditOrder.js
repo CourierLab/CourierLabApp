@@ -201,67 +201,78 @@ export default class EditOrder extends Component{
         }else{
             console.log(this.state.expectedDepartureDate);
             console.log(this.state.expectedArrivalDate);
-            fetch(`${myApiUrl}/${editOrderPath}`, {
-                method: 'POST',
-                headers: new Headers({
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': loginAsset[0].accessToken,
-                }),
-                body: JSON.stringify({
-                    driverOrderId: this.props.navigation.getParam('driverOrderId'),
-                    carLength: this.state.carLength,
-                    carWeight: this.state.carWeight,
-                    carPlateNumber: this.state.carPlateNumber,
-                    orderDescription: this.state.orderDescription,
-                    departLocation: this.state.departLocation,
-                    departLocationLatitude: this.state.departLatitude,
-                    departLocationLongitude: this.state.departLongitude,
-                    arriveLocation: this.state.arriveLocation,
-                    expectedDepartureDate: this.state.expectedDepartureDate,
-                    expectedArrivalDate: this.state.expectedArrivalDate,
-                    vehicleSpecificationId: this.state.vehicleSpec,
-                    driverId: loginAsset[0].loginUserId,
-                    deviceId: deviceId,
-                    userId: loginAsset[0].userId,
-                }),
-            })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log(json);
-                if(json.succeeded){
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
-                    })
-                    Alert.alert('Successfully Edited', json.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => {},
-                    }], {cancelable: false})
-                    this.props.navigation.state.params.rerenderFunction();
-                    this.props.navigation.goBack();
-                }else{
-                    Alert.alert('Cannot Edit', json.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => {},
-                    }], {cancelable: false})
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
-                    })
-                }
-            }).catch(err => {
-                console.log(err);
+            Geocoder.from(this.state.departLocation)
+            .then(json => {
+                var location = json.results[0].geometry.location;
+                console.log(location);
                 this.setState({
-                    spinnerVisible: false,
-                    isClicked: false,
-                    isSubmit: false,
+                    departLatitude: location.lat,
+                    departLongitude: location.lng,
                 })
-            });
+
+                fetch(`${myApiUrl}/${editOrderPath}`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].accessToken,
+                    }),
+                    body: JSON.stringify({
+                        driverOrderId: this.props.navigation.getParam('driverOrderId'),
+                        carLength: this.state.carLength,
+                        carWeight: this.state.carWeight,
+                        carPlateNumber: this.state.carPlateNumber,
+                        orderDescription: this.state.orderDescription,
+                        departLocation: this.state.departLocation,
+                        departLocationLatitude: this.state.departLatitude,
+                        departLocationLongitude: this.state.departLongitude,
+                        arriveLocation: this.state.arriveLocation,
+                        expectedDepartureDate: this.state.expectedDepartureDate,
+                        expectedArrivalDate: this.state.expectedArrivalDate,
+                        vehicleSpecificationId: this.state.vehicleSpec,
+                        driverId: loginAsset[0].loginUserId,
+                        deviceId: deviceId,
+                        userId: loginAsset[0].userId,
+                    }),
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log(json);
+                    if(json.succeeded){
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                        Alert.alert('Successfully Edited', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.props.navigation.state.params.rerenderFunction();
+                        this.props.navigation.goBack();
+                    }else{
+                        Alert.alert('Cannot Edit', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                });
+            })
+            .catch(error => console.warn(error));
         }
     }
 
@@ -292,7 +303,7 @@ export default class EditOrder extends Component{
                                 placeholder='Depart Location'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.departLocation}
-                                onChangeText={(text) => {this.setState({ departLocation: text }); this.getCoordination();}}  />
+                                onChangeText={(text) => {this.setState({ departLocation: text });}}  />
                             {/* <Text 
                                 style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                 onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', departLocation: ''})}> Pick Location from Map</Text> */}

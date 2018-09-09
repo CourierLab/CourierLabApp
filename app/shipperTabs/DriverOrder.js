@@ -10,7 +10,7 @@ import Spinner from 'react-native-spinkit';
 import OneSignal from 'react-native-onesignal';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
-let pendingOrderPath = 'ViewPendingShipper';
+let pendingOrderPath = 'ViewPendingDriver';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
@@ -59,17 +59,18 @@ export default class Home extends Component{
     }
 
     onOpened(openResult) {
+        console.log(openResult.notification.payload.additionalData);
         isPending = openResult.notification.payload.additionalData.IsPending;
         orderId = openResult.notification.payload.additionalData.OrderID;
-        // if(isPending){
-        //     _this.props.navigation.navigate('PendingConfirmationDetail', {
-        //         driverOrderId: orderId,
-        //     })
-        // }else{
-        //     _this.props.navigation.navigate('ConfirmedOrderDetail', {
-        //         driverOrderId: orderId,
-        //     })
-        // }
+        if(isPending){
+            _this.props.navigation.navigate('PendingConfirmationDetail', {
+                shipperOrderId: orderId,
+            })
+        }else{
+            _this.props.navigation.navigate('ConfirmedOrderDetail', {
+                shipperOrderId: orderId,
+            })
+        }
     }
 
     onIds(device) {
@@ -103,39 +104,39 @@ export default class Home extends Component{
     }
 
     getPendingOrder(){
-        // this.setState({
-        //     spinnerVisible: true,
-        // })
-        // fetch(`${myApiUrl}/${pendingOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId, {
-        //     method: 'GET',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //         'Authorization': loginAsset[0].accessToken,
-        //     },
-        // })
-        // .then((response) => response.json())
-        // .then((json) => {
-        //     console.log('getResult: ', json);
-        //     if(json.succeeded){
-        //         this.setState({
-        //             pendingOrderData: json.results,
-        //         });
-        //     }
-        //     this.setState({
-        //         spinnerVisible: false,
-        //     }) 
-        // }).catch(err => {
-        //     console.log(err);
-        //     this.setState({
-        //         spinnerVisible: false,
-        //     })
-        // });
+        this.setState({
+            spinnerVisible: true,
+        })
+        fetch(`${myApiUrl}/${pendingOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': loginAsset[0].accessToken,
+            },
+        })
+        .then((response) => response.json())
+        .then((json) => {
+            console.log('getResult: ', json);
+            if(json.succeeded){
+                this.setState({
+                    pendingOrderData: json.results,
+                });
+            }
+            this.setState({
+                spinnerVisible: false,
+            }) 
+        }).catch(err => {
+            console.log(err);
+            this.setState({
+                spinnerVisible: false,
+            })
+        });
     }
 
     render(){
         var pendingView = <View style={styles.noListContainer}>
-                            <Text style={styles.noListText}>No Pending Order</Text> 
+                            <Text style={styles.noListText}>No Pending Driver Order</Text> 
                           </View>;
         console.log(this.state.pendingOrderData);
         if(this.state.pendingOrderData !== [] && this.state.pendingOrderData.length > 0){
@@ -144,7 +145,7 @@ export default class Home extends Component{
                     key={index}
                     bottomDivider={true}
                     rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
-                    title={ <Text style={styles.listItemText}>{item.shipperName}</Text> }
+                    title={ <Text style={styles.listItemText}>{item.orderNumber}</Text> }
                     subtitle={
                         <View style={styles.listItemView}>
                             {(item.orderDescription !== "") ? <View style={styles.iconView}>
@@ -152,21 +153,29 @@ export default class Home extends Component{
                                     <Text style={styles.listItemText}> {item.orderDescription}</Text>    
                                 </View> : <View/>
                             }
-                            <View style={styles.iconView}>
-                                <Icon name={'map-pin'} size={14} color={'#3c4c96'} style={{marginLeft: 2, marginRight: 6}}/>
-                                <Text style={{fontSize: 15, fontFamily: 'Raleway-Regular',}}> {item.pickupLocation}</Text>    
+                            <View style={{flexDirection: 'row',}}>
+                                <Icon name={'map-pin'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                                <Text style={styles.listItemText}>  {item.departLocation} </Text> 
+                            </View>
+                            <View style={{flexDirection: 'row', marginLeft: 20,}}>
+                                <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                                <Text style={styles.listItemText}>  {item.arriveLocation}</Text>    
                             </View>
                             <View style={styles.iconView}>
                                 <Icon name={'calendar'} size={15} color={'#3c4c96'} style={{marginLeft: 0, marginRight: 3}}/>
-                                <Text style={styles.listItemText}> {item.pickUpDate}</Text>   
+                                <Text style={styles.listItemText}> {item.expectedDepartureDate}</Text>   
+                            </View>
+                            <View style={{flexDirection: 'row', marginLeft: 20,}}>
+                                <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                                <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>    
                             </View>
                         </View>
                     }
-                    // onPress={() => this.props.navigation.navigate('PendingOrderDetails', {
-                    //     orderDetails: item,
-                    // })}
+                    onPress={() => this.props.navigation.navigate('DriverOrderDetails', {
+                        orderDetails: item,
+                    })}
                 />
-                ));
+            ));
         }
         return (
             <ScrollView style={styles.listViewContainer}>

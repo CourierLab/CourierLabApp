@@ -13,6 +13,7 @@ class App extends Component{
     render(){
         console.log(this.props.isLoggedIn);
         if(this.props.isLoggedIn){
+            
             if(loginAsset[0].roleName === "Driver"){
                 return <Container />;
             }else{
