@@ -189,7 +189,7 @@ class Login extends Component{
                         }else{
                             this.props.navigation.navigate('UpdateProfileFirst', {
                                 userId: json.results.userId,
-                                accessToken: json.results.userId,
+                                accessToken: json.results.accessToken,
                                 accessTokenExpiredDate: json.results.accessTokenExpiredDate,
                                 refreshToken: json.results.refreshToken,
                                 roleId: json.results.roleId,

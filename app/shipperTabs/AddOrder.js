@@ -208,6 +208,7 @@ export default class AddOrder extends Component{
                         vehicleSpecificationId: this.state.vehicleSpec,
                         deviceId: deviceId,
                         userId: loginAsset[0].userId,
+                        driverOrderId: this.props.navigation.getParam('driverOrderId'),
                     }),
                 })
                 .then((response) => response.json())
@@ -220,7 +221,7 @@ export default class AddOrder extends Component{
                             isSubmit: false,
                         })
                         this.props.navigation.navigate('ConfirmShipperDriverOrder', {
-                            shipperOrderId: json.results.shipperOrderId,
+                            orderConfirmationDetails: json.results,
                         });
                     }else{
                         Alert.alert('Cannot Add', json.message, [

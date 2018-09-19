@@ -162,7 +162,9 @@ export default class DriverOrderDetails extends Component{
                 <View style={styles.pendingAcceptButton}>
                     <TouchableOpacity
                         style={styles.buttonContainer}
-                        onPress={() => this.props.navigation.navigate('AddOrder')}>
+                        onPress={() => this.props.navigation.navigate('AddOrder', {
+                            driverOrderId: orderDetails.driverOrderId
+                        })}>
                         <Text style={styles.buttonText}>Select Order</Text>
                     </TouchableOpacity>
                 </View>

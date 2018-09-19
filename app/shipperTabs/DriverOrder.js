@@ -62,14 +62,56 @@ export default class Home extends Component{
         console.log(openResult.notification.payload.additionalData);
         isPending = openResult.notification.payload.additionalData.IsPending;
         orderId = openResult.notification.payload.additionalData.OrderID;
-        if(isPending){
-            _this.props.navigation.navigate('PendingConfirmationDetail', {
-                shipperOrderId: orderId,
-            })
-        }else{
-            _this.props.navigation.navigate('ConfirmedOrderDetail', {
-                shipperOrderId: orderId,
-            })
+
+        let now = new Date();
+        if(loginAsset[0] !== undefined){
+            if(new Date(loginAsset[0].accessTokenExpiredDate) < now){
+                //refresh token
+                console.log('expired token calling');
+                fetch(`${myApiUrl}/${refreshTokenPath}?userId=` + loginAsset[0].userId + `&deviceId=` + deviceId, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].refreshToken,
+                    },
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log('getResult: ', json);
+                    console.log('update token successfully');
+                    if(json.succeeded){
+                        realm.write(() => {
+                            loginAsset[0].accessToken = json.results.newAccessToken;
+                            loginAsset[0].accessTokenExpiredDate = json.results.accessTokenExpiredDate;
+                            loginAsset[0].refreshToken = json.results.newRefreshToken;
+                        })
+                        this.props.onLogin(loginAsset[0].email);
+                    }else{
+                        Alert.alert('Login Expired', 'Please try to login again', [{
+                            text: 'OK',
+                            onPress: () => {},
+                            style: styles.alertText,
+                        }], {cancelable: false});
+                        this.props.onLogout();
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            }else{
+                // console.log('not over, token: ', loginAsset[0].accessTokenExpiredDate, ' now: ', now);
+                //go to main page
+                console.log('not expired yet');
+                if(isPending){
+                    _this.props.navigation.navigate('PendingConfirmationDetail', {
+                        shipperOrderId: orderId,
+                    })
+                }else{
+                    _this.props.navigation.navigate('ConfirmedOrderDetail', {
+                        shipperOrderId: orderId,
+                    })
+                }
+            }
         }
     }
 

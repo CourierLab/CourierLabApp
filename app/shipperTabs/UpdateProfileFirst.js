@@ -5,6 +5,8 @@ import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
+import { connect } from 'react-redux';
+import { login, logout } from '../utils/Actions';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let updateProfilePath = 'UpdateProfile';
@@ -12,7 +14,7 @@ let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 
-export default class UpdateProfileFirst extends Component{
+class UpdateProfileFirst extends Component{
     static navigationOptions = {
         title: 'Update Profile',
     }
@@ -88,12 +90,13 @@ export default class UpdateProfileFirst extends Component{
                 },
                 body: JSON.stringify({
                     name: this.state.name,
-                    nRIC: this.state.nric,
+                    nric: this.state.nric,
                     phoneNumber: this.state.phoneNumber,
                     address: this.state.address,
                     state: this.state.state,
                     postCode: this.state.postcode,
                     roleId: this.props.navigation.getParam('roleId'),
+                    firstTimeLogin: true,
                     deviceId: deviceId,
                     userId: this.props.navigation.getParam('userId'),
                 }),
@@ -106,26 +109,30 @@ export default class UpdateProfileFirst extends Component{
                         spinnerVisible: false,
                         isClicked: false,
                     })
-                    // realm.write(() => {
-                    //     realm.create('LoginAsset', {
-                    //         userId: json.results.userId,
-                    //         accessToken: json.results.accessToken,
-                    //         accessTokenExpiredDate: json.results.accessTokenExpiredDate,
-                    //         refreshToken: json.results.refreshToken,
-                    //         roleId: json.results.roleId,
-                    //         roleName: json.results.roleName,
-                    //         email: this.state.email,
-                    //         loginUserId: json.results.shipper.shipperId,
-                    //         loginUserName: json.results.shipper.shipperName,
-                    //         loginUserNRIC: json.results.shipper.shipperNRIC,
-                    //         loginUserPhoneNumber: json.results.shipper.shipperPhoneNumber,
-                    //     })
-                    // })
+                    realm.write(() => {
+                        realm.create('LoginAsset', {
+                            userId: this.props.navigation.getParam('userId'),
+                            accessToken: this.props.navigation.getParam('accessToken').toString(),
+                            accessTokenExpiredDate: this.props.navigation.getParam('accessTokenExpiredDate').toString(),
+                            refreshToken: this.props.navigation.getParam('refreshToken').toString(),
+                            roleId: this.props.navigation.getParam('roleId'),
+                            roleName: this.props.navigation.getParam('roleName').toString(),
+                            email: this.props.navigation.getParam('email').toString(),
+                            loginUserId: json.results.shipperId,
+                            loginUserName: json.results.shipperName,
+                            loginUserNRIC: json.results.shipperNRIC,
+                            loginUserPhoneNumber: json.results.shipperPhoneNumber,
+                            loginUserAddress: json.results.shipperAddress,
+                            loginUserState: json.results.shipperState,
+                            loginUserPostcode: json.results.shipperPostCode,
+                        })
+                    })
                     Alert.alert('Successfully Updated', json.message, [{
                         text: 'OK',
-                        onPress: () => {},
+                        onPress: () => {
+                            this.props.onLogin(this.props.navigation.getParam('email'));
+                        },
                     }], {cancelable: false});
-                    // this.props.navigation.navigate('UpdateProfileFirst');
                 }else{
                     Alert.alert('Cannot Update', json.message, [{
                         text: 'OK',
@@ -236,3 +243,20 @@ export default class UpdateProfileFirst extends Component{
         )
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    console.log('isLoggedIn: ', state.reducers.isLoggedIn);
+    return {
+        isLoggedIn: state.reducers.isLoggedIn
+    };
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        onLogin: (email) => { dispatch(login(email)); console.log('email: ', email); },
+        onForgotPassword: (email) => { dispatch(forgotpassword(email)); },
+        onLogout: (email) => { dispatch(logout()); },
+    }
+}
+
+export default connect (mapStateToProps, mapDispatchToProps)(UpdateProfileFirst);
