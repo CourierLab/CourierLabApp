@@ -115,6 +115,7 @@ export default class History extends Component{
             const expectedArrivalDate = item.expectedArrivalDate.toUpperCase();
             const isMatchDescription = item.isMatchDescription.toUpperCase();
             const orderNumber = item.orderNumber.toUpperCase();
+            const orderStatus = item.orderStatus.toUpperCase();
             const textData = text.toUpperCase();
             return orderDescription.indexOf(textData) > -1 || 
                 departLocation.indexOf(textData) > -1 || 
@@ -122,7 +123,8 @@ export default class History extends Component{
                 expectedDepartureDate.indexOf(textData) > -1 || 
                 expectedArrivalDate.indexOf(textData) > -1 || 
                 isMatchDescription.indexOf(textData) > -1 || 
-                orderNumber.indexOf(textData) > -1;
+                orderNumber.indexOf(textData) > -1 ||
+                orderStatus.indexOf(textData) > -1;
         })
         this.setState({
             filterData: newData,
@@ -166,6 +168,10 @@ export default class History extends Component{
                                 <View style={{flexDirection: 'row', marginLeft: 20,}}>
                                     <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
                                     <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>   
+                                </View>
+                                <View style={styles.iconView}>
+                                    <Icon name={'bookmark'} size={15} color={'#3c4c96'} />
+                                    <Text style={styles.listItemText}>  {item.orderStatus}</Text>
                                 </View>
                                 <View style={styles.listItemView}>
                                     {(item.isMatch) ? <Badge
@@ -226,6 +232,10 @@ export default class History extends Component{
                                 <View style={{flexDirection: 'row', marginLeft: 20,}}>
                                     <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
                                     <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>   
+                                </View>
+                                <View style={styles.iconView}>
+                                    <Icon name={'bookmark'} size={15} color={'#3c4c96'} />
+                                    <Text style={styles.listItemText}>  {item.orderStatus}</Text>
                                 </View>
                                 <View>
                                     {(item.isMatch) ? <Badge
