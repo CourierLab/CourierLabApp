@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, ScrollView, } from 'react-native';
+import { View, Text, Platform, ScrollView, Alert, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
