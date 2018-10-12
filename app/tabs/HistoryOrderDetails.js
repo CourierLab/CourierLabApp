@@ -14,6 +14,7 @@ let deleteOrderPath = 'DeleteDriverOrder';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
+let count = 0;
 
 export default class HistoryOrderDetails extends Component{
     static navigationOptions = {
@@ -29,6 +30,9 @@ export default class HistoryOrderDetails extends Component{
             spinnerVisible: false,
             orderSummary: [],
             pendingShipperOrderList: [],
+            pagination: {},
+            isScrollSpinner: false,
+            noMoreData: false,
         };
         _this = this;
     }
@@ -102,6 +106,7 @@ export default class HistoryOrderDetails extends Component{
                 this.setState({
                     orderSummary: json.results.driverOrder,
                     pendingShipperOrderList: json.results.pendingShipper,
+                    pagination: json.paging,
                 });
             }else{
                 Alert.alert('Error', json.message, [
@@ -169,6 +174,56 @@ export default class HistoryOrderDetails extends Component{
         )
     }
 
+    isCloseToBottom({layoutMeasurement, contentOffset, contentSize}){
+        const paddingToBottom = 20;
+        return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+    }
+
+    callPagination(){
+        this.setState({
+            isScrollSpinner: true,
+        })
+
+        count++;
+        if(this.state.pagination !== {}){
+            if(this.state.pagination.next !== null && count == 1){
+                fetch(this.state.pagination.next, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].accessToken,
+                    },
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    if(json.succeeded){
+                        this.setState({
+                            pendingShipperOrderList: [...this.state.pendingShipperOrderList, ...json.results],
+                            pagination: json.paging,
+                            isScrollSpinner: false,
+                        });
+                        count = 0;
+                    }
+                    console.log('latest paging: ', json.paging);
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        isScrollSpinner: false,
+                    })
+                    count = 0;
+                });
+            }
+
+            if(this.state.pagination.next === null){
+                this.setState({
+                    noMoreData: true,
+                    isScrollSpinner: false,
+                })
+            }
+        }
+    }
+
     render(){
         var pendingView = <View style={styles.noListContainer}>
                             <Text style={styles.noListText}>No Pending Order</Text> 
@@ -204,7 +259,13 @@ export default class HistoryOrderDetails extends Component{
             ));
         }
         return (
-            <ScrollView style={{backgroundColor: '#fff',}}>
+            <ScrollView style={{backgroundColor: '#fff',}}
+                onScroll={({nativeEvent}) => {
+                    if (this.isCloseToBottom(nativeEvent)) {
+                        this.callPagination();
+                    }
+                }}
+                scrollEventThrottle={0}>
                 {
                     (this.state.spinnerVisible) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
                             <Spinner
@@ -274,6 +335,18 @@ export default class HistoryOrderDetails extends Component{
                         </View>
                         <View>
                             {pendingView}
+                            {(this.state.isScrollSpinner) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
+                                <Spinner
+                                    isVisible={this.state.isScrollSpinner}
+                                    type={'9CubeGrid'}
+                                    color='#3c4c96'
+                                    paddingLeft={20}
+                                    size={50}/>
+                                    </View> : (this.state.noMoreData) ? <View style={styles.noListContainer}>
+                                        <Text style={styles.noListText}>No More Shipper Order</Text> 
+                                    </View>
+                                : <View/>
+                            }
                         </View>
                     </View> : <View/>
                 }

@@ -13,6 +13,7 @@ let pendingConfirmationPath = 'PendingShipperMatchOrders';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
+let count = 0;
 
 export default class PendingConfirmation extends Component{
     static navigationOptions = {
@@ -24,6 +25,9 @@ export default class PendingConfirmation extends Component{
         this.state = {
             pendingConfirmaiton: [],
             spinnerVisible: false,
+            pagination: {},
+            isScrollSpinner: false,
+            noMoreData: false,
         };
     }
 
@@ -77,6 +81,7 @@ export default class PendingConfirmation extends Component{
             if(json.succeeded){
                 this.setState({
                     pendingConfirmaiton: json.results,
+                    pagination: json.paging,
                 });
             }
             this.setState({
@@ -88,6 +93,57 @@ export default class PendingConfirmation extends Component{
                 spinnerVisible: false,
             })
         });
+    }
+
+    isCloseToBottom({layoutMeasurement, contentOffset, contentSize}){
+        const paddingToBottom = 20;
+        return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+    }
+
+    callPagination(){
+        this.setState({
+            isScrollSpinner: true,
+        })
+        console.log(this.state.pagination);
+        count++;
+        if(this.state.pagination !== {}){
+            if(this.state.pagination.next !== null && count == 1){
+                console.log(this.state.pagination.next);
+                fetch(this.state.pagination.next, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].accessToken,
+                    },
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    if(json.succeeded){
+                        this.setState({
+                            pendingConfirmaiton: [...this.state.pendingConfirmaiton, ...json.results],
+                            pagination: json.paging,
+                            isScrollSpinner: false,
+                        });
+                        count = 0;
+                    }
+                    console.log('latest paging: ', json.paging);
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        isScrollSpinner: false,
+                    })
+                    count = 0;
+                });
+            }
+
+            if(this.state.pagination.next === null){
+                this.setState({
+                    noMoreData: true,
+                    isScrollSpinner: false,
+                })
+            }
+        }
     }
 
     render(){
@@ -138,13 +194,31 @@ export default class PendingConfirmation extends Component{
                 ));
         }
         return (
-            <ScrollView style={styles.listViewContainer}>
+            <ScrollView style={styles.listViewContainer}
+                onScroll={({nativeEvent}) => {
+                    if (this.isCloseToBottom(nativeEvent)) {
+                        this.callPagination();
+                    }
+                }}
+                scrollEventThrottle={0}>
                 <StatusBar
                 barStyle="light-content"
                 backgroundColor="#3c4c96"/>
                 {
                     (!this.state.spinnerVisible) ? <View style={styles.homeView}>
                         {pendingView}
+                        {(this.state.isScrollSpinner) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
+                            <Spinner
+                                isVisible={this.state.isScrollSpinner}
+                                type={'9CubeGrid'}
+                                color='#3c4c96'
+                                paddingLeft={20}
+                                size={50}/>
+                                </View> : (this.state.noMoreData) ? <View style={styles.noListContainer}>
+                                    <Text style={styles.noListText}>No More Pending Confirmation Order</Text> 
+                                </View>
+                            : <View/>
+                        }
                     </View> : <View style={{marginBottom: 20, alignItems: 'center', marginTop: 20,}}>
                         <Spinner
                             isVisible={this.state.spinnerVisible}

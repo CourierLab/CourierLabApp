@@ -13,6 +13,7 @@ let shipperOrderPath = 'ViewShipperOrder';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
+let count = 0;
 
 export default class History extends Component{
     static navigationOptions = {
@@ -29,6 +30,9 @@ export default class History extends Component{
             spinnerVisible: false,
             searchItem: '',
             filterData: [],
+            pagination: {},
+            isScrollSpinner: false,
+            noMoreData: false,
         };
         _this = this;
     }
@@ -91,6 +95,7 @@ export default class History extends Component{
             if(json.succeeded){
                 this.setState({
                     shipperOrderData: json.results,
+                    pagination: json.paging,
                 });
             }
             this.setState({
@@ -127,7 +132,58 @@ export default class History extends Component{
         this.setState({
             filterData: newData,
             searchItem: text,
+            noMoreData: false,
         })
+    }
+
+    isCloseToBottom({layoutMeasurement, contentOffset, contentSize}){
+        const paddingToBottom = 20;
+        return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+    }
+
+    callPagination(){
+        this.setState({
+            isScrollSpinner: true,
+        })
+
+        count++;
+        if(this.state.pagination !== {}){
+            if(this.state.pagination.next !== null && count == 1){
+                fetch(this.state.pagination.next, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].accessToken,
+                    },
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    if(json.succeeded){
+                        this.setState({
+                            shipperOrderData: [...this.state.shipperOrderData, ...json.results],
+                            pagination: json.paging,
+                            isScrollSpinner: false,
+                        });
+                        count = 0;
+                    }
+                    console.log('latest paging: ', json.paging);
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        isScrollSpinner: false,
+                    })
+                    count = 0;
+                });
+            }
+
+            if(this.state.pagination.next === null){
+                this.setState({
+                    noMoreData: true,
+                    isScrollSpinner: false,
+                })
+            }
+        }
     }
 
     render(){
@@ -279,7 +335,15 @@ export default class History extends Component{
                         })
                     }}
                     placeholder='Search' /> 
-                <ScrollView style={styles.historyView}>
+                <ScrollView style={styles.historyView}
+                    onScroll={({nativeEvent}) => {
+                        // console.log('scrolling ', nativeEvent);
+                        if (this.isCloseToBottom(nativeEvent)) {
+                            this.callPagination();
+                            // console.log('end');
+                        }
+                    }}
+                    scrollEventThrottle={0}>
                     {
                         (this.state.spinnerVisible) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
                                 <Spinner
@@ -290,6 +354,18 @@ export default class History extends Component{
                                     size={50}/>
                             </View> : <View>
                                 {acceptedView}
+                                {(this.state.isScrollSpinner) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
+                                        <Spinner
+                                            isVisible={this.state.isScrollSpinner}
+                                            type={'9CubeGrid'}
+                                            color='#3c4c96'
+                                            paddingLeft={20}
+                                            size={50}/>
+                                    </View> : (this.state.noMoreData) ? <View style={styles.noListContainer}>
+                                        <Text style={styles.noListText}>No More Shipper Order</Text> 
+                                    </View>
+                                    : <View/>
+                                }
                             </View>
                     }
                 </ScrollView>
