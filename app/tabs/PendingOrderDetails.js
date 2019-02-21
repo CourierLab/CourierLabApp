@@ -174,7 +174,7 @@ export default class PendingOrderDetails extends Component{
                     </View>
                     <View style={styles.columnGap}>
                     </View>
-                    <View style={styles.columnRowContainer}>
+                    {/* <View style={styles.columnRowContainer}>
                         <View style={styles.columnRowContent}>
                             <Text style={styles.columnTitleText}>State</Text>
                             <Text style={styles.columnDescriptionText}>{orderDetails.recipientState}</Text>
@@ -185,7 +185,7 @@ export default class PendingOrderDetails extends Component{
                             <Text style={styles.columnTitleText}>Postcode</Text>
                             <Text style={styles.columnDescriptionText}>{orderDetails.recipientPostCode}</Text>
                         </View>
-                    </View>
+                    </View> */}
                 </View>
                 <View style={styles.spinnerView}>
                     <Spinner

@@ -21,6 +21,10 @@ import AddDriverOrderScreen from './AddDriverOrder';
 import PendingConfirmationScreen from './PendingConfirmation';
 import PendingConfirmationDetailScreen from './PendingConfirmationDetail';
 import UpdateProfileScreen from './UpdateProfile';
+import UpcomingOrderScreen from './UpcomingOrder';
+import UpdateLorryScreen from './UpdateLorry';
+import LorryScreen from './Lorry';
+import Lorry from './Lorry';
 
 const tabOneStack = createStackNavigator({
     Home: { screen: HomeScreen },
@@ -85,6 +89,24 @@ const tabThreeStack = createStackNavigator({
 const tabFourStack = createStackNavigator({
     Profile : { screen: ProfileScreen },
     UpdateProfile : { screen: UpdateProfileScreen },
+    Lorry : { screen: LorryScreen },
+    UpdateLorry : { screen: UpdateLorryScreen },
+},
+{
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: '#3c4c96',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+            fontFamily: 'Raleway-Bold',
+        },
+    }
+});
+
+const tabFiveStack = createStackNavigator({
+    UpcomingOrder : { screen: UpcomingOrderScreen },
 },
 {
     navigationOptions: {
@@ -102,6 +124,7 @@ const tabFourStack = createStackNavigator({
 export default createBottomTabNavigator({
     "Shipper Order" : { screen: tabOneStack },
     "Pending Confirmation" : { screen: tabTwoStack },
+    "Upcoming Order" : { screen: tabFiveStack },
     "Driver Order" : { screen: tabThreeStack },
     "Profile" : { screen: tabFourStack },
 },
@@ -114,6 +137,8 @@ export default createBottomTabNavigator({
                 iconName = 'shopping-cart';
             }else if(routeName === 'Pending Confirmation'){
                 iconName = 'tasks';
+            }else if(routeName === 'Upcoming Order'){
+                iconName = 'clock-o';
             }else if(routeName === 'Driver Order'){
                 iconName = 'truck';
             }else if(routeName === 'Profile'){
@@ -125,6 +150,9 @@ export default createBottomTabNavigator({
     tabBarOptions: {
         activeTintColor: '#ffbb16',
         inactiveTintColor: '#3c4c96',
+        // labelStyle: {
+        //     fontSize: 12,
+        // },
     },
 });
 

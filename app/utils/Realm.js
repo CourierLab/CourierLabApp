@@ -23,6 +23,21 @@ class MyRealm {
                     loginUserAddress: 'string',
                     loginUserState: 'string',
                     loginUserPostcode: {type: 'int'},
+                    lorryId: {type: 'int', optional: true},
+                    lorryColor: {type: 'string', optional: true},
+                    lorryImage: {type: 'string', optional: true},
+                    lorryLengthId: {type: 'int', optional: true},
+                    lorryLengthAmount: {type: 'int', optional: true},
+                    lorryName: {type: 'string', optional: true},
+                    lorryPlateNumber: {type: 'string', optional: true},
+                    lorryTypeId: {type: 'int', optional: true},
+                    lorryTypeName: {type: 'string', optional: true},
+                    lorryWeightId: {type: 'int', optional: true},
+                    lorryWeigthAmount: {type: 'int', optional: true},
+                    bankId: {type: 'int', optional: true},
+                    bankName: {type: 'string', optional: true},
+                    bankAccountNumber: {type: 'string', optional: true},
+                    driverImage: {type: 'string', optional: true},
                 }
             };
 

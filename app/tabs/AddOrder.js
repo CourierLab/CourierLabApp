@@ -30,9 +30,11 @@ export default class AddOrder extends Component{
             departLatitude: '',
             departLongitude: '',
             arriveLocation: '',
-            carLength: '',
-            carWeight: '',
-            carPlateNumber: '',
+            arriveLatitude: '',
+            arriveLongitude: '',
+            lorryLength: '',
+            lorryWeight: '',
+            lorryPlateNumber: '',
             orderDescription: '',
             expectedDepartureDate: '',
             expectedArrivalDate: '',
@@ -51,6 +53,7 @@ export default class AddOrder extends Component{
         setTimeout(() => {
             this.checkInternetConnection();
         }, 500);
+        this.getLorryDetail();
         this.getVehicleSpec();
         // Geocoder.init('AIzaSyAfqLd5k68W11gB03CqwNq5ikAjNpAle2c');
         Geocoder.init('AIzaSyCgGvYKsFv6HeUdTF-8FdE389pYjBOolvc');
@@ -80,6 +83,14 @@ export default class AddOrder extends Component{
             text: 'OK',
             onPress: () => this.disableAlertAndCheckInternetConnection()
         }], {cancelable: false})
+    }
+
+    getLorryDetail(){
+        this.setState({
+            lorryLength: loginAsset[0].lorryLengthAmount.toString(),
+            lorryWeight: loginAsset[0].lorryWeigthAmount.toString(),
+            lorryPlateNumber: loginAsset[0].lorryPlateNumber,
+        })
     }
 
     getVehicleSpec(){
@@ -145,63 +156,75 @@ export default class AddOrder extends Component{
                     departLongitude: location.lng,
                 })
 
-                fetch(`${myApiUrl}/${addOrderPath}`, {
-                    method: 'POST',
-                    headers: new Headers({
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': loginAsset[0].accessToken,
-                    }),
-                    body: JSON.stringify({
-                        carLength: this.state.carLength,
-                        carWeight: this.state.carWeight,
-                        carPlateNumber: this.state.carPlateNumber,
-                        orderDescription: this.state.orderDescription,
-                        departLocation: this.state.departLocation,
-                        departLocationLatitude: this.state.departLatitude,
-                        departLocationLongitude: this.state.departLongitude,
-                        arriveLocation: this.state.arriveLocation,
-                        expectedDepartureDate: this.state.expectedDepartureDate,
-                        expectedArrivalDate: this.state.expectedArrivalDate,
-                        vehicleSpecificationId: this.state.vehicleSpec,
-                        driverId: loginAsset[0].loginUserId,
-                        deviceId: deviceId,
-                        userId: loginAsset[0].userId,
-                        shipperOrderId: this.props.navigation.getParam('shipperOrderId'),
-                    }),
-                })
-                .then((response) => response.json())
-                .then((json) => {
-                    console.log(json);
-                    if(json.succeeded){
-                        this.setState({
-                            spinnerVisible: false,
-                            isClicked: false,
-                            isSubmit: false,
-                        })
-                        this.props.navigation.navigate('ConfirmDriverShipperOrder', {
-                            orderConfirmationDetails : json.results,
-                        });
-                    }else{
-                        Alert.alert('Cannot Add', json.message, [
-                        {
-                            text: 'OK',
-                            onPress: () => {},
-                        }], {cancelable: false})
-                        this.setState({
-                            spinnerVisible: false,
-                            isClicked: false,
-                            isSubmit: false,
-                        })
-                    }
-                }).catch(err => {
-                    console.log(err);
+                Geocoder.from(this.state.arriveLocation)
+                .then(json => {
+                    var location = json.results[0].geometry.location;
+                    console.log(location);
                     this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
+                        arriveLatitude: location.lat,
+                        arriveLongitude: location.lng,
                     })
-                });
+
+                    console.log('arrivelat ', this.state.arriveLatitude)
+                    console.log('arrivelong ', this.state.arriveLongitude)
+
+                    fetch(`${myApiUrl}/${addOrderPath}`, {
+                        method: 'POST',
+                        headers: new Headers({
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': loginAsset[0].accessToken,
+                        }),
+                        body: JSON.stringify({
+                            orderDescription: this.state.orderDescription,
+                            departLocation: this.state.departLocation,
+                            departLocationLatitude: this.state.departLatitude,
+                            departLocationLongitude: this.state.departLongitude,
+                            arriveLocation: this.state.arriveLocation,
+                            arriveLocationLatitude: this.state.arriveLatitude,
+                            arriveLocationLongitude: this.state.arriveLongitude,
+                            expectedDepartureDate: this.state.expectedDepartureDate,
+                            expectedArrivalDate: this.state.expectedArrivalDate,
+                            vehicleSpecificationId: this.state.vehicleSpec,
+                            driverId: loginAsset[0].loginUserId,
+                            deviceId: deviceId,
+                            userId: loginAsset[0].userId,
+                            shipperOrderId: this.props.navigation.getParam('shipperOrderId'),
+                        }),
+                    })
+                    .then((response) => response.json())
+                    .then((json) => {
+                        console.log(json);
+                        if(json.succeeded){
+                            this.setState({
+                                spinnerVisible: false,
+                                isClicked: false,
+                                isSubmit: false,
+                            })
+                            this.props.navigation.navigate('ConfirmDriverShipperOrder', {
+                                orderConfirmationDetails : json.results,
+                            });
+                        }else{
+                            Alert.alert('Cannot Add', json.message, [
+                            {
+                                text: 'OK',
+                                onPress: () => {},
+                            }], {cancelable: false})
+                            this.setState({
+                                spinnerVisible: false,
+                                isClicked: false,
+                                isSubmit: false,
+                            })
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                    });
+                }).catch(error => console.warn(error));
             })
             .catch(error => console.warn(error));
         }
@@ -222,186 +245,213 @@ export default class AddOrder extends Component{
             <KeyboardAvoidingView style={styles.container}>
                 <ScrollView>
                     <View>
-                        <TextInput
-                            style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            underlineColorAndroid={'transparent'}
-                            autoFocus={false}
-                            keyboardType='default'
-                            returnKeyLabel="next"
-                            placeholder='Depart Location'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.departLocation}
-                            onChangeText={(text) => {this.setState({ departLocation: text });}}  />
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location: </Text>
+                            <TextInput
+                                style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                autoFocus={false}
+                                keyboardType='default'
+                                returnKeyLabel="next"
+                                placeholder='Depart Location'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.departLocation}
+                                onChangeText={(text) => {this.setState({ departLocation: text });}}  />
+                        </View>
                         {/* <Text 
-                            style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
-                            onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', departLocation: ''})}> Pick Location from Map</Text> */}
-                        <TextInput
-                            style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            keyboardType='default'
-                            returnKeyLabel="next"
-                            placeholder='Arrive Location'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.arriveLocation}
-                            onChangeText={(text) => this.setState({ arriveLocation: text })}  />
+                                style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', departLocation: ''})}> Pick Location from Map</Text> */}
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Arrive Location: </Text>
+                            <TextInput
+                                style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                keyboardType='default'
+                                returnKeyLabel="next"
+                                placeholder='Arrive Location'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.arriveLocation}
+                                onChangeText={(text) => this.setState({ arriveLocation: text })}  />
+                        </View>
                         {/* <Text 
-                            style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
-                            onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', arriveLocation: ''})}> Pick Location from Map</Text> */}
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            underlineColorAndroid={'transparent'}
-                            returnKeyLabel="next"
-                            placeholder='Car Length(m)'
-                            keyboardType={'numeric'}
-                            placeholderTextColor='#939ABA'
-                            value={this.state.carLength}
-                            onChangeText={(text) => this.setState({ carLength: text })} />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            returnKeyLabel="next"
-                            keyboardType={'numeric'}
-                            placeholder='Car Weight(kg)'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.carWeight}
-                            onChangeText={(text) => this.setState({ carWeight: text })} />
-                        <TextInput
-                            style={styles.input}
-                            underlineColorAndroid={'transparent'}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            keyboardType='default'
-                            returnKeyLabel="next"
-                            placeholder='Car Plate Number'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.carPlateNumber}
-                            onChangeText={(text) => this.setState({ carPlateNumber: text })}  />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            keyboardType='default'
-                            returnKeyLabel="next"
-                            placeholder='Order Description'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.orderDescription}
-                            onChangeText={(text) => this.setState({ orderDescription: text })}  />
-                        <DatePicker
-                            style={{width: '100%', height: 50, marginBottom: 10,}}
-                            customStyles={{
-                                dateTouchBody: {
-                                    width: '100%',
-                                    height: 50,
-                                    backgroundColor: '#fff',
-                                    marginBottom: 20,
-                                    padding: 0,
-                                    borderColor: '#3c4c96',
-                                    borderWidth: 1,
-                                },
-                                placeholderText: {
-                                    fontFamily: 'Raleway-Bold',
-                                    color: '#939ABA',
-                                    fontSize: 20,
-                                    textAlign: 'left',
-                                },
-                                dateText: {
-                                    fontFamily: 'Raleway-Bold',
-                                    color: '#3c4c96',
-                                    fontSize: 20,
-                                    textAlign: 'left',
-                                },
-                                dateInput: {
-                                    width: '100%',
-                                    height: 50,
-                                    backgroundColor: '#fff',
-                                    borderColor: '#3c4c96',
-                                    borderWidth: 1,
-                                },
-                            }}
-                            placeholder={'Expected Departure Date'}
-                            date={this.state.expectedDepartureDate}
-                            mode="datetime"
-                            format="DD/MM/YYYY h:mm a"
-                            is24Hour={false}
-                            confirmBtnText="Confirm"
-                            cancelBtnText="Cancel"
-                            showIcon={false}
-                            onDateChange={(datetime) => {this.setState({expectedDepartureDate: datetime});}} />
-                        <DatePicker
-                            style={{width: '100%', height: 50, marginBottom: 10,}}
-                            customStyles={{
-                                dateTouchBody: {
-                                    width: '100%',
-                                    height: 50,
-                                    backgroundColor: '#fff',
-                                    marginBottom: 20,
-                                    padding: 0,
-                                    borderColor: '#3c4c96',
-                                    borderWidth: 1,
-                                },
-                                placeholderText: {
-                                    fontFamily: 'Raleway-Bold',
-                                    color: '#939ABA',
-                                    fontSize: 20,
-                                    textAlign: 'left',
-                                },
-                                dateText: {
-                                    fontFamily: 'Raleway-Bold',
-                                    color: '#3c4c96',
-                                    fontSize: 20,
-                                    textAlign: 'left',
-                                },
-                                dateInput: {
-                                    width: '100%',
-                                    height: 50,
-                                    backgroundColor: '#fff',
-                                    borderColor: '#3c4c96',
-                                    borderWidth: 1,
-                                },
-                            }}
-                            placeholder={'Expected Arrival Date'}
-                            date={this.state.expectedArrivalDate}
-                            mode="datetime"
-                            format="DD/MM/YYYY h:mm a"
-                            is24Hour={false}
-                            confirmBtnText="Confirm"
-                            cancelBtnText="Cancel"
-                            showIcon={false}
-                            onDateChange={(datetime) => {this.setState({expectedArrivalDate: datetime});}} />
-                        <MultiSelect
-                            hideTags
-                            style={styles.input}
-                            items={this.state.vehicleSpecList}
-                            uniqueKey="vehicleSpecificationId"
-                            ref={(component) => { this.multiSelect = component }}
-                            onSelectedItemsChange={this.onSelectedItemsChange}
-                            selectedItems={this.state.vehicleSpec}
-                            selectText="Select Vechicle Spec"
-                            searchInputPlaceholderText="Search Vehicle Spec..."
-                            onChangeInput={ (text)=> console.log(text)}
-                            altFontFamily="Raleway-Regular"
-                            itemFontSize={20}
-                            fontSize={20}
-                            tagRemoveIconColor="#3c4c96"
-                            tagBorderColor="#3c4c96"
-                            tagTextColor="#3c4c96"
-                            selectedItemTextColor="#3c4c96"
-                            selectedItemIconColor="#3c4c96"
-                            itemTextColor="#3c4c96"
-                            displayKey="vehicleSpecificationName"
-                            searchInputStyle={{ color: '#3c4c96', height: 25, }}
-                            submitButtonColor="#3c4c96"
-                            submitButtonText="Done"
-                        />
+                                style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', arriveLocation: ''})}> Pick Location from Map</Text> */}
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Length(m): </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                returnKeyLabel="next"
+                                placeholder='Lorry Length(m)'
+                                keyboardType={'numeric'}
+                                placeholderTextColor='#939ABA'
+                                value={this.state.lorryLength} 
+                                editable={false}/>
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Weight(kg): </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                returnKeyLabel="next"
+                                keyboardType={'numeric'}
+                                placeholder='Lorry Weight(kg)'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.lorryWeight} 
+                                editable={false}/>
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Plate Number: </Text>
+                            <TextInput
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                keyboardType='default'
+                                returnKeyLabel="next"
+                                placeholder='Lorry Plate Number'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.lorryPlateNumber}
+                                editable={false} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Order Description: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                keyboardType='default'
+                                returnKeyLabel="next"
+                                placeholder='Order Description'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.orderDescription}
+                                onChangeText={(text) => this.setState({ orderDescription: text })}  />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Expected Departure Date: </Text>
+                            <DatePicker
+                                style={{width: '100%', height: 50, marginBottom: 10,}}
+                                customStyles={{
+                                    dateTouchBody: {
+                                        width: '100%',
+                                        height: 50,
+                                        backgroundColor: '#fff',
+                                        marginBottom: 20,
+                                        padding: 0,
+                                        borderColor: '#3c4c96',
+                                        borderWidth: 1,
+                                    },
+                                    placeholderText: {
+                                        fontFamily: 'Raleway-Bold',
+                                        color: '#939ABA',
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                    },
+                                    dateText: {
+                                        fontFamily: 'Raleway-Bold',
+                                        color: '#3c4c96',
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                    },
+                                    dateInput: {
+                                        width: '100%',
+                                        height: 50,
+                                        backgroundColor: '#fff',
+                                        borderColor: '#3c4c96',
+                                        borderWidth: 1,
+                                    },
+                                }}
+                                placeholder={'Expected Departure Date'}
+                                date={this.state.expectedDepartureDate}
+                                mode="datetime"
+                                format="DD/MM/YYYY h:mm a"
+                                is24Hour={false}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                showIcon={false}
+                                onDateChange={(datetime) => {this.setState({expectedDepartureDate: datetime});}} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Expected Arrival Date: </Text>
+                            <DatePicker
+                                style={{width: '100%', height: 50, marginBottom: 10,}}
+                                customStyles={{
+                                    dateTouchBody: {
+                                        width: '100%',
+                                        height: 50,
+                                        backgroundColor: '#fff',
+                                        marginBottom: 20,
+                                        padding: 0,
+                                        borderColor: '#3c4c96',
+                                        borderWidth: 1,
+                                    },
+                                    placeholderText: {
+                                        fontFamily: 'Raleway-Bold',
+                                        color: '#939ABA',
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                    },
+                                    dateText: {
+                                        fontFamily: 'Raleway-Bold',
+                                        color: '#3c4c96',
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                    },
+                                    dateInput: {
+                                        width: '100%',
+                                        height: 50,
+                                        backgroundColor: '#fff',
+                                        borderColor: '#3c4c96',
+                                        borderWidth: 1,
+                                    },
+                                }}
+                                placeholder={'Expected Arrival Date'}
+                                date={this.state.expectedArrivalDate}
+                                mode="datetime"
+                                format="DD/MM/YYYY h:mm a"
+                                is24Hour={false}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                showIcon={false}
+                                onDateChange={(datetime) => {this.setState({expectedArrivalDate: datetime});}} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Vechicle Spec: </Text>
+                            <MultiSelect
+                                hideTags
+                                style={styles.input}
+                                items={this.state.vehicleSpecList}
+                                uniqueKey="vehicleSpecificationId"
+                                ref={(component) => { this.multiSelect = component }}
+                                onSelectedItemsChange={this.onSelectedItemsChange}
+                                selectedItems={this.state.vehicleSpec}
+                                selectText="Select Vechicle Spec"
+                                searchInputPlaceholderText="Search Vehicle Spec..."
+                                onChangeInput={ (text)=> console.log(text)}
+                                altFontFamily="Raleway-Regular"
+                                itemFontSize={20}
+                                fontSize={20}
+                                tagRemoveIconColor="#3c4c96"
+                                tagBorderColor="#3c4c96"
+                                tagTextColor="#3c4c96"
+                                selectedItemTextColor="#3c4c96"
+                                selectedItemIconColor="#3c4c96"
+                                itemTextColor="#3c4c96"
+                                displayKey="vehicleSpecificationName"
+                                searchInputStyle={{ color: '#3c4c96', height: 25, }}
+                                submitButtonColor="#3c4c96"
+                                submitButtonText="Done"
+                            />
+                        </View>
                         <View>
                             {this.multiSelect ? this.multiSelect.getSelectedItemsExt(this.state.vehicleSpec) : null}
                         </View>

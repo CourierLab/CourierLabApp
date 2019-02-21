@@ -175,6 +175,22 @@ export default class ConfirmDriverShipperOrder extends Component{
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.arriveLocation}</Text>
                         </View>
                         <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Length(m): </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{loginAsset[0].lorryLengthAmount.toString()}</Text>
+                        </View>
+                        <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Weight(kg): </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{loginAsset[0].lorryWeigthAmount.toString()}</Text>
+                        </View>
+                        <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Plate Number:: </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{loginAsset[0].lorryPlateNumber}</Text>
+                        </View>
+                        <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Return: </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{(this.state.driverDetails.isReturn) ? 'Yes' : 'No'}</Text>
+                        </View>
+                        {/* <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Car Length (m): </Text>
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.carLength}</Text>
                         </View>
@@ -185,7 +201,7 @@ export default class ConfirmDriverShipperOrder extends Component{
                         <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Car Plate Number: </Text>
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.carPlateNumber}</Text>
-                        </View>
+                        </View> */}
                         <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Order Description: </Text>
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.orderDescription}</Text>
@@ -239,6 +255,10 @@ export default class ConfirmDriverShipperOrder extends Component{
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.vehicleSpecifications}</Text>
                         </View>
                         <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Shipper Delivery Distance(km): </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.props.navigation.getParam('orderConfirmationDetails').shipperDeliveryDistance}</Text>
+                        </View>
+                        <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Pick Up Location: </Text>
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.pickupLocation}</Text>
                         </View>
@@ -266,14 +286,14 @@ export default class ConfirmDriverShipperOrder extends Component{
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient Address: </Text>
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.recipientAddress}</Text>
                         </View>
-                        <View style={{flexDirection: 'column',}}>
+                        {/* <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient State: </Text>
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.recipientState}</Text>
                         </View>
                         <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient Postcode: </Text>
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.recipientPostCode}</Text>
-                        </View>
+                        </View> */}
                     </View>
                 </Card>
             </View> : <View />}

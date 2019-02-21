@@ -5,12 +5,14 @@ import LoginScreen from './Login';
 import ForgotPasswordScreen from './ForgotPassword';
 import RegisterScreen from './Register';
 import UpdateProfileFirstScreen from '../shipperTabs/UpdateProfileFirst';
+import UpdateLorryFirstScreen from '../tabs/UpdateLorryFirst';
 
 export default createStackNavigator({
     Login: { screen: LoginScreen },
     Register: { screen: RegisterScreen },
     ForgotPassword: { screen: ForgotPasswordScreen },
     UpdateProfileFirst: { screen: UpdateProfileFirstScreen },
+    UpdateLorryFirst: { screen: UpdateLorryFirstScreen },
 },
 {
     navigationOptions: {

@@ -38,16 +38,16 @@ export default class AddOrder extends Component{
                 recipientAddress: "",
                 recipientEmailAddress: "",
                 recipientPhoneNumber: "",
-                recipientPostCode: "",
-                recipientState: "",
+                // recipientPostCode: "",
+                // recipientState: "",
                 id: 0,
             }],
             favRecipientId: 0,
             favRecipientName: '',
             recipientName: '',
             recipientAddress: '',
-            recipientState: '',
-            recipientPostcode: '',
+            // recipientState: '',
+            // recipientPostcode: '',
             recipientEmail: '',
             recipientPhoneNumber: '',
             orderWeight: '',
@@ -163,8 +163,8 @@ export default class AddOrder extends Component{
             isClicked: true,
             isSubmit: true,
         })
-        if(this.state.pickUpLocation === "" || this.state.pickUpDate === "" || this.state.expectedArrivalDate === "" || this.state.recipientName === "" || this.state.recipientAddress === "" || this.state.recipientState === "" || this.state.recipientPostcode === "" || this.state.recipientEmail === "" || this.state.recipientPhoneNumber === "" || this.state.orderWeight === "" || this.state.orderDescription === "" || this.state.vehicleSpec === ""){
-            Alert.alert('Cannot Add', "Please key in Pick Up Location, Pick Up Date, Expected Arrival Date, Recipient Name, Recipient Address, Recipient State, Recipient Postcode, Recipient Email, Recipient Phone Number, Order Weight(kg), Order Description and Vechicle Specification", [{
+        if(this.state.pickUpLocation === "" || this.state.pickUpDate === "" || this.state.expectedArrivalDate === "" || this.state.recipientName === "" || this.state.recipientAddress === "" || this.state.recipientEmail === "" || this.state.recipientPhoneNumber === "" || this.state.orderWeight === "" || this.state.orderDescription === "" || this.state.vehicleSpec === ""){
+            Alert.alert('Cannot Add', "Please key in Pick Up Location, Pick Up Date, Expected Arrival Date, Recipient Name, Recipient Address, Recipient Email, Recipient Phone Number, Order Weight(kg), Order Description and Vechicle Specification", [{
                 text: 'OK',
                 onPress: () => {},
             }], {cancelable: false});
@@ -201,8 +201,8 @@ export default class AddOrder extends Component{
                         favouriteRecipientId: this.state.favRecipientId,
                         recipientName: this.state.recipientName,
                         recipientAddress: this.state.recipientAddress,
-                        recipientState: this.state.recipientState,
-                        recipientPostCode: this.state.recipientPostcode,
+                        // recipientState: this.state.recipientState,
+                        // recipientPostCode: this.state.recipientPostcode,
                         recipientEmailAddress: this.state.recipientEmail,
                         recipientPhoneNumber: this.state.recipientPhoneNumber,
                         vehicleSpecificationId: this.state.vehicleSpec,
@@ -262,164 +262,274 @@ export default class AddOrder extends Component{
             <KeyboardAvoidingView style={styles.container}>
                 <ScrollView>
                     <View>
-                        <TextInput
-                            style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            underlineColorAndroid={'transparent'}
-                            autoFocus={false}
-                            keyboardType='default'
-                            returnKeyLabel="next"
-                            placeholder='Pick Up Location'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.pickUpLocation}
-                            onChangeText={(text) => {this.setState({ pickUpLocation: text });}}  />
-                        <DatePicker
-                            style={{width: '100%', height: 50, marginBottom: 10,}}
-                            customStyles={{
-                                dateTouchBody: {
-                                    width: '100%',
-                                    height: 50,
-                                    backgroundColor: '#fff',
-                                    marginBottom: 20,
-                                    padding: 0,
-                                    borderColor: '#3c4c96',
-                                    borderWidth: 1,
-                                },
-                                placeholderText: {
-                                    fontFamily: 'Raleway-Bold',
-                                    color: '#939ABA',
-                                    fontSize: 20,
-                                    textAlign: 'left',
-                                },
-                                dateText: {
-                                    fontFamily: 'Raleway-Bold',
-                                    color: '#3c4c96',
-                                    fontSize: 20,
-                                    textAlign: 'left',
-                                },
-                                dateInput: {
-                                    width: '100%',
-                                    height: 50,
-                                    backgroundColor: '#fff',
-                                    borderColor: '#3c4c96',
-                                    borderWidth: 1,
-                                },
-                            }}
-                            placeholder={'Pick Up Date'}
-                            date={this.state.pickUpDate}
-                            mode="datetime"
-                            format="DD/MM/YYYY h:mm a"
-                            is24Hour={false}
-                            confirmBtnText="Confirm"
-                            cancelBtnText="Cancel"
-                            showIcon={false}
-                            onDateChange={(datetime) => {this.setState({pickUpDate: datetime});}} />
-                        <DatePicker
-                            style={{width: '100%', height: 50, marginBottom: 10,}}
-                            customStyles={{
-                                dateTouchBody: {
-                                    width: '100%',
-                                    height: 50,
-                                    backgroundColor: '#fff',
-                                    marginBottom: 20,
-                                    padding: 0,
-                                    borderColor: '#3c4c96',
-                                    borderWidth: 1,
-                                },
-                                placeholderText: {
-                                    fontFamily: 'Raleway-Bold',
-                                    color: '#939ABA',
-                                    fontSize: 20,
-                                    textAlign: 'left',
-                                },
-                                dateText: {
-                                    fontFamily: 'Raleway-Bold',
-                                    color: '#3c4c96',
-                                    fontSize: 20,
-                                    textAlign: 'left',
-                                },
-                                dateInput: {
-                                    width: '100%',
-                                    height: 50,
-                                    backgroundColor: '#fff',
-                                    borderColor: '#3c4c96',
-                                    borderWidth: 1,
-                                },
-                            }}
-                            placeholder={'Expected Arrival Date'}
-                            date={this.state.expectedArrivalDate}
-                            mode="datetime"
-                            format="DD/MM/YYYY h:mm a"
-                            is24Hour={false}
-                            confirmBtnText="Confirm"
-                            cancelBtnText="Cancel"
-                            showIcon={false}
-                            onDateChange={(datetime) => {this.setState({expectedArrivalDate: datetime});}} />
-                        <ModalSelector
-                            data={this.state.favRecipientList}
-                            supportedOrientations={['portrait']}
-                            keyExtractor= {item => item.recipientId}
-                            labelExtractor= {item => item.recipientName}
-                            accessible={true}
-                            scrollViewAccessibilityLabel={'Scrollable options'}
-                            cancelButtonAccessibilityLabel={'Cancel Button'}
-                            onChange={(option)=>{ 
-                                if(option.id === 0){
-                                    this.setState({
-                                        recipientName: "",
-                                        favRecipientName: option.recipientName,
-                                        recipientAddress: option.recipientAddress,
-                                        recipientEmail: option.recipientEmailAddress,
-                                        recipientPhoneNumber: option.recipientPhoneNumber,
-                                        recipientPostcode: option.recipientPostCode.toString(),
-                                        recipientState: option.recipientState,
-                                        favRecipientId: option.id
-                                    })
-                                }else{
-                                    this.setState({
-                                        recipientName: option.recipientName,
-                                        favRecipientName: option.recipientName,
-                                        recipientAddress: option.recipientAddress,
-                                        recipientEmail: option.recipientEmailAddress,
-                                        recipientPhoneNumber: option.recipientPhoneNumber,
-                                        recipientPostcode: option.recipientPostCode.toString(),
-                                        recipientState: option.recipientState,
-                                        favRecipientId: option.id
-                                    })     
-                                }
-                            }}>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: </Text>
+                            <TextInput
+                                style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                autoFocus={false}
+                                keyboardType='default'
+                                returnKeyLabel="next"
+                                placeholder='Pick Up Location'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.pickUpLocation}
+                                onChangeText={(text) => {this.setState({ pickUpLocation: text });}}  />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Date: </Text>
+                            <DatePicker
+                                style={{width: '100%', height: 50, marginBottom: 10,}}
+                                customStyles={{
+                                    dateTouchBody: {
+                                        width: '100%',
+                                        height: 50,
+                                        backgroundColor: '#fff',
+                                        marginBottom: 20,
+                                        padding: 0,
+                                        borderColor: '#3c4c96',
+                                        borderWidth: 1,
+                                    },
+                                    placeholderText: {
+                                        fontFamily: 'Raleway-Bold',
+                                        color: '#939ABA',
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                    },
+                                    dateText: {
+                                        fontFamily: 'Raleway-Bold',
+                                        color: '#3c4c96',
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                    },
+                                    dateInput: {
+                                        width: '100%',
+                                        height: 50,
+                                        backgroundColor: '#fff',
+                                        borderColor: '#3c4c96',
+                                        borderWidth: 1,
+                                    },
+                                }}
+                                placeholder={'Pick Up Date'}
+                                date={this.state.pickUpDate}
+                                mode="datetime"
+                                format="DD/MM/YYYY h:mm a"
+                                is24Hour={false}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                showIcon={false}
+                                onDateChange={(datetime) => {this.setState({pickUpDate: datetime});}} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Expected Arrival Date: </Text>
+                            <DatePicker
+                                style={{width: '100%', height: 50, marginBottom: 10,}}
+                                customStyles={{
+                                    dateTouchBody: {
+                                        width: '100%',
+                                        height: 50,
+                                        backgroundColor: '#fff',
+                                        marginBottom: 20,
+                                        padding: 0,
+                                        borderColor: '#3c4c96',
+                                        borderWidth: 1,
+                                    },
+                                    placeholderText: {
+                                        fontFamily: 'Raleway-Bold',
+                                        color: '#939ABA',
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                    },
+                                    dateText: {
+                                        fontFamily: 'Raleway-Bold',
+                                        color: '#3c4c96',
+                                        fontSize: 20,
+                                        textAlign: 'left',
+                                    },
+                                    dateInput: {
+                                        width: '100%',
+                                        height: 50,
+                                        backgroundColor: '#fff',
+                                        borderColor: '#3c4c96',
+                                        borderWidth: 1,
+                                    },
+                                }}
+                                placeholder={'Expected Arrival Date'}
+                                date={this.state.expectedArrivalDate}
+                                mode="datetime"
+                                format="DD/MM/YYYY h:mm a"
+                                is24Hour={false}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                showIcon={false}
+                                onDateChange={(datetime) => {this.setState({expectedArrivalDate: datetime});}} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Your Favourite Recipient: </Text>
+                            <ModalSelector
+                                data={this.state.favRecipientList}
+                                supportedOrientations={['portrait']}
+                                keyExtractor= {item => item.recipientId}
+                                labelExtractor= {item => item.recipientName}
+                                accessible={true}
+                                scrollViewAccessibilityLabel={'Scrollable options'}
+                                cancelButtonAccessibilityLabel={'Cancel Button'}
+                                onChange={(option)=>{ 
+                                    if(option.id === 0){
+                                        this.setState({
+                                            recipientName: "",
+                                            favRecipientName: option.recipientName,
+                                            recipientAddress: option.recipientAddress,
+                                            recipientEmail: option.recipientEmailAddress,
+                                            recipientPhoneNumber: option.recipientPhoneNumber,
+                                            // recipientPostcode: option.recipientPostCode.toString(),
+                                            // recipientState: option.recipientState,
+                                            favRecipientId: option.id
+                                        })
+                                    }else{
+                                        this.setState({
+                                            recipientName: option.recipientName,
+                                            favRecipientName: option.recipientName,
+                                            recipientAddress: option.recipientAddress,
+                                            recipientEmail: option.recipientEmailAddress,
+                                            recipientPhoneNumber: option.recipientPhoneNumber,
+                                            // recipientPostcode: option.recipientPostCode.toString(),
+                                            // recipientState: option.recipientState,
+                                            favRecipientId: option.id
+                                        })     
+                                    }
+                                }}>
+                                    <TextInput
+                                    style={styles.input}
+                                    editable={false}
+                                    placeholder='Your Favourite Recipient'
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor='#939ABA'
+                                    value={this.state.favRecipientName}/>
+                            </ModalSelector>
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Name: </Text>
+                            <TextInput
+                                style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                keyboardType='default'
+                                returnKeyLabel="next"
+                                placeholder='Recipient Name'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.recipientName}
+                                onChangeText={(text) => this.setState({ recipientName: text })}  />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: </Text>
                             <TextInput
                                 style={styles.input}
-                                editable={false}
-                                placeholder='Your Favourite Recipient'
+                                autoCapitalize="none"
+                                autoCorrect={false}
                                 underlineColorAndroid={'transparent'}
+                                returnKeyLabel="next"
+                                placeholder='Recipient Address'
+                                keyboardType={'default'}
                                 placeholderTextColor='#939ABA'
-                                value={this.state.favRecipientName}/>
-                        </ModalSelector>
-                        <TextInput
-                            style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            keyboardType='default'
-                            returnKeyLabel="next"
-                            placeholder='Recipient Name'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.recipientName}
-                            onChangeText={(text) => this.setState({ recipientName: text })}  />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            underlineColorAndroid={'transparent'}
-                            returnKeyLabel="next"
-                            placeholder='Recipient Address'
-                            keyboardType={'default'}
-                            placeholderTextColor='#939ABA'
-                            value={this.state.recipientAddress}
-                            onChangeText={(text) => this.setState({ recipientAddress: text })} />
-                        <TextInput
+                                value={this.state.recipientAddress}
+                                onChangeText={(text) => this.setState({ recipientAddress: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Email Address: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                keyboardType='email-address'
+                                returnKeyLabel="next"
+                                placeholder='Recipient Email Address'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.recipientEmail}
+                                onChangeText={(text) => this.setState({ recipientEmail: text })}  />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Phone Number: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                returnKeyLabel="next"
+                                keyboardType={'default'}
+                                placeholder='Recipient Phone Number'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.recipientPhoneNumber}
+                                onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Order Weight (kg): </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                returnKeyLabel="next"
+                                keyboardType={'default'}
+                                placeholder='Order Weight (kg)'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.orderWeight}
+                                onChangeText={(text) => this.setState({ orderWeight: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Order Description: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                returnKeyLabel="next"
+                                keyboardType={'default'}
+                                placeholder='Order Description'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.orderDescription}
+                                onChangeText={(text) => this.setState({ orderDescription: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Vechicle Spec: </Text>
+                            <MultiSelect
+                                hideTags
+                                style={styles.input}
+                                items={this.state.vehicleSpecList}
+                                uniqueKey="vehicleSpecificationId"
+                                ref={(component) => { this.multiSelect = component }}
+                                onSelectedItemsChange={this.onSelectedItemsChange}
+                                selectedItems={this.state.vehicleSpec}
+                                selectText="Select Vechicle Spec"
+                                searchInputPlaceholderText="Search Vehicle Spec..."
+                                onChangeInput={ (text)=> console.log(text)}
+                                altFontFamily="Raleway-Regular"
+                                itemFontSize={20}
+                                fontSize={20}
+                                tagRemoveIconColor="#3c4c96"
+                                tagBorderColor="#3c4c96"
+                                tagTextColor="#3c4c96"
+                                selectedItemTextColor="#3c4c96"
+                                selectedItemIconColor="#3c4c96"
+                                itemTextColor="#3c4c96"
+                                displayKey="vehicleSpecificationName"
+                                searchInputStyle={{ color: '#3c4c96', height: 25, }}
+                                submitButtonColor="#3c4c96"
+                                submitButtonText="Done"
+                            />
+                        </View>
+
+                        
+                        
+                        
+                        
+                            
+                        
+                        
+                        {/* <TextInput
                             style={styles.input}
                             autoCapitalize="none"
                             underlineColorAndroid={'transparent'}
@@ -440,76 +550,12 @@ export default class AddOrder extends Component{
                             placeholder='Recipient Postcode'
                             placeholderTextColor='#939ABA'
                             value={this.state.recipientPostcode}
-                            onChangeText={(text) => this.setState({ recipientPostcode: text })}  />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            keyboardType='email-address'
-                            returnKeyLabel="next"
-                            placeholder='Recipient Email Address'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.recipientEmail}
-                            onChangeText={(text) => this.setState({ recipientEmail: text })}  />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            returnKeyLabel="next"
-                            keyboardType={'default'}
-                            placeholder='Recipient Phone Number'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.recipientPhoneNumber}
-                            onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            returnKeyLabel="next"
-                            keyboardType={'default'}
-                            placeholder='Order Weight (kg)'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.orderWeight}
-                            onChangeText={(text) => this.setState({ orderWeight: text })} />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            returnKeyLabel="next"
-                            keyboardType={'default'}
-                            placeholder='Order Description'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.orderDescription}
-                            onChangeText={(text) => this.setState({ orderDescription: text })} />
-                        <MultiSelect
-                            hideTags
-                            style={styles.input}
-                            items={this.state.vehicleSpecList}
-                            uniqueKey="vehicleSpecificationId"
-                            ref={(component) => { this.multiSelect = component }}
-                            onSelectedItemsChange={this.onSelectedItemsChange}
-                            selectedItems={this.state.vehicleSpec}
-                            selectText="Select Vechicle Spec"
-                            searchInputPlaceholderText="Search Vehicle Spec..."
-                            onChangeInput={ (text)=> console.log(text)}
-                            altFontFamily="Raleway-Regular"
-                            itemFontSize={20}
-                            fontSize={20}
-                            tagRemoveIconColor="#3c4c96"
-                            tagBorderColor="#3c4c96"
-                            tagTextColor="#3c4c96"
-                            selectedItemTextColor="#3c4c96"
-                            selectedItemIconColor="#3c4c96"
-                            itemTextColor="#3c4c96"
-                            displayKey="vehicleSpecificationName"
-                            searchInputStyle={{ color: '#3c4c96', height: 25, }}
-                            submitButtonColor="#3c4c96"
-                            submitButtonText="Done"
-                        />
+                            onChangeText={(text) => this.setState({ recipientPostcode: text })}  /> */}
+                        
+                        
+                        
+                        
+                        
                         <View>
                             {this.multiSelect ? this.multiSelect.getSelectedItemsExt(this.state.vehicleSpec) : null}
                         </View>

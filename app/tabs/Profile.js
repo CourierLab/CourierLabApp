@@ -34,6 +34,9 @@ class Profile extends Component{
             name: '',
             nric: '',
             phoneNumber: '',
+            bank: '',
+            bankAccountNumber: '',
+            driverImage: '',
         };
         _this = this;
     }
@@ -76,6 +79,9 @@ class Profile extends Component{
             name: loginAsset[0].loginUserName,
             nric: loginAsset[0].loginUserNRIC,
             phoneNumber: loginAsset[0].loginUserPhoneNumber,
+            bank: loginAsset[0].bankName,
+            bankAccountNumber: loginAsset[0].bankAccountNumber,
+            driverImage: loginAsset[0].driverImage,
         })
     }
 
@@ -134,6 +140,15 @@ class Profile extends Component{
     render(){
         return(
             <ScrollView style={styles.container}>
+                <View style={{flexDirection: 'row', paddingBottom: 0, paddingTop: 0, justifyContent: 'center', }}>
+                    <Avatar
+                        size="xlarge"
+                        rounded
+                        source={{uri: this.state.driverImage}}
+                        onPress={() => console.log("Works!")}
+                        activeOpacity={0.7}
+                    />
+                </View>
                 <View>
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Name: </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.name}</Text>
@@ -143,6 +158,17 @@ class Profile extends Component{
 
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.phoneNumber}</Text>
+
+                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank: </Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.bank}</Text>
+
+                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank Account Number: </Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.bankAccountNumber}</Text>
+
+                    <Text style={{paddingLeft: 5, paddingTop: 10, paddingBottom: 0, paddingRight: 5, color: '#3c4c96', fontSize: 18, fontFamily: 'Raleway-Bold', justifyContent: 'flex-start', textDecorationLine: 'underline', alignSelf: 'flex-start',}}
+                        onPress={() => this.props.navigation.navigate('Lorry')}>
+                        My Lorry Information
+                    </Text>
                 </View>
                 <View style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingLeft: 10, paddingRight: 10, marginTop: 40, marginLeft: 0, marginRight: 0, marginBottom: 10,} : {backgroundColor: '#3c4c96', paddingLeft: 10, paddingRight: 10, marginTop: 40, marginLeft: 0, marginRight: 0, marginBottom: 10,}}>
                     <TouchableOpacity

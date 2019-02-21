@@ -142,11 +142,48 @@ class Login extends Component{
             })
             .then((response) => response.json())
             .then((json) => {
+                console.log(json);
+
                 if(json.succeeded){
                     console.log(json);
                     if(json.results.driver !== null){
-                        realm.write(() => {
-                            realm.create('LoginAsset', {
+                        if(json.results.driver.hasLorry){
+                            realm.write(() => {
+                                realm.create('LoginAsset', {
+                                    userId: json.results.userId,
+                                    accessToken: json.results.accessToken,
+                                    accessTokenExpiredDate: json.results.accessTokenExpiredDate,
+                                    refreshToken: json.results.refreshToken,
+                                    roleId: json.results.roleId,
+                                    roleName: json.results.roleName,
+                                    email: this.state.email,
+                                    loginUserId: json.results.driver.driverId,
+                                    loginUserName: json.results.driver.driverName,
+                                    loginUserNRIC: json.results.driver.driverNRIC,
+                                    loginUserPhoneNumber: json.results.driver.driverPhoneNumber,
+                                    loginUserAddress: '',
+                                    loginUserState: '',
+                                    loginUserPostcode: 0,
+                                    lorryId: json.results.driver.lorry.lorryId,
+                                    lorryColor: json.results.driver.lorry.lorryColor,
+                                    lorryImage: json.results.driver.lorry.lorryImage,
+                                    lorryLengthId: json.results.driver.lorry.lorryLengthId,
+                                    lorryLengthAmount: json.results.driver.lorry.lorryLengthAmount,
+                                    lorryName: json.results.driver.lorry.lorryName,
+                                    lorryPlateNumber: json.results.driver.lorry.lorryPlateNumber,
+                                    lorryTypeId: json.results.driver.lorry.lorryTypeId,
+                                    lorryTypeName: json.results.driver.lorry.lorryTypeName,
+                                    lorryWeightId: json.results.driver.lorry.lorryWeightId,
+                                    lorryWeigthAmount: json.results.driver.lorry.lorryWeightAmount,
+                                    bankId: json.results.driver.bankId,
+                                    bankName: json.results.driver.bankName,
+                                    bankAccountNumber: json.results.driver.bankAccountNumber,
+                                    driverImage: json.results.driver.driverImage,
+                                })
+                            })
+                            this.props.onLogin(this.state.email);
+                        }else{
+                            this.props.navigation.navigate('UpdateLorryFirst', {
                                 userId: json.results.userId,
                                 accessToken: json.results.accessToken,
                                 accessTokenExpiredDate: json.results.accessTokenExpiredDate,
@@ -158,12 +195,12 @@ class Login extends Component{
                                 loginUserName: json.results.driver.driverName,
                                 loginUserNRIC: json.results.driver.driverNRIC,
                                 loginUserPhoneNumber: json.results.driver.driverPhoneNumber,
-                                loginUserAddress: '',
-                                loginUserState: '',
-                                loginUserPostcode: 0,
-                            })
-                        })
-                        this.props.onLogin(this.state.email);
+                                bankId: json.results.driver.bankId,
+                                bankName: json.results.driver.bankName,
+                                bankAccountNumber: json.results.driver.bankAccountNumber,
+                                driverImage: json.results.driver.driverImage,
+                            });
+                        }
                     }else{
                         if(json.results.shipper !== null){
                             console.log(json.results.accessTokenExpiredDate);
