@@ -160,66 +160,84 @@ export default class UpdateProfile extends Component{
         return(
             <ScrollView style={styles.container}>
                 <View>
-                    <TextInput
-                        style={styles.input}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        underlineColorAndroid={'transparent'}
-                        keyboardType='default'
-                        placeholder='Name'
-                        placeholderTextColor='#8E9495'
-                        value={this.state.name}
-                        onChangeText={(text) => this.setState({ name: text })}  />
-                    <TextInput
-                        style={styles.input}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        underlineColorAndroid={'transparent'}
-                        keyboardType='default'
-                        placeholder='NRIC'
-                        placeholderTextColor='#8E9495'
-                        value={this.state.nric}
-                        onChangeText={(text) => this.setState({ nric: text })}  />
-                    <TextInput
-                        style={styles.input}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        underlineColorAndroid={'transparent'}
-                        keyboardType='default'
-                        placeholder='Phone Number'
-                        placeholderTextColor='#8E9495'
-                        value={this.state.phoneNumber}
-                        onChangeText={(text) => this.setState({ phoneNumber: text })}  />
-                    <TextInput
-                        style={styles.input}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        underlineColorAndroid={'transparent'}
-                        keyboardType='default'
-                        placeholder='Address'
-                        placeholderTextColor='#8E9495'
-                        value={this.state.address}
-                        onChangeText={(text) => this.setState({ address: text })}  />
-                    <TextInput
-                        style={styles.input}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        underlineColorAndroid={'transparent'}
-                        keyboardType='default'
-                        placeholder='State'
-                        placeholderTextColor='#8E9495'
-                        value={this.state.shipperState}
-                        onChangeText={(text) => this.setState({ shipperState: text })}  />
-                    <TextInput
-                        style={styles.input}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        underlineColorAndroid={'transparent'}
-                        keyboardType='number-pad'
-                        placeholder='PostCode'
-                        placeholderTextColor='#8E9495'
-                        value={this.state.postcode}
-                        onChangeText={(text) => this.setState({ postcode: text })}  />
+                    <View>
+                        <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Name: </Text>
+                        <TextInput
+                            style={styles.input}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='Name'
+                            placeholderTextColor='#8E9495'
+                            value={this.state.name}
+                            onChangeText={(text) => this.setState({ name: text })}  />
+                    </View>  
+                    <View>
+                        <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
+                        <TextInput
+                            style={styles.input}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='NRIC'
+                            placeholderTextColor='#8E9495'
+                            value={this.state.nric}
+                            onChangeText={(text) => this.setState({ nric: text })}  />
+                    </View>  
+                    <View>
+                        <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
+                        <TextInput
+                            style={styles.input}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='Phone Number'
+                            placeholderTextColor='#8E9495'
+                            value={this.state.phoneNumber}
+                            onChangeText={(text) => this.setState({ phoneNumber: text })}  />
+                    </View>  
+                    <View>
+                        <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Address: </Text>
+                        <TextInput
+                            style={styles.input}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='Address'
+                            placeholderTextColor='#8E9495'
+                            value={this.state.address}
+                            onChangeText={(text) => this.setState({ address: text })}  />
+                    </View>  
+                    <View>
+                        <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>State: </Text>
+                        <TextInput
+                            style={styles.input}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='State'
+                            placeholderTextColor='#8E9495'
+                            value={this.state.shipperState}
+                            onChangeText={(text) => this.setState({ shipperState: text })}  />
+                    </View>  
+                    <View>
+                        <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>PostCode: </Text>
+                        <TextInput
+                            style={styles.input}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='number-pad'
+                            placeholder='PostCode'
+                            placeholderTextColor='#8E9495'
+                            value={this.state.postcode}
+                            onChangeText={(text) => this.setState({ postcode: text })}  />
+                    </View>  
                 </View>
                 {
                     (this.state.isClicked) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20,}}> 

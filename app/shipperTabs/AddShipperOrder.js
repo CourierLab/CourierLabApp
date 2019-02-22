@@ -14,6 +14,7 @@ let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let addOrderPath = 'AddShipperOrder';
 let vehicleSpecPath = 'GetVehicleSpecification';
 let favRecipientPath = 'GetFavouriteRecipient';
+let getLorryTypePath = 'GetLorryType';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
@@ -38,6 +39,8 @@ export default class AddDriverOrder extends Component{
                 recipientAddress: "",
                 recipientEmailAddress: "",
                 recipientPhoneNumber: "",
+                recipientAddressLatitude: "",
+                recipientAddressLongitude: "",
                 // recipientPostCode: "",
                 // recipientState: "",
                 id: 0,
@@ -48,6 +51,8 @@ export default class AddDriverOrder extends Component{
             recipientAddress: '',
             // recipientState: '',
             // recipientPostcode: '',
+            recipientAddressLatitude: '',
+            recipientAddressLongitude: '',
             recipientEmail: '',
             recipientPhoneNumber: '',
             orderWeight: '',
@@ -56,6 +61,9 @@ export default class AddDriverOrder extends Component{
             vehicleSpecList: [],
             currentDate: new Date(),
             isSubmit: false,
+            lorryTypeList: [],
+            selectedLorryType: '',
+            selectedLorryTypeId: 0,
         }
     }
 
@@ -69,6 +77,7 @@ export default class AddDriverOrder extends Component{
         }, 500);
         this.getVehicleSpec();
         this.getFavRecipient();
+        this.getLorryType();
         Geocoder.init('AIzaSyCgGvYKsFv6HeUdTF-8FdE389pYjBOolvc');
     }
 
@@ -157,14 +166,35 @@ export default class AddDriverOrder extends Component{
 		.catch(error => console.warn(error));
     }
 
+    getLorryType(){
+        fetch(`${myApiUrl}/${getLorryTypePath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': loginAsset[0].accessToken,
+            },
+        })
+        .then((response) => response.json())
+        .then((json) => {
+            if(json.succeeded){
+                this.setState({
+                    lorryTypeList: json.results,
+                });
+            } 
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
     addOrder(){
         this.setState({
             spinnerVisible: true,
             isClicked: true,
             isSubmit: true,
         })
-        if(this.state.pickUpLocation === "" || this.state.pickUpDate === "" || this.state.expectedArrivalDate === "" || this.state.recipientName === "" || this.state.recipientAddress === "" || this.state.recipientEmail === "" || this.state.recipientPhoneNumber === "" || this.state.orderWeight === "" || this.state.orderDescription === "" || this.state.vehicleSpec === ""){
-            Alert.alert('Cannot Add', "Please key in Pick Up Location, Pick Up Date, Expected Arrival Date, Recipient Name, Recipient Address, Recipient Email, Recipient Phone Number, Order Weight(kg), Order Description and Vechicle Specification", [{
+        if(this.state.pickUpLocation === "" || this.state.pickUpDate === "" || this.state.expectedArrivalDate === "" || this.state.selectedLorryTypeId === "" || this.state.recipientName === "" || this.state.recipientAddress === "" || this.state.recipientEmail === "" || this.state.recipientPhoneNumber === "" || this.state.orderWeight === "" || this.state.orderDescription === "" || this.state.vehicleSpec === ""){
+            Alert.alert('Cannot Add', "Please key in Pick Up Location, Pick Up Date, Expected Arrival Date, Lorry Type, Recipient Name, Recipient Address, Recipient Email, Recipient Phone Number, Order Weight(kg), Order Description and Vechicle Specification", [{
                 text: 'OK',
                 onPress: () => {},
             }], {cancelable: false});
@@ -183,65 +213,79 @@ export default class AddDriverOrder extends Component{
                     pickUpLongitude: location.lng,
                 })
                 
-                fetch(`${myApiUrl}/${addOrderPath}`, {
-                    method: 'POST',
-                    headers: new Headers({
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': loginAsset[0].accessToken,
-                    }),
-                    body: JSON.stringify({
-                        pickUpLocation: this.state.pickUpLocation,
-                        pickUpLocationLatitude: this.state.pickUpLatitude,
-                        pickUpLocationLongitude: this.state.pickUpLongitude,
-                        orderDescription: this.state.orderDescription,
-                        orderWeight: this.state.orderWeight,
-                        pickUpDateTime: this.state.pickUpDate,
-                        arrivalDateTime: this.state.expectedArrivalDate,
-                        favouriteRecipientId: this.state.favRecipientId,
-                        recipientName: this.state.recipientName,
-                        recipientAddress: this.state.recipientAddress,
-                        // recipientState: this.state.recipientState,
-                        // recipientPostCode: this.state.recipientPostcode,
-                        recipientEmailAddress: this.state.recipientEmail,
-                        recipientPhoneNumber: this.state.recipientPhoneNumber,
-                        vehicleSpecificationId: this.state.vehicleSpec,
-                        deviceId: deviceId,
-                        userId: loginAsset[0].userId,
-                    }),
-                })
-                .then((response) => response.json())
-                .then((json) => {
-                    console.log('add driver order ', json);
-                    if(json.succeeded){
-                        this.setState({
-                            spinnerVisible: false,
-                            isClicked: false,
-                            isSubmit: false,
-                        })
-                        this.props.navigation.navigate('HistoryOrderDetails', {
-                            shipperOrderId: json.results.shipperOrderId,
-                        });
-                    }else{
-                        Alert.alert('Cannot Add', json.message, [
-                        {
-                            text: 'OK',
-                            onPress: () => {},
-                        }], {cancelable: false})
-                        this.setState({
-                            spinnerVisible: false,
-                            isClicked: false,
-                            isSubmit: false,
-                        })
-                    }
-                }).catch(err => {
-                    console.log(err);
+                Geocoder.from(this.state.recipientAddress)
+                .then(json => {
+                    var location = json.results[0].geometry.location;
+                    console.log(location);
                     this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
+                        recipientAddressLatitude: location.lat,
+                        recipientAddressLatitude: location.lng,
                     })
-                });
+
+                    fetch(`${myApiUrl}/${addOrderPath}`, {
+                        method: 'POST',
+                        headers: new Headers({
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': loginAsset[0].accessToken,
+                        }),
+                        body: JSON.stringify({
+                            pickUpLocation: this.state.pickUpLocation,
+                            pickUpLocationLatitude: this.state.pickUpLatitude,
+                            pickUpLocationLongitude: this.state.pickUpLongitude,
+                            orderDescription: this.state.orderDescription,
+                            orderWeight: this.state.orderWeight,
+                            pickUpDateTime: this.state.pickUpDate,
+                            arrivalDateTime: this.state.expectedArrivalDate,
+                            favouriteRecipientId: this.state.favRecipientId,
+                            recipientName: this.state.recipientName,
+                            recipientAddress: this.state.recipientAddress,
+                            recipientAddressLatitude: this.state.recipientAddressLatitude,
+                            recipientAddressLongitude: this.state.recipientAddressLongitude,
+                            lorryTypeId: this.state.selectedLorryTypeId,
+                            // recipientState: this.state.recipientState,
+                            // recipientPostCode: this.state.recipientPostcode,
+                            recipientEmailAddress: this.state.recipientEmail,
+                            recipientPhoneNumber: this.state.recipientPhoneNumber,
+                            vehicleSpecificationId: this.state.vehicleSpec,
+                            deviceId: deviceId,
+                            userId: loginAsset[0].userId,
+                        }),
+                    })
+                    .then((response) => response.json())
+                    .then((json) => {
+                        console.log('add driver order ', json);
+                        if(json.succeeded){
+                            this.setState({
+                                spinnerVisible: false,
+                                isClicked: false,
+                                isSubmit: false,
+                            })
+                            this.props.navigation.navigate('HistoryOrderDetails', {
+                                shipperOrderId: json.results.shipperOrderId,
+                            });
+                        }else{
+                            Alert.alert('Cannot Add', json.message, [
+                            {
+                                text: 'OK',
+                                onPress: () => {},
+                            }], {cancelable: false})
+                            this.setState({
+                                spinnerVisible: false,
+                                isClicked: false,
+                                isSubmit: false,
+                            })
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                    });
+                })
+                .catch(error => console.warn(error));
             })
             .catch(error => console.warn(error));
         }
@@ -383,6 +427,8 @@ export default class AddDriverOrder extends Component{
                                             recipientPhoneNumber: option.recipientPhoneNumber,
                                             // recipientPostcode: option.recipientPostCode.toString(),
                                             // recipientState: option.recipientState,
+                                            recipientAddressLatitude: option.recipientAddressLatitude,
+                                            recipientAddressLongitude: option.recipientAddressLongitude,
                                             favRecipientId: option.id
                                         })
                                     }else{
@@ -394,6 +440,8 @@ export default class AddDriverOrder extends Component{
                                             recipientPhoneNumber: option.recipientPhoneNumber,
                                             // recipientPostcode: option.recipientPostCode.toString(),
                                             // recipientState: option.recipientState,
+                                            recipientAddressLatitude: option.recipientAddressLatitude,
+                                            recipientAddressLongitude: option.recipientAddressLongitude,
                                             favRecipientId: option.id
                                         })     
                                     }
@@ -462,6 +510,31 @@ export default class AddDriverOrder extends Component{
                                 placeholderTextColor='#939ABA'
                                 value={this.state.recipientPhoneNumber}
                                 onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Type: </Text>
+                            <ModalSelector
+                                data={this.state.lorryTypeList}
+                                supportedOrientations={['portrait']}
+                                keyExtractor= {item => item.lorryTypeId}
+                                labelExtractor= {item => item.lorryTypeName}
+                                accessible={true}
+                                scrollViewAccessibilityLabel={'Scrollable options'}
+                                cancelButtonAccessibilityLabel={'Cancel Button'}
+                                onChange={(option)=>{ 
+                                    this.setState({
+                                        selectedLorryType: option.lorryTypeName,
+                                        selectedLorryTypeId: option.lorryTypeId,
+                                    })
+                                }}>
+                                <TextInput
+                                    style={{height: 50, backgroundColor: '#fff', marginBottom: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, marginLeft: 0, marginRight: 0, fontFamily: 'Raleway-Bold',}}
+                                    editable={false}
+                                    placeholder='Select Lorry Type'
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor='#939ABA'
+                                    value={this.state.selectedLorryType}/>
+                            </ModalSelector>
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Order Weight (kg): </Text>

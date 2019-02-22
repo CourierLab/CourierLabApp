@@ -107,6 +107,7 @@ const tabFourStack = createStackNavigator({
 
 const tabFiveStack = createStackNavigator({
     UpcomingOrder : { screen: UpcomingOrderScreen },
+    ConfirmedOrderDetail: { screen: ConfirmedOrderDetailScreen },
 },
 {
     navigationOptions: {

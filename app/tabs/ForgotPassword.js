@@ -134,17 +134,20 @@ export default class ForgotPassword extends Component{
             <KeyboardAvoidingView style={styles.container}>
                 <ScrollView>
                     <View>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            keyboardType='email-address'
-                            returnKeyLabel="next"
-                            placeholder='Email Address'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.email}
-                            onChangeText={(text) => this.setState({ email: text })}  />
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Email Address: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                keyboardType='email-address'
+                                returnKeyLabel="next"
+                                placeholder='Email Address'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.email}
+                                onChangeText={(text) => this.setState({ email: text })}  />
+                        </View>
                     </View>
                     {spinnerView}
                     <View style={{paddingTop: 10,}}>

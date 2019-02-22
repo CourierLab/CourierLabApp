@@ -156,51 +156,63 @@ export default class Register extends Component{
             <KeyboardAvoidingView style={styles.container}>
                 <ScrollView>
                     <View>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            underlineColorAndroid={'transparent'}
-                            autoFocus={true}
-                            keyboardType='default'
-                            returnKeyLabel="next"
-                            placeholder='Username'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.username}
-                            onChangeText={(text) => this.setState({ username: text })}  />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            keyboardType='email-address'
-                            returnKeyLabel="next"
-                            placeholder='Email Address'
-                            placeholderTextColor='#939ABA'
-                            value={this.state.email}
-                            onChangeText={(text) => this.setState({ email: text })}  />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            underlineColorAndroid={'transparent'}
-                            returnKeyLabel="next"
-                            placeholder='Password'
-                            placeholderTextColor='#939ABA'
-                            secureTextEntry={true}
-                            value={this.state.password}
-                            onChangeText={(text) => this.setState({ password: text })} />
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            underlineColorAndroid={'transparent'}
-                            autoCorrect={false}
-                            returnKeyLabel="go"
-                            placeholder='Confirm Password'
-                            placeholderTextColor='#939ABA'
-                            secureTextEntry={true}
-                            value={this.state.confirmPassword}
-                            onChangeText={(text) => this.setState({ confirmPassword: text })} />
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Username: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                autoFocus={true}
+                                keyboardType='default'
+                                returnKeyLabel="next"
+                                placeholder='Username'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.username}
+                                onChangeText={(text) => this.setState({ username: text })}  />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Email Address: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                keyboardType='email-address'
+                                returnKeyLabel="next"
+                                placeholder='Email Address'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.email}
+                                onChangeText={(text) => this.setState({ email: text })}  />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Password: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                returnKeyLabel="next"
+                                placeholder='Password'
+                                placeholderTextColor='#939ABA'
+                                secureTextEntry={true}
+                                value={this.state.password}
+                                onChangeText={(text) => this.setState({ password: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Confirm Password: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                returnKeyLabel="go"
+                                placeholder='Confirm Password'
+                                placeholderTextColor='#939ABA'
+                                secureTextEntry={true}
+                                value={this.state.confirmPassword}
+                                onChangeText={(text) => this.setState({ confirmPassword: text })} />
+                        </View>
                     </View>
                     {spinnerView}
                     <View style={{paddingTop: 10,}}>

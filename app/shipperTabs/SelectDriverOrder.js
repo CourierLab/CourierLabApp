@@ -27,6 +27,7 @@ export default class SelectShipperOrder extends Component{
             isClicked: false,
             driverDetails: [],
             shipperDetails: [],
+            distance: 0.0,
         };
     }
 
@@ -150,6 +151,7 @@ export default class SelectShipperOrder extends Component{
                 this.setState({
                     driverDetails: json.results.driverOrder,
                     shipperDetails: json.results.shipperOrder,
+                    distance: json.results.distance,
                     spinnerVisible: false,
                 })
             }else{
@@ -195,7 +197,7 @@ export default class SelectShipperOrder extends Component{
                         <Card title={(
                                 <View style={{flexDirection: 'column',}}>
                                     <Text style={{fontFamily: 'Raleway-Bold', fontSize: 20, textAlign: 'center',}}>Shipper Order Details</Text>
-                                    <Text style={{fontFamily: 'Raleway-Italic', fontSize: 15, textAlign: 'center',}}>{this.state.shipperDetails.distance} away from your departure</Text>
+                                    <Text style={{fontFamily: 'Raleway-Italic', fontSize: 15, textAlign: 'center',}}>{this.state.distance} away from your departure</Text>
                                     <View style={{borderBottomWidth: 1, borderBottomColor: '#e0e0e0', marginTop: 10,}}/>
                                 </View>
                             )} 
@@ -212,6 +214,14 @@ export default class SelectShipperOrder extends Component{
                             <View style={{flexDirection: 'column',}}>
                                 <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Order Weight (kg): </Text>
                                 <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.orderWeight}</Text>
+                            </View>
+                            <View style={{flexDirection: 'column',}}>
+                                <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Estimated Price (RM): </Text>
+                                <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.price}</Text>
+                            </View>
+                            <View style={{flexDirection: 'column',}}>
+                                <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Delivery Distance (km): </Text>
+                                <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.shipperDeliveryDistance}</Text>
                             </View>
                             <View style={{flexDirection: 'column',}}>
                                 <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Vehicle Specification: </Text>
@@ -245,14 +255,14 @@ export default class SelectShipperOrder extends Component{
                                 <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient Address: </Text>
                                 <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.recipientAddress}</Text>
                             </View>
-                            <View style={{flexDirection: 'column',}}>
+                            {/* <View style={{flexDirection: 'column',}}>
                                 <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient State: </Text>
                                 <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.recipientState}</Text>
                             </View>
                             <View style={{flexDirection: 'column',}}>
                                 <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient Postcode: </Text>
                                 <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.shipperDetails.recipientPostCode}</Text>
-                            </View>
+                            </View> */}
                         </View>
                     </Card>
                 </View> : <View />}
@@ -279,16 +289,24 @@ export default class SelectShipperOrder extends Component{
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.arriveLocation}</Text>
                         </View>
                         <View style={{flexDirection: 'column',}}>
-                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Car Length (m): </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.carLength}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Type: </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.lorryType}</Text>
                         </View>
                         <View style={{flexDirection: 'column',}}>
-                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Car Weight (kg): </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.carWeight}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Length (m): </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.lorryLength}</Text>
                         </View>
                         <View style={{flexDirection: 'column',}}>
-                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Car Plate Number: </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.carPlateNumber}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Weight (kg): </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.lorryWeight}</Text>
+                        </View>
+                        <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Plate Number: </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.lorryPlateNumber}</Text>
+                        </View>
+                        <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Return: </Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.isReturn}</Text>
                         </View>
                         <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Order Description: </Text>
