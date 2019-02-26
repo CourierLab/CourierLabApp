@@ -86,7 +86,7 @@ export default class Lorry extends Component{
             <ScrollView style={styles.container}>
                 <View style={{flexDirection: 'row', paddingBottom: 10, paddingTop: 0, justifyContent: 'center', }}>
                     <Avatar
-                        size={width-60}
+                        size={width-100}
                         source={{uri: this.state.lorryImage}}
                         onPress={() => console.log("Works!")}
                         activeOpacity={0.7}
@@ -109,7 +109,7 @@ export default class Lorry extends Component{
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryPlateNumber}</Text>
 
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Color: </Text>
-                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryColor}</Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 20, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryColor}</Text>
                 </View>
             </ScrollView>
         )

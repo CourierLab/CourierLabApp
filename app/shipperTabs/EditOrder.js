@@ -232,7 +232,7 @@ export default class EditOrder extends Component{
                         orderDescription: json.results.shipperOrder.orderDescription,
                         vehicleSpecString: json.results.shipperOrder.vehicleSpecifications,
                         spinnerVisible: false,
-                        selectedLorryType: json.results.shipperOrder.lorryTypeName,
+                        selectedLorryType: json.results.shipperOrder.lorryType,
                         selectedLorryTypeId: json.results.shipperOrder.lorryTypeId,
                     })
                     spec = this.state.vehicleSpecString.split(', ');
@@ -588,13 +588,13 @@ export default class EditOrder extends Component{
                                     data={this.state.lorryTypeList}
                                     supportedOrientations={['portrait']}
                                     keyExtractor= {item => item.lorryTypeId}
-                                    labelExtractor= {item => item.lorryTypeName}
+                                    labelExtractor= {item => item.lorryType}
                                     accessible={true}
                                     scrollViewAccessibilityLabel={'Scrollable options'}
                                     cancelButtonAccessibilityLabel={'Cancel Button'}
                                     onChange={(option)=>{ 
                                         this.setState({
-                                            selectedLorryType: option.lorryTypeName,
+                                            selectedLorryType: option.lorryType,
                                             selectedLorryTypeId: option.lorryTypeId,
                                         })
                                     }}>

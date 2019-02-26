@@ -102,23 +102,29 @@ export default class DriverOrderDetails extends Component{
                     </View>
                     <View style={styles.columnGap}>
                     </View>
+                    <View style={styles.columnNormal}>
+                        <Text style={styles.columnTitleText}>Lorry Type</Text>
+                        <Text style={styles.columnDescriptionText}>{orderDetails.lorryTypeName}</Text>
+                    </View>
+                    <View style={styles.columnGap}>
+                    </View>
                     <View style={styles.columnRowContainer}>
                         <View style={styles.columnRowContent}>
-                            <Text style={styles.columnTitleText}>Car Length (m)</Text>
-                            <Text style={styles.columnDescriptionText}>{orderDetails.carLength}</Text>
+                            <Text style={styles.columnTitleText}>Lorry Length (m)</Text>
+                            <Text style={styles.columnDescriptionText}>{orderDetails.lorryLength}</Text>
                         </View>
                         <View style={styles.columnRowGap}>
                         </View>
                         <View style={styles.columnRowContent}>
-                            <Text style={styles.columnTitleText}>Car Weight (kg)</Text>
-                            <Text style={styles.columnDescriptionText}>{orderDetails.carWeight}</Text>
+                            <Text style={styles.columnTitleText}>Lorry Weight (kg)</Text>
+                            <Text style={styles.columnDescriptionText}>{orderDetails.lorryWeight}</Text>
                         </View>
                     </View>
                     <View style={styles.columnGap}>
                     </View>
                     <View style={styles.columnNormal}>
-                        <Text style={styles.columnTitleText}>Car Plate</Text>
-                        <Text style={styles.columnDescriptionText}>{orderDetails.carPlateNumber}</Text>
+                        <Text style={styles.columnTitleText}>Lorry Plate Number</Text>
+                        <Text style={styles.columnDescriptionText}>{orderDetails.lorryPlateNumber}</Text>
                     </View>
                     <View style={styles.columnGap}>
                     </View>

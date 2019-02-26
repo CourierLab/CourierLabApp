@@ -16,6 +16,8 @@ import DriverOrderDetailsScreen from './DriverOrderDetails';
 import AddOrderScreen from './AddOrder';
 import ConfirmShipperDriverOrderScreen from './ConfirmShipperDriverOrder';
 import PendingConfirmationDetailScreen from './PendingConfirmationDetail';
+import PendingPaymentScreen from './PendingPayment';
+import PendingPaymentDetailScreen from './PendingPaymentDetail';
 
 const tabOneStack = createStackNavigator({
     DriverOrder: { screen: DriverOrderScreen },
@@ -61,6 +63,7 @@ const tabThreeStack = createStackNavigator({
     SelectDriverOrder : { screen: SelectDriverOrderScreen },
     AddShipperOrder : { screen: AddShipperOrderScreen },
     EditOrder : { screen: EditOrderScreen },
+    PendingPaymentDetail : { screen: PendingPaymentDetailScreen },
 },
 {
     navigationOptions: {
@@ -92,10 +95,28 @@ const tabFourStack = createStackNavigator({
     }
 });
 
+const tabFiveStack = createStackNavigator({
+    PendingPayment : { screen: PendingPaymentScreen },
+    PendingPaymentDetail : { screen: PendingPaymentDetailScreen },
+},
+{
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: '#3c4c96',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+            fontFamily: 'Raleway-Bold',
+        },
+    }
+});
+
 export default createBottomTabNavigator({
     "Driver Order" : { screen: tabOneStack },
     "Pending Confirmation" : { screen: tabTwoStack },
     "Shipper Order" : { screen: tabThreeStack },
+    "Pending Payment" : { screen: tabFiveStack },
     "Profile" : { screen: tabFourStack },
 },
 {
@@ -111,6 +132,8 @@ export default createBottomTabNavigator({
                 iconName = 'shopping-cart';
             }else if(routeName === 'Profile'){
                 iconName = 'user';
+            }else if(routeName === 'Pending Payment'){
+                iconName = 'dollar';
             }
             return <Icon name={iconName} size={25} color={tintColor} />;
         },

@@ -306,7 +306,7 @@ export default class SelectShipperOrder extends Component{
                         </View>
                         <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Return: </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.driverDetails.isReturn}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{(this.state.driverDetails.isReturn) ? 'Yes' : 'No'}</Text>
                         </View>
                         <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Order Description: </Text>

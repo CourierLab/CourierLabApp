@@ -414,7 +414,21 @@ export default class ConfirmedOrderDetail extends Component{
                                         <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.orderSummary.driverOrder.vehicleSpecifications}</Text>
                                     </View>
                                 </View>
-                            </Card></View> : <View />}
+                            </Card>
+                            {
+                                (this.state.orderSummary.shipperOrder.showPayButton) ? <View style={{backgroundColor: '#fff', paddingLeft: 10, paddingRight: 10, marginLeft: 20, marginRight: 20, marginBottom: 40,}}>
+                                    <TouchableOpacity
+                                        disabled={this.state.isSubmit}
+                                        style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
+                                        onPress={() => {this.props.navigation.navigate('PendingPaymentDetail', {
+                                            matchedOrderId: this.state.orderSummary.matchedOrderId,
+                                            rerenderFunction : () => this.getOrderSummary()
+                                        })}}>
+                                        <Text style={styles.buttonText}>Pay</Text>
+                                    </TouchableOpacity>
+                                </View> : <View/>
+                            }
+                            </View> : <View />}
                         </View>
                 }
             </ScrollView>
