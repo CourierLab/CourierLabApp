@@ -419,7 +419,7 @@ export default class ConfirmedOrderDetail extends Component{
                                 </View>
                             </Card>
                             {
-                                (this.state.orderSummary.shipperOrder.showPayButton) ? <View style={{backgroundColor: '#fff', paddingLeft: 10, paddingRight: 10, marginLeft: 20, marginRight: 20, marginBottom: 40,}}>
+                                (this.state.orderSummary.shipperOrder.showPayButton) ? <View style={{backgroundColor: '#fff', paddingLeft: 10, paddingRight: 10, marginLeft: 20, marginRight: 20, marginBottom: 40, paddingTop: 20,}}>
                                     <TouchableOpacity
                                         disabled={this.state.isSubmit}
                                         style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
