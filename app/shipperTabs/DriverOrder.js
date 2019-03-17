@@ -39,7 +39,7 @@ export default class Home extends Component{
         setTimeout(() => {
             this.checkInternetConnection();
         }, 500);
-        this._navListener = this.props.navigation.addListener('didFocus', (playload) => {
+        this._navListener = this.props.navigation.addListener('willFocus', (playload) => {
             StatusBar.setBarStyle('light-content');
             isAndroid && StatusBar.setBackgroundColor('#3c4c96');
             this.getPendingOrder();

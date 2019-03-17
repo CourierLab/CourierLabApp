@@ -5,11 +5,16 @@ import LoginContainer from '../tabs/LoginContainer';
 import Container from '../tabs/Container';
 import ShipperContainer from '../shipperTabs/Container';
 import MyRealm from './Realm';
+import SplashScreen from 'react-native-splash-screen';
 
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 
 class App extends Component{
+    componentDidMount() {
+        SplashScreen.hide()
+    }
+
     render(){
         console.log(this.props.isLoggedIn);
         if(this.props.isLoggedIn){

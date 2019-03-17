@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, Text, TextInput,  View, Button, Image, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
+import { ScrollView, Text, TextInput,  View, Platform, Image, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
 import { styles } from '../utils/Style';
 import { login, logout } from '../utils/Actions';
 import NetworkConnection from '../utils/NetworkConnection';
@@ -15,6 +15,7 @@ let refreshTokenPath = 'RefreshToken';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
+let deviceModel = DeviceInfo.getModel().toString()
 
 class Login extends Component{
     static navigationOptions = {
@@ -35,6 +36,7 @@ class Login extends Component{
 
     componentWillMount(){
         console.log(loginAsset[0]);
+        console.log(DeviceInfo.getModel())
         let now = new Date();
         if(loginAsset[0] !== undefined){
             if(new Date(loginAsset[0].accessTokenExpiredDate) < now){
@@ -260,8 +262,106 @@ class Login extends Component{
 
     render(){
         let alt = (this.state.route === 'Login') ? 'ForgotPassword' : 'Login';
+        console.log(deviceModel == 'iPhone 5s');
+        let iosView = (deviceModel == 'iPhone 5s') ? <KeyboardAvoidingView behavior="padding" style={{backgroundColor: '#fff', padding: 20,}}>
+        <ScrollView>
+        <View style={styles.loginContainer}>
+            <Image resizeMode="contain" style={styles.logo} source={require('../assets/courierLab.jpg')} />
+            <Text style={styles.title}>COURIER LAB</Text>
+        </View>
+        <View style={styles.spinnerView}>
+            <Spinner
+                isVisible={this.state.spinnerVisible}
+                type={'9CubeGrid'}
+                color='#3c4c96'
+                paddingLeft={20}
+                size={50}/>
+        </View>
+        <View style={styles.formContainer}>
+            <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                underlineColorAndroid={'transparent'}
+                autoCorrect={false}
+                autoFocus={false}
+                keyboardType='email-address'
+                returnKeyLabel="next"
+                placeholder='Username'
+                placeholderTextColor='#939ABA'
+                value={this.state.email}
+                onChangeText={(text) => this.setState({ email: text })}  />
+            <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                underlineColorAndroid={'transparent'}
+                autoCorrect={false}
+                returnKeyLabel="go"
+                placeholder='Password'
+                placeholderTextColor='#939ABA'
+                secureTextEntry={true}
+                value={this.state.password}
+                onChangeText={(text) => this.setState({ password: text })} />
+            <View style={{margin: 7}}/>
+            <TouchableOpacity
+                disabled={this.state.isSubmit}
+                style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
+                onPress={(e) => this.userLogin(e)}>
+                <Text style={styles.buttonText}>{this.state.route}</Text>
+            </TouchableOpacity>
+            <Text style={styles.forgotText} onPress={() => this.props.navigation.navigate('ForgotPassword')}>Forgot Password</Text>
+            <Text style={{fontSize: 17, color: '#3c4c96', textAlign: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 0, paddingBottom: 10, fontFamily: 'Raleway-Bold',}} onPress={() => this.props.navigation.navigate('Register')}>Register as Shipper</Text>
+        </View>
+        </ScrollView>
+    </KeyboardAvoidingView> : <KeyboardAvoidingView behavior="padding" style={{flex: 1, backgroundColor: '#fff', padding: 20,}}>
+        <View style={styles.loginContainer}>
+            <Image resizeMode="contain" style={styles.logo} source={require('../assets/courierLab.jpg')} />
+            <Text style={styles.title}>LINERS</Text>
+        </View>
+        <View style={styles.spinnerView}>
+            <Spinner
+                isVisible={this.state.spinnerVisible}
+                type={'9CubeGrid'}
+                color='#3c4c96'
+                paddingLeft={20}
+                size={50}/>
+        </View>
+        <View style={styles.formContainer}>
+            <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                underlineColorAndroid={'transparent'}
+                autoCorrect={false}
+                autoFocus={false}
+                keyboardType='email-address'
+                returnKeyLabel="next"
+                placeholder='Username'
+                placeholderTextColor='#939ABA'
+                value={this.state.email}
+                onChangeText={(text) => this.setState({ email: text })}  />
+            <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                underlineColorAndroid={'transparent'}
+                autoCorrect={false}
+                returnKeyLabel="go"
+                placeholder='Password'
+                placeholderTextColor='#939ABA'
+                secureTextEntry={true}
+                value={this.state.password}
+                onChangeText={(text) => this.setState({ password: text })} />
+            <View style={{margin: 7}}/>
+            <TouchableOpacity
+                disabled={this.state.isSubmit}
+                style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
+                onPress={(e) => this.userLogin(e)}>
+                <Text style={styles.buttonText}>{this.state.route}</Text>
+            </TouchableOpacity>
+            <Text style={styles.forgotText} onPress={() => this.props.navigation.navigate('ForgotPassword')}>Forgot Password</Text>
+            <Text style={{fontSize: 17, color: '#3c4c96', textAlign: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 0, paddingBottom: 10, fontFamily: 'Raleway-Bold',}} onPress={() => this.props.navigation.navigate('Register')}>Register as Shipper</Text>
+        </View>
+    </KeyboardAvoidingView>
         return(
-            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+            (Platform.OS === 'ios') ? iosView : <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff', padding: 20,}}>
                 <View style={styles.loginContainer}>
                     <Image resizeMode="contain" style={styles.logo} source={require('../assets/courierLab.jpg')} />
                     <Text style={styles.title}>COURIER LAB</Text>

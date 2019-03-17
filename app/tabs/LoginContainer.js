@@ -6,6 +6,7 @@ import ForgotPasswordScreen from './ForgotPassword';
 import RegisterScreen from './Register';
 import UpdateProfileFirstScreen from '../shipperTabs/UpdateProfileFirst';
 import UpdateLorryFirstScreen from '../tabs/UpdateLorryFirst';
+// import SplashScreen from './SplashScreen';
 
 export default createStackNavigator({
     Login: { screen: LoginScreen },
@@ -13,8 +14,10 @@ export default createStackNavigator({
     ForgotPassword: { screen: ForgotPasswordScreen },
     UpdateProfileFirst: { screen: UpdateProfileFirstScreen },
     UpdateLorryFirst: { screen: UpdateLorryFirstScreen },
+    // Splash: { screen: SplashScreen },
 },
 {
+    // initialRouteName: "Splash",
     navigationOptions: {
         headerStyle: {
             backgroundColor: '#3c4c96',

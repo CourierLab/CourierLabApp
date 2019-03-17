@@ -24,7 +24,6 @@ import UpdateProfileScreen from './UpdateProfile';
 import UpcomingOrderScreen from './UpcomingOrder';
 import UpdateLorryScreen from './UpdateLorry';
 import LorryScreen from './Lorry';
-import Lorry from './Lorry';
 
 const tabOneStack = createStackNavigator({
     Home: { screen: HomeScreen },

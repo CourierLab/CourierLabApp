@@ -60,7 +60,7 @@ export default class Scanner extends Component {
         this.setState({ 
             isScanned: true,
         })
-
+        console.log('orderNumber ', orderNumber)
         fetch(`${myApiUrl}/${orderScanningPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&orderNumber=` + orderNumber, {
             method: 'GET',
             headers: {

@@ -166,7 +166,7 @@ class Profile extends Component{
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <Text style={{paddingTop:10, paddingBottom: 10, textAlign: 'center', fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Bold',}}>App version: {deviceVersion}</Text>
+                    <Text style={{paddingTop:10, paddingBottom: 30, textAlign: 'center', fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Bold',}}>App version: {deviceVersion}</Text>
                 </View>
             </ScrollView>
         )

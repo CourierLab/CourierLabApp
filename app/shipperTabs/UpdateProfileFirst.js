@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, ScrollView,  } from 'react-native';
+import { Text, TextInput, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, ScrollView, Platform, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
@@ -164,7 +164,100 @@ class UpdateProfileFirst extends Component{
                         size={50}/>
                 </View> : <View/>;
         return(
-            <KeyboardAvoidingView style={styles.container}>
+            (Platform.OS === 'ios') ? <KeyboardAvoidingView behavior="padding" style={styles.container}>
+                <ScrollView>
+                    <View>
+                        <Text style={{paddingBottom: 20, fontSize: 16, color: '#3c4c96', fontFamily: 'Raleway-Bold', }}>NOTE: Please key in your information for first time setup.</Text>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Name: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                autoFocus={true}
+                                keyboardType='default'
+                                placeholder='Name'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.name}
+                                onChangeText={(text) => this.setState({ name: text })}  />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                keyboardType='default'
+                                placeholder='NRIC'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.nric}
+                                onChangeText={(text) => this.setState({ nric: text })}  />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                placeholder='Phone Number'
+                                keyboardType='default'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.phoneNumber}
+                                onChangeText={(text) => this.setState({ phoneNumber: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>State: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                placeholder='State'
+                                keyboardType='default'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.state}
+                                onChangeText={(text) => this.setState({ state: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Address: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                placeholder='Address'
+                                keyboardType='default'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.address}
+                                onChangeText={(text) => this.setState({ address: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Postcode: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                placeholder='Postcode'
+                                keyboardType='numeric'
+                                placeholderTextColor='#939ABA'
+                                value={this.state.postcode}
+                                onChangeText={(text) => this.setState({ postcode: text })} />
+                        </View>
+                    </View>
+                    {spinnerView}
+                    <View style={{paddingTop: 10,}}>
+                        <TouchableOpacity
+                            style={styles.buttonContainer}
+                            onPress={(e) => this.updateProfile(e)}>
+                            <Text style={styles.buttonText}>Update Profile</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView> : <KeyboardAvoidingView style={styles.container}>
                 <ScrollView>
                     <View>
                         <Text style={{paddingBottom: 20, fontSize: 16, color: '#3c4c96', fontFamily: 'Raleway-Bold', }}>NOTE: Please key in your information for first time setup.</Text>

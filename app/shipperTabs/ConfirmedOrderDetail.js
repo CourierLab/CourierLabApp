@@ -38,7 +38,7 @@ export default class ConfirmedOrderDetail extends Component{
             this.checkInternetConnection();
         }, 500);
         // this.getOrderSummary();
-        this._navListener = this.props.navigation.addListener('didFocus', (playload) => {
+        this._navListener = this.props.navigation.addListener('willFocus', (playload) => {
             this.getOrderSummary();
             console.log('payload page 2: ', playload);
         });

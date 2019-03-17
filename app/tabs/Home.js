@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, StatusBar, isAndroid, SafeAreaView, ScrollView, } from 'react-native';
+import { View, Text, Alert, StatusBar, isAndroid, Platform, ScrollView, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
@@ -41,7 +41,7 @@ export default class Home extends Component{
         }, 500);
         console.log(deviceId);
         console.log(loginAsset[0]);
-        this._navListener = this.props.navigation.addListener('didFocus', (playload) => {
+        this._navListener = this.props.navigation.addListener('willFocus', (playload) => {
             StatusBar.setBarStyle('light-content');
             isAndroid && StatusBar.setBackgroundColor('#3c4c96');
             this.getPendingOrder();
@@ -69,10 +69,10 @@ export default class Home extends Component{
         console.log('Data: ', openResult.notification.payload.additionalData);
         console.log('isActive: ', openResult.notification.isAppInFocus);
         console.log('openResult: ', openResult);
-        console.log('url: ', openResult.notification.payload.launchURL);
+        // console.log('url: ', openResult.notification.payload.launchURL);
         isPending = openResult.notification.payload.additionalData.IsPending;
         orderId = openResult.notification.payload.additionalData.OrderID;
-        console.log(isPending);
+        console.log('ispending: ', isPending);
         let now = new Date();
         if(loginAsset[0] !== undefined){
             if(new Date(loginAsset[0].accessTokenExpiredDate) < now){
@@ -113,13 +113,25 @@ export default class Home extends Component{
                 //go to main page
                 console.log('not expired yet');
                 if(isPending){
-                    this.props.navigation.navigate('PendingConfirmationDetail', {
-                        driverOrderId: orderId,
-                    })
+                    if(Platform.OS === 'ios'){
+                        _this.props.navigation.navigate('PendingConfirmationDetail', {
+                            driverOrderId: orderId,
+                        })
+                    }else{
+                        this.props.navigation.navigate('PendingConfirmationDetail', {
+                            driverOrderId: orderId,
+                        })
+                    }
                 }else{
-                    this.props.navigation.navigate('ConfirmedOrderDetail', {
-                        driverOrderId: orderId,
-                    })
+                    if(Platform.OS === 'ios'){
+                        _this.props.navigation.navigate('ConfirmedOrderDetail', {
+                            driverOrderId: orderId,
+                        })
+                    }else{
+                        this.props.navigation.navigate('ConfirmedOrderDetail', {
+                            driverOrderId: orderId,
+                        })
+                    }
                 }            
             }
         }

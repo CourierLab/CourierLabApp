@@ -27,10 +27,12 @@ export default class History extends Component{
         super(props);
         this.state = {
             driverOrderData: [],
+            allDriverOrderData: [],
             spinnerVisible: false,
             searchItem: '',
             filterData: [],
             pagination: {},
+            allPagination: {},
             isScrollSpinner: false,
             noMoreData: false,
         };
@@ -43,7 +45,7 @@ export default class History extends Component{
         }, 500);
         // this.getDriverOrder();
 
-        this._navListener = this.props.navigation.addListener('didFocus', (playload) => {
+        this._navListener = this.props.navigation.addListener('willFocus', (playload) => {
             this.getDriverOrder();
             console.log('payload page 2: ', playload);
         });
@@ -79,11 +81,12 @@ export default class History extends Component{
         }], {cancelable: false})
     }
 
-    getDriverOrder(){
+    async getDriverOrder(){
+        var number = 0
         this.setState({
             spinnerVisible: true,
         })
-        fetch(`${myApiUrl}/${driverOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&driverId=` + loginAsset[0].loginUserId, {
+        await fetch(`${myApiUrl}/${driverOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&driverId=` + loginAsset[0].loginUserId, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -95,9 +98,15 @@ export default class History extends Component{
         .then((json) => {
             console.log('getResult: ', json);
             if(json.succeeded){
+                var last = json.paging.last
+                var page = last.split('&')
+                var pageNumber = page[3].lastIndexOf('=')
+                number = page[3].substring(pageNumber + 1)
                 this.setState({
                     driverOrderData: json.results,
+                    allDriverOrderData: json.results,
                     pagination: json.paging,
+                    allPagination: json.paging,
                 });
             }
             this.setState({
@@ -109,10 +118,33 @@ export default class History extends Component{
                 spinnerVisible: false,
             })
         });
+
+        for(var i=1; i<number; i++){
+            await fetch(this.state.allPagination.next, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': loginAsset[0].accessToken,
+                },
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                if(json.succeeded){
+                    this.setState({
+                        allDriverOrderData: [...this.state.allDriverOrderData, ...json.results],
+                        allPagination: json.paging,
+                    });
+                }
+                console.log('latest paging: ', json.paging);
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     }
 
     searchFilterFunction(text){
-        const newData = this.state.driverOrderData.filter(function(item){
+        const newData = this.state.allDriverOrderData.filter(function(item){
             const orderDescription = (item.orderDescription !== null) ? item.orderDescription.toUpperCase() : '';
             const departLocation = item.departLocation.toUpperCase();
             const arriveLocation = item.arriveLocation.toUpperCase();

@@ -27,10 +27,12 @@ export default class History extends Component{
         super(props);
         this.state = {
             shipperOrderData: [],
+            allShipperOrderData: [],
             spinnerVisible: false,
             searchItem: '',
             filterData: [],
             pagination: {},
+            allPagination: {},
             isScrollSpinner: false,
             noMoreData: false,
         };
@@ -41,7 +43,7 @@ export default class History extends Component{
         setTimeout(() => {
             this.checkInternetConnection();
         }, 500);
-        this._navListener = this.props.navigation.addListener('didFocus', (playload) => {
+        this._navListener = this.props.navigation.addListener('willFocus', (playload) => {
             this.getShipperOrder();
             console.log('payload page 2: ', playload);
         });
@@ -77,11 +79,12 @@ export default class History extends Component{
         }], {cancelable: false})
     }
 
-    getShipperOrder(){
+    async getShipperOrder(){
+        var number = 0
         this.setState({
             spinnerVisible: true,
         })
-        fetch(`${myApiUrl}/${shipperOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&shipperId=` + loginAsset[0].loginUserId, {
+        await fetch(`${myApiUrl}/${shipperOrderPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&shipperId=` + loginAsset[0].loginUserId, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -93,9 +96,15 @@ export default class History extends Component{
         .then((json) => {
             console.log('getResult: ', json);
             if(json.succeeded){
+                var last = json.paging.last
+                var page = last.split('&')
+                var pageNumber = page[3].lastIndexOf('=')
+                number = page[3].substring(pageNumber + 1)
                 this.setState({
                     shipperOrderData: json.results,
+                    allShipperOrderData: json.results,
                     pagination: json.paging,
+                    allPagination: json.paging,
                 });
             }
             this.setState({
@@ -107,10 +116,33 @@ export default class History extends Component{
                 spinnerVisible: false,
             })
         });
+
+        for(var i=1; i<number; i++){
+            await fetch(this.state.allPagination.next, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': loginAsset[0].accessToken,
+                },
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                if(json.succeeded){
+                    this.setState({
+                        allShipperOrderData: [...this.state.allShipperOrderData, ...json.results],
+                        allPagination: json.paging,
+                    });
+                }
+                console.log('latest paging: ', json.paging);
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     }
 
     searchFilterFunction(text){
-        const newData = this.state.shipperOrderData.filter(function(item){
+        const newData = this.state.allShipperOrderData.filter(function(item){
             const orderDescription = (item.orderDescription !== null) ? item.orderDescription.toUpperCase() : '';
             const pickUpLocation = item.pickUpLocation.toUpperCase();
             const recipientName = item.recipientName.toUpperCase();
