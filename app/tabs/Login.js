@@ -266,8 +266,8 @@ class Login extends Component{
         let iosView = (deviceModel == 'iPhone 5s') ? <KeyboardAvoidingView behavior="padding" style={{backgroundColor: '#fff', padding: 20,}}>
         <ScrollView>
         <View style={styles.loginContainer}>
-            <Image resizeMode="contain" style={styles.logo} source={require('../assets/courierLab.jpg')} />
-            <Text style={styles.title}>COURIER LAB</Text>
+            <Image resizeMode="contain" style={styles.logo} source={require('../assets/logoBackground.png')} />
+            <Text style={[styles.title, {color: '#fff'}]}>LINERS</Text>
         </View>
         <View style={styles.spinnerView}>
             <Spinner
@@ -314,8 +314,8 @@ class Login extends Component{
         </ScrollView>
     </KeyboardAvoidingView> : <KeyboardAvoidingView behavior="padding" style={{flex: 1, backgroundColor: '#fff', padding: 20,}}>
         <View style={styles.loginContainer}>
-            <Image resizeMode="contain" style={styles.logo} source={require('../assets/courierLab.jpg')} />
-            <Text style={styles.title}>LINERS</Text>
+            <Image resizeMode="contain" style={styles.logo} source={require('../assets/logoBackground.png')} />
+            <Text style={[styles.title, {color: '#fff'}]}>LINERS</Text>
         </View>
         <View style={styles.spinnerView}>
             <Spinner
@@ -363,8 +363,8 @@ class Login extends Component{
         return(
             (Platform.OS === 'ios') ? iosView : <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff', padding: 20,}}>
                 <View style={styles.loginContainer}>
-                    <Image resizeMode="contain" style={styles.logo} source={require('../assets/courierLab.jpg')} />
-                    <Text style={styles.title}>COURIER LAB</Text>
+                    <Image resizeMode="contain" style={styles.logo} source={require('../assets/logoBackground.png')} />
+                    <Text style={[styles.title, {color: '#fff'}]}>LINERS</Text>
                 </View>
                 <View style={styles.spinnerView}>
                     <Spinner
