@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, Alert, ScrollView, TouchableOpacity, Linking, Platform, Dimensions, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import { styles } from '../utils/Style';
 import Spinner from 'react-native-spinkit';
-import { Card, } from 'react-native-elements';
+import { Card, Avatar, } from 'react-native-elements';
 import ProgressBar from 'react-native-progress/Bar';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
@@ -16,6 +16,7 @@ let rejectOrderPath = 'ShipperRejectOrder';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
+let {height, width} = Dimensions.get('window');
 
 export default class PendingConfirmationDetail extends Component{
     static navigationOptions = {
@@ -389,6 +390,19 @@ export default class PendingConfirmationDetail extends Component{
                                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient Address: </Text>
                                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.orderSummary.shipperOrder.recipientAddress}</Text>
                                 </View>
+                                <View style={{flexDirection: 'column',}}>
+                                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Order Image: </Text>
+                                    {
+                                        (this.state.orderSummary.shipperOrder.shipperOrderImage !== '') ? <View style={{flexDirection: 'row', paddingBottom: 10, paddingTop: 0, paddingLeft: 5, paddingRight: 5, justifyContent: 'flex-start', }}>
+                                            <Avatar
+                                                size={width-100}
+                                                source={{uri: this.state.orderSummary.shipperOrder.shipperOrderImage}}
+                                                onPress={() => console.log("Works!")}
+                                                activeOpacity={0.7}
+                                            />
+                                        </View> : <View />
+                                    }
+                                </View>
                                 {/* <View style={{flexDirection: 'column',}}>
                                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient State: </Text>
                                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.orderSummary.shipperOrder.recipientState}</Text>
@@ -418,14 +432,14 @@ export default class PendingConfirmationDetail extends Component{
                                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Type: </Text>
                                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.orderSummary.driverOrder.lorryType}</Text>
                                 </View>
-                                <View style={{flexDirection: 'column',}}>
+                                {/* <View style={{flexDirection: 'column',}}>
                                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Length (m): </Text>
                                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.orderSummary.driverOrder.lorryLength}</Text>
                                 </View>
                                 <View style={{flexDirection: 'column',}}>
                                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Weight (kg): </Text>
                                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.orderSummary.driverOrder.lorryWeight}</Text>
-                                </View>
+                                </View> */}
                                 <View style={{flexDirection: 'column',}}>
                                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Lorry Plate Number: </Text>
                                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.orderSummary.driverOrder.lorryPlateNumber}</Text>

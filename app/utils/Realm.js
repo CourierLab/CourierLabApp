@@ -26,18 +26,20 @@ class MyRealm {
                     lorryId: {type: 'int', optional: true},
                     lorryColor: {type: 'string', optional: true},
                     lorryImage: {type: 'string', optional: true},
-                    lorryLengthId: {type: 'int', optional: true},
-                    lorryLengthAmount: {type: 'int', optional: true},
+                    // lorryLengthId: {type: 'int', optional: true},  //blank now
+                    // lorryLengthAmount: {type: 'int', optional: true},  //blank now
                     lorryName: {type: 'string', optional: true},
                     lorryPlateNumber: {type: 'string', optional: true},
                     lorryTypeId: {type: 'int', optional: true},
                     lorryTypeName: {type: 'string', optional: true},
-                    lorryWeightId: {type: 'int', optional: true},
-                    lorryWeigthAmount: {type: 'int', optional: true},
+                    // lorryWeightId: {type: 'int', optional: true},  //blank now
+                    // lorryWeigthAmount: {type: 'int', optional: true},  //blank now
                     bankId: {type: 'int', optional: true},
                     bankName: {type: 'string', optional: true},
                     bankAccountNumber: {type: 'string', optional: true},
                     driverImage: {type: 'string', optional: true},
+                    driverICImage: {type: 'string', optional: true},
+                    driverLicenseImage: {type: 'string', optional: true},
                 }
             };
 

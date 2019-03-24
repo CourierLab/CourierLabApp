@@ -9,6 +9,7 @@ import MultiSelect from 'react-native-multiple-select';
 import Geocoder from 'react-native-geocoding';
 import DatePicker from 'react-native-datepicker';
 import ModalSelector from 'react-native-modal-selector';
+import ImagePicker from 'react-native-image-picker';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let addOrderPath = 'AddShipperOrder';
@@ -43,7 +44,7 @@ export default class AddDriverOrder extends Component{
                 recipientAddressLongitude: "",
                 // recipientPostCode: "",
                 // recipientState: "",
-                id: 0,
+                recipientId: 0,
             }],
             favRecipientId: 0,
             favRecipientName: '',
@@ -64,6 +65,7 @@ export default class AddDriverOrder extends Component{
             lorryTypeList: [],
             selectedLorryType: '',
             selectedLorryTypeId: 0,
+            orderImage: '',
         }
     }
 
@@ -187,14 +189,42 @@ export default class AddDriverOrder extends Component{
         });
     }
 
+    openImage(){
+        const options = {
+            title: 'Select Image',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                this.setState({
+                    orderImage: "",
+                });
+            }else if (response.error) {
+                this.setState({
+                    orderImage: "",
+                });
+            }else {
+                const source = response.uri;
+                this.setState({
+                    orderImage: source,
+                });
+            }
+        });
+        console.log('image: ', this.state.orderImage)
+    }
+
     addOrder(){
         this.setState({
             spinnerVisible: true,
             isClicked: true,
             isSubmit: true,
         })
-        if(this.state.pickUpLocation === "" || this.state.pickUpDate === "" || this.state.expectedArrivalDate === "" || this.state.selectedLorryTypeId === "" || this.state.recipientName === "" || this.state.recipientAddress === "" || this.state.recipientEmail === "" || this.state.recipientPhoneNumber === "" || this.state.orderWeight === "" || this.state.orderDescription === "" || this.state.vehicleSpec === ""){
-            Alert.alert('Cannot Add', "Please key in Pick Up Location, Pick Up Date, Expected Arrival Date, Lorry Type, Recipient Name, Recipient Address, Recipient Email, Recipient Phone Number, Order Weight(kg), Order Description and Vechicle Specification", [{
+        if(this.state.pickUpLocation === "" || this.state.pickUpDate === "" || this.state.expectedArrivalDate === "" || this.state.selectedLorryTypeId === "" || this.state.recipientName === "" || this.state.recipientAddress === "" || this.state.recipientEmail === "" || this.state.recipientPhoneNumber === "" || this.state.orderWeight === "" || this.state.orderDescription === "" || this.state.vehicleSpec === "" || this.state.orderImage === ''){
+            Alert.alert('Cannot Add', "Please key in Pick Up Location, Pick Up Date, Expected Arrival Date, Lorry Type, Recipient Name, Recipient Address, Recipient Email, Recipient Phone Number, Order Weight(kg), Order Description, Vechicle Specification and Shipper Order Image", [{
                 text: 'OK',
                 onPress: () => {},
             }], {cancelable: false});
@@ -219,38 +249,61 @@ export default class AddDriverOrder extends Component{
                     console.log(location);
                     this.setState({
                         recipientAddressLatitude: location.lat,
-                        recipientAddressLatitude: location.lng,
+                        recipientAddressLongitude: location.lng,
                     })
 
+                    var bodyData = new FormData();
+                    bodyData.append('pickUpLocation', this.state.pickUpLocation);
+                    bodyData.append('pickUpLocationLatitude', this.state.pickUpLatitude);
+                    bodyData.append('pickUpLocationLongitude', this.state.pickUpLongitude);
+                    bodyData.append('orderDescription', this.state.orderDescription);
+                    bodyData.append('orderWeight', this.state.orderWeight);
+                    bodyData.append('pickUpDateTime', this.state.pickUpDate);
+                    bodyData.append('arrivalDateTime', this.state.expectedArrivalDate);
+                    bodyData.append('favouriteRecipientId', this.state.favRecipientId);
+                    bodyData.append('recipientName', this.state.recipientName);
+                    bodyData.append('recipientAddress', this.state.recipientAddress);
+                    bodyData.append('recipientAddressLatitude', this.state.recipientAddressLatitude);
+                    bodyData.append('recipientAddressLongitude', this.state.recipientAddressLongitude);
+                    bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
+                    bodyData.append('recipientEmailAddress', this.state.recipientEmail);
+                    bodyData.append('recipientPhoneNumber', this.state.recipientPhoneNumber);
+                    bodyData.append('vehicleSpecificationId', this.state.vehicleSpec.toString());
+                    bodyData.append('deviceId', deviceId);
+                    bodyData.append('userId', loginAsset[0].userId);
+                    // bodyData.append('driverOrderId', this.props.navigation.getParam('driverOrderId'));
+                    bodyData.append('shipperOrderImage', { uri: this.state.orderImage, name: 'orderImage', type: 'image/jpeg' });
+                    console.log(bodyData)
                     fetch(`${myApiUrl}/${addOrderPath}`, {
                         method: 'POST',
                         headers: new Headers({
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
+                            // 'Accept': 'application/json',
+                            'Content-Type': 'multipart/form-data',
                             'Authorization': loginAsset[0].accessToken,
                         }),
-                        body: JSON.stringify({
-                            pickUpLocation: this.state.pickUpLocation,
-                            pickUpLocationLatitude: this.state.pickUpLatitude,
-                            pickUpLocationLongitude: this.state.pickUpLongitude,
-                            orderDescription: this.state.orderDescription,
-                            orderWeight: this.state.orderWeight,
-                            pickUpDateTime: this.state.pickUpDate,
-                            arrivalDateTime: this.state.expectedArrivalDate,
-                            favouriteRecipientId: this.state.favRecipientId,
-                            recipientName: this.state.recipientName,
-                            recipientAddress: this.state.recipientAddress,
-                            recipientAddressLatitude: this.state.recipientAddressLatitude,
-                            recipientAddressLongitude: this.state.recipientAddressLongitude,
-                            lorryTypeId: this.state.selectedLorryTypeId,
-                            // recipientState: this.state.recipientState,
-                            // recipientPostCode: this.state.recipientPostcode,
-                            recipientEmailAddress: this.state.recipientEmail,
-                            recipientPhoneNumber: this.state.recipientPhoneNumber,
-                            vehicleSpecificationId: this.state.vehicleSpec,
-                            deviceId: deviceId,
-                            userId: loginAsset[0].userId,
-                        }),
+                        body: bodyData,
+                        // body: JSON.stringify({
+                        //     pickUpLocation: this.state.pickUpLocation,
+                        //     pickUpLocationLatitude: this.state.pickUpLatitude,
+                        //     pickUpLocationLongitude: this.state.pickUpLongitude,
+                        //     orderDescription: this.state.orderDescription,
+                        //     orderWeight: this.state.orderWeight,
+                        //     pickUpDateTime: this.state.pickUpDate,
+                        //     arrivalDateTime: this.state.expectedArrivalDate,
+                        //     favouriteRecipientId: this.state.favRecipientId,
+                        //     recipientName: this.state.recipientName,
+                        //     recipientAddress: this.state.recipientAddress,
+                        //     recipientAddressLatitude: this.state.recipientAddressLatitude,
+                        //     recipientAddressLongitude: this.state.recipientAddressLongitude,
+                        //     lorryTypeId: this.state.selectedLorryTypeId,
+                        //     // recipientState: this.state.recipientState,
+                        //     // recipientPostCode: this.state.recipientPostcode,
+                        //     recipientEmailAddress: this.state.recipientEmail,
+                        //     recipientPhoneNumber: this.state.recipientPhoneNumber,
+                        //     vehicleSpecificationId: this.state.vehicleSpec,
+                        //     deviceId: deviceId,
+                        //     userId: loginAsset[0].userId,
+                        // }),
                     })
                     .then((response) => response.json())
                     .then((json) => {
@@ -429,7 +482,7 @@ export default class AddDriverOrder extends Component{
                                             // recipientState: option.recipientState,
                                             recipientAddressLatitude: option.recipientAddressLatitude,
                                             recipientAddressLongitude: option.recipientAddressLongitude,
-                                            favRecipientId: option.id
+                                            favRecipientId: option.recipientId
                                         })
                                     }else{
                                         this.setState({
@@ -442,7 +495,7 @@ export default class AddDriverOrder extends Component{
                                             // recipientState: option.recipientState,
                                             recipientAddressLatitude: option.recipientAddressLatitude,
                                             recipientAddressLongitude: option.recipientAddressLongitude,
-                                            favRecipientId: option.id
+                                            favRecipientId: option.recipientId
                                         })     
                                     }
                                 }}>
@@ -842,6 +895,26 @@ export default class AddDriverOrder extends Component{
                         /> */}
                         <View>
                             {this.multiSelect ? this.multiSelect.getSelectedItemsExt(this.state.vehicleSpec) : null}
+                        </View>
+                        <View style={{paddingLeft: 0, paddingRight: 0, paddingTop: 5, }}>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Order Image: </Text>
+                            <View style={{flexDirection: 'row',}}>
+                                {
+                                    (this.state.orderImage !== "") ? <View style={{flexDirection: 'row',}}>
+                                        <Image resizeMode="cover" source={{ uri: this.state.orderImage }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
+                                        <TouchableOpacity
+                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                            onPress={(e) => this.openImage()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <TouchableOpacity
+                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                        onPress={(e) => this.openImage()}>
+                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
                         </View>
                     </View>
                     {spinnerView}
@@ -982,7 +1055,7 @@ export default class AddDriverOrder extends Component{
                                             // recipientState: option.recipientState,
                                             recipientAddressLatitude: option.recipientAddressLatitude,
                                             recipientAddressLongitude: option.recipientAddressLongitude,
-                                            favRecipientId: option.id
+                                            favRecipientId: option.recipientId
                                         })
                                     }else{
                                         this.setState({
@@ -995,7 +1068,7 @@ export default class AddDriverOrder extends Component{
                                             // recipientState: option.recipientState,
                                             recipientAddressLatitude: option.recipientAddressLatitude,
                                             recipientAddressLongitude: option.recipientAddressLongitude,
-                                            favRecipientId: option.id
+                                            favRecipientId: option.recipientId
                                         })     
                                     }
                                 }}>
@@ -1395,6 +1468,26 @@ export default class AddDriverOrder extends Component{
                         /> */}
                         <View>
                             {this.multiSelect ? this.multiSelect.getSelectedItemsExt(this.state.vehicleSpec) : null}
+                        </View>
+                        <View style={{paddingLeft: 0, paddingRight: 0, paddingTop: 5, }}>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Order Image: </Text>
+                            <View style={{flexDirection: 'row',}}>
+                                {
+                                    (this.state.orderImage !== "") ? <View style={{flexDirection: 'row',}}>
+                                        <Image resizeMode="cover" source={{ uri: this.state.orderImage }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
+                                        <TouchableOpacity
+                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                            onPress={(e) => this.openImage()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <TouchableOpacity
+                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                        onPress={(e) => this.openImage()}>
+                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
                         </View>
                     </View>
                     {spinnerView}

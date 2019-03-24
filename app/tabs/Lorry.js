@@ -26,8 +26,8 @@ export default class Lorry extends Component{
             spinnerVisible: false,
             isSubmit: false,
             lorryType: '',
-            lorryWeight: 0.0,
-            lorryLength: 0.0,
+            // lorryWeight: 0.0,
+            // lorryLength: 0.0,
             lorryName: '',
             lorryPlateNumber: '',
             lorryColor: '',
@@ -72,8 +72,8 @@ export default class Lorry extends Component{
     getLorry(){
         this.setState({
             lorryType: loginAsset[0].lorryTypeName,
-            lorryWeight: loginAsset[0].lorryWeigthAmount,
-            lorryLength: loginAsset[0].lorryLengthAmount,
+            // lorryWeight: loginAsset[0].lorryWeigthAmount,
+            // lorryLength: loginAsset[0].lorryLengthAmount,
             lorryName: loginAsset[0].lorryName,
             lorryPlateNumber: loginAsset[0].lorryPlateNumber,
             lorryColor: loginAsset[0].lorryColor,
@@ -84,14 +84,16 @@ export default class Lorry extends Component{
     render(){
         return(
             <ScrollView style={styles.container}>
-                <View style={{flexDirection: 'row', paddingBottom: 10, paddingTop: 0, justifyContent: 'center', }}>
-                    <Avatar
-                        size={width-100}
-                        source={{uri: this.state.lorryImage}}
-                        onPress={() => console.log("Works!")}
-                        activeOpacity={0.7}
-                    />
-                </View>
+                {
+                    (this.state.lorryImage !== '') ? <View style={{flexDirection: 'row', paddingBottom: 10, paddingTop: 0, justifyContent: 'center', }}>
+                        <Avatar
+                            size={width-100}
+                            source={{uri: this.state.lorryImage}}
+                            onPress={() => console.log("Works!")}
+                            activeOpacity={0.7}
+                        />
+                    </View> : <View />
+                }
                 <View>
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Name: </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryName}</Text>
@@ -99,11 +101,11 @@ export default class Lorry extends Component{
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Type: </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryType}</Text>
 
-                    <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Weight(kg): </Text>
+                    {/* <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Weight(kg): </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryWeight}</Text>
 
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Length(m): </Text>
-                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryLength}</Text>
+                    <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryLength}</Text> */}
 
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Plate Number: </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.lorryPlateNumber}</Text>

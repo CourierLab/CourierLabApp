@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, TextInput, } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, TextInput, Dimensions, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
@@ -17,6 +17,7 @@ let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 let deviceVersion = DeviceInfo.getVersion();
+let {height, width} = Dimensions.get('window');
 
 class Profile extends Component{
     static navigationOptions = {
@@ -37,6 +38,8 @@ class Profile extends Component{
             bank: '',
             bankAccountNumber: '',
             driverImage: '',
+            driverIcImage: '',
+            driverLicenseImage: '',
         };
         _this = this;
     }
@@ -82,6 +85,8 @@ class Profile extends Component{
             bank: loginAsset[0].bankName,
             bankAccountNumber: loginAsset[0].bankAccountNumber,
             driverImage: loginAsset[0].driverImage,
+            driverIcImage: loginAsset[0].driverICImage,
+            driverLicenseImage: loginAsset[0].driverLicenseImage,
         })
     }
 
@@ -138,17 +143,21 @@ class Profile extends Component{
     }
 
     render(){
+        console.log('ic ', this.state.driverIcImage)
+        console.log('license ', this.state.driverLicenseImage)
         return(
             <ScrollView style={styles.container}>
-                <View style={{flexDirection: 'row', paddingBottom: 0, paddingTop: 0, justifyContent: 'center', }}>
-                    <Avatar
-                        size="xlarge"
-                        rounded
-                        source={{uri: this.state.driverImage}}
-                        onPress={() => console.log("Works!")}
-                        activeOpacity={0.7}
-                    />
-                </View>
+                {
+                    (this.state.driverImage !== '') ? <View style={{flexDirection: 'row', paddingBottom: 0, paddingTop: 0, justifyContent: 'center', }}>
+                        <Avatar
+                            size="xlarge"
+                            rounded
+                            source={{uri: this.state.driverImage}}
+                            onPress={() => console.log("Works!")}
+                            activeOpacity={0.7}
+                        />
+                    </View> : <View/>
+                }
                 <View>
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Name: </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.name}</Text>
@@ -164,6 +173,32 @@ class Profile extends Component{
 
                     <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank Account Number: </Text>
                     <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.bankAccountNumber}</Text>
+
+                    {
+                        (this.state.driverIcImage != '') ? <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver IC: </Text>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingTop: 0, paddingLeft: 5, paddingRight: 5, justifyContent: 'flex-start', }}>
+                                <Avatar
+                                    size={width-100}
+                                    source={{uri: this.state.driverIcImage}}
+                                    activeOpacity={0.7}
+                                />
+                            </View>
+                        </View> : <View />
+                    }
+
+                    {
+                        (this.state.driverLicenseImage != '') ? <View style={{flexDirection: 'column',}}>
+                            <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver License: </Text>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingTop: 0, paddingLeft: 5, paddingRight: 5, justifyContent: 'flex-start', }}>
+                                <Avatar
+                                    size={width-100}
+                                    source={{uri: this.state.driverLicenseImage}}
+                                    activeOpacity={0.7}
+                                />
+                            </View>
+                        </View> : <View />
+                    }
 
                     <Text style={{paddingLeft: 5, paddingTop: 10, paddingBottom: 0, paddingRight: 5, color: '#3c4c96', fontSize: 18, fontFamily: 'Raleway-Bold', justifyContent: 'flex-start', textDecorationLine: 'underline', alignSelf: 'flex-start',}}
                         onPress={() => this.props.navigation.navigate('Lorry')}>

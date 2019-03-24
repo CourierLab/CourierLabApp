@@ -106,7 +106,7 @@ export default class DriverOrderDetails extends Component{
                         <Text style={styles.columnTitleText}>Lorry Type</Text>
                         <Text style={styles.columnDescriptionText}>{orderDetails.lorryTypeName}</Text>
                     </View>
-                    <View style={styles.columnGap}>
+                    {/* <View style={styles.columnGap}>
                     </View>
                     <View style={styles.columnRowContainer}>
                         <View style={styles.columnRowContent}>
@@ -119,7 +119,7 @@ export default class DriverOrderDetails extends Component{
                             <Text style={styles.columnTitleText}>Lorry Weight (kg)</Text>
                             <Text style={styles.columnDescriptionText}>{orderDetails.lorryWeight}</Text>
                         </View>
-                    </View>
+                    </View> */}
                     <View style={styles.columnGap}>
                     </View>
                     <View style={styles.columnNormal}>

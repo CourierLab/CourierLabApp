@@ -27,12 +27,12 @@ export default class UpdateLorry extends Component{
             lorryTypeList: [],
             selectedLorryType: '',
             selectedLorryTypeId: 0,
-            lorryWeightList: [],
-            selectedLorryWeight: 0.0,
-            selectedLorryWeightId: 0,
-            lorryLengthList: [],
-            selectedLorryLength: 0.0,
-            selectedLorryLengthId: 0,
+            // lorryWeightList: [],
+            // selectedLorryWeight: 0.0,
+            // selectedLorryWeightId: 0,
+            // lorryLengthList: [],
+            // selectedLorryLength: 0.0,
+            // selectedLorryLengthId: 0,
             lorryName: '',
             lorryPlateNumber: '',
             lorryColor: '',
@@ -80,10 +80,10 @@ export default class UpdateLorry extends Component{
         this.setState({
             selectedLorryTypeId: loginAsset[0].lorryTypeId,
             selectedLorryType: loginAsset[0].lorryTypeName,
-            selectedLorryWeight: loginAsset[0].lorryWeigthAmount,
-            selectedLorryWeightId: loginAsset[0].lorryWeightId,
-            selectedLorryLength: loginAsset[0].lorryLengthAmount,
-            selectedLorryLengthId: loginAsset[0].lorryLengthId,
+            // selectedLorryWeight: loginAsset[0].lorryWeigthAmount,
+            // selectedLorryWeightId: loginAsset[0].lorryWeightId,
+            // selectedLorryLength: loginAsset[0].lorryLengthAmount,
+            // selectedLorryLengthId: loginAsset[0].lorryLengthId,
             lorryName: loginAsset[0].lorryName,
             lorryPlateNumber: loginAsset[0].lorryPlateNumber,
             lorryColor: loginAsset[0].lorryColor,
@@ -112,28 +112,28 @@ export default class UpdateLorry extends Component{
         });
     }
 
-    getLorryWeightLength(lorryTypeId){
-        fetch(`${myApiUrl}/${getLorryWeightLengthPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&lorryTypeId=` + lorryTypeId, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': loginAsset[0].accessToken,
-            },
-        })
-        .then((response) => response.json())
-        .then((json) => {
-            console.log('weight length: ', json.results)
-            if(json.succeeded){
-                this.setState({
-                    lorryWeightList: json.results.lorryWeight,
-                    lorryLengthList: json.results.lorryLength,
-                });
-            } 
-        }).catch(err => {
-            console.log(err);
-        });
-    }
+    // getLorryWeightLength(lorryTypeId){
+    //     fetch(`${myApiUrl}/${getLorryWeightLengthPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&lorryTypeId=` + lorryTypeId, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json',
+    //             'Authorization': loginAsset[0].accessToken,
+    //         },
+    //     })
+    //     .then((response) => response.json())
+    //     .then((json) => {
+    //         console.log('weight length: ', json.results)
+    //         if(json.succeeded){
+    //             this.setState({
+    //                 lorryWeightList: json.results.lorryWeight,
+    //                 lorryLengthList: json.results.lorryLength,
+    //             });
+    //         } 
+    //     }).catch(err => {
+    //         console.log(err);
+    //     });
+    // }
 
     openImage(){
         const options = {
@@ -169,8 +169,9 @@ export default class UpdateLorry extends Component{
             isClicked: true,
         })
 
-        if(this.state.selectedLorryType === "" || this.state.selectedLorryWeight === "" || this.state.selectedLorryLength == "" || this.state.lorryName === "" || this.state.lorryPlateNumber === "" || this.state.lorryColor === "" || this.state.lorryImage === ""){
-            Alert.alert('Cannot Update', 'Please key in Lorry Type, Lorry Weight, Lorry Length, Lorry Name, Lorry Plate Number, Lorry Color and Lorry Image.', [{
+        // if(this.state.selectedLorryType === "" || this.state.selectedLorryWeight === "" || this.state.selectedLorryLength == "" || this.state.lorryName === "" || this.state.lorryPlateNumber === "" || this.state.lorryColor === "" || this.state.lorryImage === ""){
+        if(this.state.selectedLorryType === "" || this.state.lorryName === "" || this.state.lorryPlateNumber === "" || this.state.lorryColor === "" || this.state.lorryImage === ""){
+            Alert.alert('Cannot Update', 'Please key in Lorry Type, Lorry Name, Lorry Plate Number, Lorry Color and Lorry Image.', [{
                 text: 'OK',
                 onPress: () => {},
             }], {cancelable: false});
@@ -184,8 +185,8 @@ export default class UpdateLorry extends Component{
             bodyData.append('lorryPlateNumber', this.state.lorryPlateNumber);
             bodyData.append('lorryColor', this.state.lorryColor);
             bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
-            bodyData.append('lorryWeightId', this.state.selectedLorryWeightId);
-            bodyData.append('lorryLengthId', this.state.selectedLorryLengthId);
+            // bodyData.append('lorryWeightId', this.state.selectedLorryWeightId);
+            // bodyData.append('lorryLengthId', this.state.selectedLorryLengthId);
             bodyData.append('driverId', loginAsset[0].loginUserId);
             bodyData.append('deviceId', deviceId);
             bodyData.append('userId', loginAsset[0].userId);
@@ -211,10 +212,10 @@ export default class UpdateLorry extends Component{
                     })
                     realm.write(() => {
                         loginAsset[0].lorryTypeName = json.results.lorryTypeName,
-                        loginAsset[0].lorryWeigthAmount = json.results.lorryWeightAmount,
-                        loginAsset[0].lorryWeightId = json.results.lorryWeightId,
-                        loginAsset[0].lorryLengthAmount = json.results.lorryLengthAmount,
-                        loginAsset[0].lorryLengthId = json.results.lorryLengthId,
+                        // loginAsset[0].lorryWeigthAmount = json.results.lorryWeightAmount,
+                        // loginAsset[0].lorryWeightId = json.results.lorryWeightId,
+                        // loginAsset[0].lorryLengthAmount = json.results.lorryLengthAmount,
+                        // loginAsset[0].lorryLengthId = json.results.lorryLengthId,
                         loginAsset[0].lorryName = json.results.lorryName,
                         loginAsset[0].lorryPlateNumber = json.results.lorryPlateNumber,
                         loginAsset[0].lorryColor = json.results.lorryColor,
@@ -275,10 +276,10 @@ export default class UpdateLorry extends Component{
                                     this.setState({
                                         selectedLorryType: option.lorryTypeName,
                                         selectedLorryTypeId: option.lorryTypeId,
-                                        selectedLorryWeight: '',
-                                        selectedLorryLength: '',
+                                        // selectedLorryWeight: '',
+                                        // selectedLorryLength: '',
                                     })
-                                    this.getLorryWeightLength(option.lorryTypeId) 
+                                    // this.getLorryWeightLength(option.lorryTypeId) 
                                 }}>
                                 <TextInput
                                     style={{height: 50, backgroundColor: '#fff', marginBottom: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, marginLeft: 15, marginRight: 15, fontFamily: 'Raleway-Bold',}}
@@ -289,7 +290,7 @@ export default class UpdateLorry extends Component{
                                     value={this.state.selectedLorryType}/>
                             </ModalSelector>
                         </View>
-                        <View>
+                        {/* <View>
                             <Text style={{paddingLeft: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 20, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Weight(kg): </Text>
                             <ModalSelector
                                 data={this.state.lorryWeightList}
@@ -338,7 +339,7 @@ export default class UpdateLorry extends Component{
                                     placeholderTextColor='#939ABA'
                                     value={this.state.selectedLorryLength.toString()}/>
                             </ModalSelector>
-                        </View>
+                        </View> */}
                         <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Name: </Text>
                             <TextInput

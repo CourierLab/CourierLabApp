@@ -34,8 +34,8 @@ export default class EditOrder extends Component{
             arriveLocation: '',
             arriveLatitude: '',
             arriveLongitude: '',
-            lorryLength: '',
-            lorryWeight: '',
+            // lorryLength: '',
+            // lorryWeight: '',
             lorryPlateNumber: '',
             orderDescription: '',
             expectedDepartureDate: '',
@@ -90,8 +90,8 @@ export default class EditOrder extends Component{
 
     getLorryDetail(){
         this.setState({
-            lorryLength: loginAsset[0].lorryLengthAmount.toString(),
-            lorryWeight: loginAsset[0].lorryWeigthAmount.toString(),
+            // lorryLength: loginAsset[0].lorryLengthAmount.toString(),
+            // lorryWeight: loginAsset[0].lorryWeigthAmount.toString(),
             lorryPlateNumber: loginAsset[0].lorryPlateNumber,
         })
     }
@@ -347,7 +347,7 @@ export default class EditOrder extends Component{
                                     value={this.state.arriveLocation}
                                     onChangeText={(text) => this.setState({ arriveLocation: text })}  />
                             </View>
-                            <View>
+                            {/* <View>
                                 <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Length(m): </Text>
                                 <TextInput
                                     style={styles.input}
@@ -374,7 +374,7 @@ export default class EditOrder extends Component{
                                     placeholderTextColor='#939ABA'
                                     value={this.state.lorryWeight} 
                                     editable={false}/>
-                            </View>
+                            </View> */}
                             <View>
                                 <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Plate Number: </Text>
                                 <TextInput

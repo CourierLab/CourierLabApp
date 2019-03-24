@@ -32,8 +32,8 @@ export default class AddDriverOrder extends Component{
             arriveLocation: '',
             arriveLatitude: '',
             arriveLongitude: '',
-            lorryLength: '',
-            lorryWeight: '',
+            // lorryLength: '',
+            // lorryWeight: '',
             lorryPlateNumber: '',
             orderDescription: '',
             expectedDepartureDate: '',
@@ -87,8 +87,8 @@ export default class AddDriverOrder extends Component{
 
     getLorryDetail(){
         this.setState({
-            lorryLength: loginAsset[0].lorryLengthAmount.toString(),
-            lorryWeight: loginAsset[0].lorryWeigthAmount.toString(),
+            // lorryLength: loginAsset[0].lorryLengthAmount.toString(),
+            // lorryWeight: loginAsset[0].lorryWeigthAmount.toString(),
             lorryPlateNumber: loginAsset[0].lorryPlateNumber,
         })
     }
@@ -276,7 +276,7 @@ export default class AddDriverOrder extends Component{
                         {/* <Text 
                                 style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                 onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', arriveLocation: ''})}> Pick Location from Map</Text> */}
-                        <View>
+                        {/* <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Length(m): </Text>
                             <TextInput
                                 style={styles.input}
@@ -303,7 +303,7 @@ export default class AddDriverOrder extends Component{
                                 placeholderTextColor='#939ABA'
                                 value={this.state.lorryWeight} 
                                 editable={false}/>
-                        </View>
+                        </View> */}
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Plate Number: </Text>
                             <TextInput

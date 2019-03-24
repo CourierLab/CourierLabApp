@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, ScrollView, Alert, } from 'react-native';
+import { View, Text, Platform, ScrollView, Alert, RefreshControl, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
@@ -77,6 +77,10 @@ export default class History extends Component{
             text: 'OK',
             onPress: () => this.disableAlertAndCheckInternetConnection()
         }], {cancelable: false})
+    }
+
+    _onRefresh = () => {
+        this.getShipperOrder()
     }
 
     async getShipperOrder(){
@@ -356,7 +360,7 @@ export default class History extends Component{
                 <SearchBar
                     platform={Platform.OS}
                     lightTheme
-                    containerStyle={{backgroundColor:'#fff'}}
+                    containerStyle={{backgroundColor:'#fff', borderBottomColor: '#e0e0e0', borderBottomWidth: 1,}}
                     value={this.state.searchItem}
                     onChangeText={(text) => {
                         this.searchFilterFunction(text);
@@ -375,7 +379,14 @@ export default class History extends Component{
                             // console.log('end');
                         }
                     }}
-                    scrollEventThrottle={0}>
+                    scrollEventThrottle={0}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={false}
+                            onRefresh={this._onRefresh}
+                        />
+                    }>
                     {
                         (this.state.spinnerVisible) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
                                 <Spinner

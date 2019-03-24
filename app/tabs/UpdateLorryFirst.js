@@ -29,12 +29,12 @@ class UpdateLorryFirst extends Component{
             lorryTypeList: [],
             selectedLorryType: '',
             selectedLorryTypeId: 0,
-            lorryWeightList: [],
-            selectedLorryWeight: '',
-            selectedLorryWeightId: 0,
-            lorryLengthList: [],
-            selectedLorryLength: '',
-            selectedLorryLengthId: 0,
+            // lorryWeightList: [],
+            // selectedLorryWeight: '',
+            // selectedLorryWeightId: 0,
+            // lorryLengthList: [],
+            // selectedLorryLength: '',
+            // selectedLorryLengthId: 0,
             lorryName: '',
             lorryPlateNumber: '',
             lorryColor: '',
@@ -98,28 +98,28 @@ class UpdateLorryFirst extends Component{
         });
     }
 
-    getLorryWeightLength(lorryTypeId){
-        fetch(`${myApiUrl}/${getLorryWeightLengthPath}?deviceId=` + deviceId + `&userId=` + this.props.navigation.getParam('userId') + `&lorryTypeId=` + lorryTypeId, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': this.props.navigation.getParam('accessToken'),
-            },
-        })
-        .then((response) => response.json())
-        .then((json) => {
-            console.log('weight length: ', json.results)
-            if(json.succeeded){
-                this.setState({
-                    lorryWeightList: json.results.lorryWeight,
-                    lorryLengthList: json.results.lorryLength,
-                });
-            } 
-        }).catch(err => {
-            console.log(err);
-        });
-    }
+    // getLorryWeightLength(lorryTypeId){
+    //     fetch(`${myApiUrl}/${getLorryWeightLengthPath}?deviceId=` + deviceId + `&userId=` + this.props.navigation.getParam('userId') + `&lorryTypeId=` + lorryTypeId, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json',
+    //             'Authorization': this.props.navigation.getParam('accessToken'),
+    //         },
+    //     })
+    //     .then((response) => response.json())
+    //     .then((json) => {
+    //         console.log('weight length: ', json.results)
+    //         if(json.succeeded){
+    //             this.setState({
+    //                 lorryWeightList: json.results.lorryWeight,
+    //                 lorryLengthList: json.results.lorryLength,
+    //             });
+    //         } 
+    //     }).catch(err => {
+    //         console.log(err);
+    //     });
+    // }
 
     openImage(){
         const options = {
@@ -155,8 +155,9 @@ class UpdateLorryFirst extends Component{
             isClicked: true,
         })
 
-        if(this.state.selectedLorryType === "" || this.state.selectedLorryWeight === "" || this.state.selectedLorryLength == "" || this.state.lorryName === "" || this.state.lorryPlateNumber === "" || this.state.lorryColor === "" || this.state.lorryImage === ""){
-            Alert.alert('Cannot Update', 'Please key in Lorry Type, Lorry Weight, Lorry Length, Lorry Name, Lorry Plate Number, Lorry Color and Lorry Image.', [{
+        // if(this.state.selectedLorryType === "" || this.state.selectedLorryWeight === "" || this.state.selectedLorryLength == "" || this.state.lorryName === "" || this.state.lorryPlateNumber === "" || this.state.lorryColor === "" || this.state.lorryImage === ""){
+        if(this.state.selectedLorryType === "" || this.state.lorryName === "" || this.state.lorryPlateNumber === "" || this.state.lorryColor === "" || this.state.lorryImage === ""){
+            Alert.alert('Cannot Update', 'Please key in Lorry Type, Lorry Name, Lorry Plate Number, Lorry Color and Lorry Image.', [{
                 text: 'OK',
                 onPress: () => {},
             }], {cancelable: false});
@@ -170,8 +171,8 @@ class UpdateLorryFirst extends Component{
             bodyData.append('lorryPlateNumber', this.state.lorryPlateNumber);
             bodyData.append('lorryColor', this.state.lorryColor);
             bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
-            bodyData.append('lorryWeightId', this.state.selectedLorryWeightId);
-            bodyData.append('lorryLengthId', this.state.selectedLorryLengthId);
+            // bodyData.append('lorryWeightId', this.state.selectedLorryWeightId);
+            // bodyData.append('lorryLengthId', this.state.selectedLorryLengthId);
             bodyData.append('driverId', this.props.navigation.getParam('loginUserId'));
             bodyData.append('deviceId', deviceId);
             bodyData.append('userId', this.props.navigation.getParam('userId'));
@@ -213,14 +214,14 @@ class UpdateLorryFirst extends Component{
                             lorryId: json.results.lorryId,
                             lorryColor: json.results.lorryColor,
                             lorryImage: json.results.lorryImage,
-                            lorryLengthId: json.results.lorryLengthId,
-                            lorryLengthAmount: json.results.lorryLengthAmount,
+                            // lorryLengthId: json.results.lorryLengthId,
+                            // lorryLengthAmount: json.results.lorryLengthAmount,
                             lorryName: json.results.lorryName,
                             lorryPlateNumber: json.results.lorryPlateNumber,
                             lorryTypeId: json.results.lorryTypeId,
                             lorryTypeName: json.results.lorryTypeName,
-                            lorryWeightId: json.results.lorryWeightId,
-                            lorryWeigthAmount: json.results.lorryWeightAmount,
+                            // lorryWeightId: json.results.lorryWeightId,
+                            // lorryWeigthAmount: json.results.lorryWeightAmount,
                             bankId: this.props.navigation.getParam('bankId'),
                             bankName: this.props.navigation.getParam('bankName').toString(),
                             bankAccountNumber: this.props.navigation.getParam('bankAccountNumber').toString(),
@@ -282,10 +283,10 @@ class UpdateLorryFirst extends Component{
                                     this.setState({
                                         selectedLorryType: option.lorryTypeName,
                                         selectedLorryTypeId: option.lorryTypeId,
-                                        selectedLorryWeight: '',
-                                        selectedLorryLength: '',
+                                        // selectedLorryWeight: '',
+                                        // selectedLorryLength: '',
                                     })
-                                    this.getLorryWeightLength(option.lorryTypeId) 
+                                    // this.getLorryWeightLength(option.lorryTypeId) 
                                 }}>
                                 <TextInput
                                     style={{height: 50, backgroundColor: '#fff', marginBottom: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, marginLeft: 15, marginRight: 15, fontFamily: 'Raleway-Bold',}}
@@ -296,7 +297,7 @@ class UpdateLorryFirst extends Component{
                                     value={this.state.selectedLorryType}/>
                             </ModalSelector>
                         </View>
-                        <View>
+                        {/* <View>
                             <Text style={{paddingLeft: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 20, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Weight (KG): </Text>
                             <ModalSelector
                                 data={this.state.lorryWeightList}
@@ -345,7 +346,7 @@ class UpdateLorryFirst extends Component{
                                     placeholderTextColor='#939ABA'
                                     value={this.state.selectedLorryLength}/>
                             </ModalSelector>
-                        </View>
+                        </View> */}
                         <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Name: </Text>
                             <TextInput

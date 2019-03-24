@@ -97,13 +97,14 @@ export default class Scanner extends Component {
     }
     
     render () {
+        console.log('camera')
         return (
             <View style={{flex: 1, flexDirection: 'row',}}>
                 <Camera
                     style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}
                     aspect={Camera.constants.Aspect.fill}
                     onBarCodeRead={(e) => {
-                        console.log(e);
+                        console.log('open scanner', e);
                         if(!this.state.isScanned){
                             this.scanQR(e.data);
                         }

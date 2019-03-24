@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, TextInput, KeyboardAvoidingView, Platform, } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, TextInput, KeyboardAvoidingView, Platform, Image, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
@@ -36,6 +36,8 @@ export default class UpdateProfile extends Component{
             driverImage: '',
             bankList: [],
             selectedBank: '',
+            driverIC: '',
+            driverLicense: '',
         };
     }
 
@@ -51,6 +53,8 @@ export default class UpdateProfile extends Component{
             selectedBank: loginAsset[0].bankName,
             bankAccountNumber: loginAsset[0].bankAccountNumber,
             driverImage: loginAsset[0].driverImage,
+            driverIC: loginAsset[0].driverICImage,
+            driverLicense: loginAsset[0].driverLicenseImage,
         })
         this.getBankList()
     }
@@ -130,6 +134,62 @@ export default class UpdateProfile extends Component{
         console.log('image: ', this.state.driverImage)
     }
 
+    openImage2(){
+        const options = {
+            title: 'Select Image',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                this.setState({
+                    driverIC: "",
+                });
+            }else if (response.error) {
+                this.setState({
+                    driverIC: "",
+                });
+            }else {
+                const source = response.uri;
+                this.setState({
+                    driverIC: source,
+                });
+            }
+        });
+        console.log('image: ', this.state.driverIC)
+    }
+
+    openImage3(){
+        const options = {
+            title: 'Select Image',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                this.setState({
+                    driverLicense: "",
+                });
+            }else if (response.error) {
+                this.setState({
+                    driverLicense: "",
+                });
+            }else {
+                const source = response.uri;
+                this.setState({
+                    driverLicense: source,
+                });
+            }
+        });
+        console.log('image: ', this.state.driverLicense)
+    }
+
     updateProfile(e){
         this.setState({
             spinnerVisible: true,
@@ -159,6 +219,8 @@ export default class UpdateProfile extends Component{
             bodyData.append('deviceId', deviceId);
             bodyData.append('userId', loginAsset[0].userId);
             bodyData.append('driverImage', { uri: this.state.driverImage, name: 'driverImage', type: 'image/jpeg' });
+            bodyData.append('driverICImage', { uri: this.state.driverIC, name: 'driverIC', type: 'image/jpeg' });
+            bodyData.append('driverLicenseImage', { uri: this.state.driverLicense, name: 'driverLicense', type: 'image/jpeg' });
             console.log(bodyData);
             fetch(`${myApiUrl}/${updateProfilePath}`, {
                 method: 'POST',
@@ -197,7 +259,9 @@ export default class UpdateProfile extends Component{
                         loginAsset[0].bankId = json.results.bankId,
                         loginAsset[0].bankName = json.results.bankName,
                         loginAsset[0].bankAccountNumber = json.results.bankAccountNumber,
-                        loginAsset[0].driverImage = json.results.driverProfilePicture
+                        loginAsset[0].driverImage = json.results.driverProfilePicture,
+                        loginAsset[0].driverICImage = json.results.driverICImage,
+                        loginAsset[0].driverLicenseImage = json.results.driverLicenseImage
                     })
                     this.setState({ 
                         spinnerVisible: false,
@@ -342,6 +406,46 @@ export default class UpdateProfile extends Component{
                                 value={this.state.bankAccountNumber}
                                 onChangeText={(text) => this.setState({ bankAccountNumber: text })}  />
                         </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver IC: </Text>
+                            <View style={{flexDirection: 'row',}}>
+                                {
+                                    (this.state.driverIC !== "") ? <View style={{flexDirection: 'row',}}>
+                                        <Image resizeMode="cover" source={{ uri: this.state.driverIC }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
+                                        <TouchableOpacity
+                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                            onPress={(e) => this.openImage2()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <TouchableOpacity
+                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                        onPress={(e) => this.openImage2()}>
+                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver License: </Text>
+                            <View style={{flexDirection: 'row',}}>
+                                {
+                                    (this.state.driverLicense !== "") ? <View style={{flexDirection: 'row',}}>
+                                        <Image resizeMode="cover" source={{ uri: this.state.driverLicense }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
+                                        <TouchableOpacity
+                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                            onPress={(e) => this.openImage3()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <TouchableOpacity
+                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                        onPress={(e) => this.openImage3()}>
+                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        </View>
                     </View>
                     {
                         (this.state.isClicked) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20, paddingLeft: 20, paddingRight: 20,}}> 
@@ -468,6 +572,46 @@ export default class UpdateProfile extends Component{
                                 placeholderTextColor='#8E9495'
                                 value={this.state.bankAccountNumber}
                                 onChangeText={(text) => this.setState({ bankAccountNumber: text })}  />
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver IC: </Text>
+                            <View style={{flexDirection: 'row',}}>
+                                {
+                                    (this.state.driverIC !== "") ? <View style={{flexDirection: 'row',}}>
+                                        <Image resizeMode="cover" source={{ uri: this.state.driverIC }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
+                                        <TouchableOpacity
+                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                            onPress={(e) => this.openImage2()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <TouchableOpacity
+                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                        onPress={(e) => this.openImage2()}>
+                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver License: </Text>
+                            <View style={{flexDirection: 'row',}}>
+                                {
+                                    (this.state.driverLicense !== "") ? <View style={{flexDirection: 'row',}}>
+                                        <Image resizeMode="cover" source={{ uri: this.state.driverLicense }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
+                                        <TouchableOpacity
+                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                            onPress={(e) => this.openImage3()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <TouchableOpacity
+                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                        onPress={(e) => this.openImage3()}>
+                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
                         </View>
                     </View>
                     {
