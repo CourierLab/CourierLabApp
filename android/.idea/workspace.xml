@@ -15,38 +15,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="59a23772-a54a-474b-a256-0d70c24880ea" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/index.android.bundle" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/index.android.bundle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/index.android.bundle.meta" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/index.android.bundle.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/AddOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/AddOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/AddShipperOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/AddShipperOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/ConfirmShipperDriverOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/ConfirmShipperDriverOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/ConfirmedOrderDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/ConfirmedOrderDetail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/DriverOrderDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/DriverOrderDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/EditOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/EditOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/HistoryOrderDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/HistoryOrderDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/PendingConfirmationDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/PendingConfirmationDetail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/SelectDriverOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/SelectDriverOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/ShipperHistory.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/ShipperHistory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/AddDriverOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/AddDriverOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/AddOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/AddOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/ConfirmDriverShipperOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/ConfirmDriverShipperOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/ConfirmedOrderDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/ConfirmedOrderDetail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/EditOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/EditOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/History.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/History.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/HistoryOrderDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/HistoryOrderDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/Login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/Lorry.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/Lorry.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/PendingConfirmationDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/PendingConfirmationDetail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/Profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/Scanner.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/Scanner.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/SelectShipperOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/SelectShipperOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/UpdateLorry.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/UpdateLorry.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/UpdateLorryFirst.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/UpdateLorryFirst.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/tabs/UpdateProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/UpdateProfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../app/utils/Realm.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/utils/Realm.js" afterDir="false" />
-    </list>
+    <list default="true" id="59a23772-a54a-474b-a256-0d70c24880ea" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,15 +48,15 @@
     <session id="1277872853">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="16" />
+          <entry key="project.closed" value="17" />
           <entry key="project.open.time.1" value="4" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.5" value="2" />
-          <entry key="project.open.time.6" value="4" />
+          <entry key="project.open.time.6" value="5" />
           <entry key="project.open.time.7" value="2" />
           <entry key="project.open.time.8" value="2" />
-          <entry key="project.opened" value="16" />
+          <entry key="project.opened" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -192,7 +161,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/courierlab/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
+            <state relative-caret-position="60">
               <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -204,7 +173,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/courierlab/MainApplication.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="302">
+            <state relative-caret-position="420">
               <caret line="50" column="4" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -3747,7 +3716,17 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="AndroidView">
+        <subPane>
+          <expand>
+            <path>
+              <item name="CourierLab" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -3802,18 +3781,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView">
-        <subPane>
-          <expand>
-            <path>
-              <item name="CourierLab" type="1abcf292:AndroidViewProjectNode" />
-              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -3944,7 +3913,7 @@
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="992" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1904762" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1904762" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Build Variants" order="3" side_tool="true" />
@@ -3959,12 +3928,12 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Logcat" order="7" visible="true" weight="0.3288889" />
+      <window_info anchor="bottom" id="Logcat" order="7" weight="0.3288889" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3288889" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Build" order="11" weight="0.30555555" />
-      <window_info anchor="bottom" id="Android Profiler" order="12" />
+      <window_info active="true" anchor="bottom" id="Build" order="11" visible="true" weight="0.30555555" />
+      <window_info anchor="bottom" id="Android Profiler" order="12" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -4011,12 +3980,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/com/courierlab/BuildConfig.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
         </state>
       </provider>
-      <provider editor-type-id="android-manifest" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/launch_screen.xml">
       <provider selected="true" editor-type-id="text-editor">
@@ -4036,6 +4005,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="38" selection-start-line="3" selection-start-column="38" selection-end-line="3" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -4071,7 +4047,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/courierlab/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
+        <state relative-caret-position="60">
           <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -4081,18 +4057,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/courierlab/MainApplication.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
+        <state relative-caret-position="420">
           <caret line="50" column="4" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
         </state>
       </provider>
     </entry>

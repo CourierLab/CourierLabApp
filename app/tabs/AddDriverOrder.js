@@ -127,7 +127,7 @@ export default class AddDriverOrder extends Component{
 		.catch(error => console.warn(error));
     }
 
-    addOrder(){
+    async addOrder(){
         this.setState({
             spinnerVisible: true,
             isClicked: true,
@@ -144,7 +144,7 @@ export default class AddDriverOrder extends Component{
                 isSubmit: false,
             })
         }else{
-            Geocoder.from(this.state.departLocation)
+            await Geocoder.from(this.state.departLocation)
             .then(json => {
                 var location = json.results[0].geometry.location;
                 console.log(location);
@@ -152,77 +152,108 @@ export default class AddDriverOrder extends Component{
                     departLatitude: location.lat,
                     departLongitude: location.lng,
                 })
+            })
+            .catch(error => console.warn(error));
 
-                Geocoder.from(this.state.arriveLocation)
-                .then(json => {
-                    var location = json.results[0].geometry.location;
-                    console.log(location);
-                    this.setState({
-                        arriveLatitude: location.lat,
-                        arriveLongitude: location.lng,
-                    })
+            await Geocoder.from(this.state.arriveLocation)
+            .then(json => {
+                var location = json.results[0].geometry.location;
+                console.log(location);
+                this.setState({
+                    arriveLatitude: location.lat,
+                    arriveLongitude: location.lng,
+                })
+                console.log('arrivelat ', this.state.arriveLatitude)
+                console.log('arrivelong ', this.state.arriveLongitude)
+            }).catch(error => console.warn(error));
 
-                    console.log('arrivelat ', this.state.arriveLatitude)
-                    console.log('arrivelong ', this.state.arriveLongitude)
-
-                    fetch(`${myApiUrl}/${addOrderPath}`, {
-                        method: 'POST',
-                        headers: new Headers({
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            'Authorization': loginAsset[0].accessToken,
-                        }),
-                        body: JSON.stringify({
-                            orderDescription: this.state.orderDescription,
-                            departLocation: this.state.departLocation,
-                            departLocationLatitude: this.state.departLatitude,
-                            departLocationLongitude: this.state.departLongitude,
-                            arriveLocation: this.state.arriveLocation,
-                            arriveLocationLatitude: this.state.arriveLatitude,
-                            arriveLocationLongitude: this.state.arriveLongitude,
-                            expectedDepartureDate: this.state.expectedDepartureDate,
-                            expectedArrivalDate: this.state.expectedArrivalDate,
-                            vehicleSpecificationId: this.state.vehicleSpec,
-                            driverId: loginAsset[0].loginUserId,
-                            deviceId: deviceId,
-                            userId: loginAsset[0].userId,
-                        }),
-                    })
-                    .then((response) => response.json())
-                    .then((json) => {
-                        console.log('add driver order ', json);
-                        if(json.succeeded){
-                            this.setState({
-                                spinnerVisible: false,
-                                isClicked: false,
-                                isSubmit: false,
-                            })
-                            this.props.navigation.navigate('HistoryOrderDetails', {
-                                driverOrderId: json.results.driverOrderId,
-                            });
-                        }else{
-                            Alert.alert('Cannot Add', json.message, [
-                            {
-                                text: 'OK',
-                                onPress: () => {},
-                            }], {cancelable: false})
-                            this.setState({
-                                spinnerVisible: false,
-                                isClicked: false,
-                                isSubmit: false,
-                            })
-                        }
-                    }).catch(err => {
-                        console.log(err);
+            if(this.state.pickUpLatitude === '' || this.state.pickUpLongitude === ''){
+                Alert.alert('Cannot Add', 'The Pick Up location is invalid', [
+                {
+                    text: 'OK',
+                    onPress: () => {},
+                }], {cancelable: false})
+                this.setState({
+                    spinnerVisible: false,
+                    isClicked: false,
+                    isSubmit: false,
+                    departLatitude: '',
+                    departLongitude: '',
+                    arriveLatitude: '',
+                    arriveLongitude: '',
+                })
+            }else if(this.state.recipientAddressLatitude === '' || this.state.recipientAddressLatitude === ''){
+                Alert.alert('Cannot Add', 'The Recipient Address is invalid', [
+                {
+                    text: 'OK',
+                    onPress: () => {},
+                }], {cancelable: false})
+                this.setState({
+                    spinnerVisible: false,
+                    isClicked: false,
+                    isSubmit: false,
+                    departLatitude: '',
+                    departLongitude: '',
+                    arriveLatitude: '',
+                    arriveLongitude: '',
+                })
+            }else{
+                fetch(`${myApiUrl}/${addOrderPath}`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].accessToken,
+                    }),
+                    body: JSON.stringify({
+                        orderDescription: this.state.orderDescription,
+                        departLocation: this.state.departLocation,
+                        departLocationLatitude: this.state.departLatitude,
+                        departLocationLongitude: this.state.departLongitude,
+                        arriveLocation: this.state.arriveLocation,
+                        arriveLocationLatitude: this.state.arriveLatitude,
+                        arriveLocationLongitude: this.state.arriveLongitude,
+                        expectedDepartureDate: this.state.expectedDepartureDate,
+                        expectedArrivalDate: this.state.expectedArrivalDate,
+                        vehicleSpecificationId: this.state.vehicleSpec,
+                        driverId: loginAsset[0].loginUserId,
+                        deviceId: deviceId,
+                        userId: loginAsset[0].userId,
+                    }),
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log('add driver order ', json);
+                    if(json.succeeded){
                         this.setState({
                             spinnerVisible: false,
                             isClicked: false,
                             isSubmit: false,
                         })
-                    });    
-                }).catch(error => console.warn(error));
-            })
-            .catch(error => console.warn(error));
+                        this.props.navigation.navigate('HistoryOrderDetails', {
+                            driverOrderId: json.results.driverOrderId,
+                        });
+                    }else{
+                        Alert.alert('Cannot Add', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                });
+            }
         }
     }
 

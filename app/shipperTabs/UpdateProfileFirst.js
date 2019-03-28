@@ -81,25 +81,39 @@ class UpdateProfileFirst extends Component{
                 isClicked: false,
             })
         }else{
+            var bodyData = new FormData();
+            bodyData.append('name', this.state.name);
+            bodyData.append('nRIC', this.state.nric);
+            bodyData.append('phoneNumber', this.state.phoneNumber);
+            bodyData.append('address', this.state.address);
+            bodyData.append('state', this.state.state);
+            bodyData.append('postCode', this.state.postcode);
+            bodyData.append('roleId', this.props.navigation.getParam('roleId'));
+            bodyData.append('firstTimeLogin', true);
+            bodyData.append('deviceId', deviceId);
+            bodyData.append('userId', this.props.navigation.getParam('userId'));
+            console.log(bodyData);
+
             fetch(`${myApiUrl}/${updateProfilePath}`, {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    // 'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                     // 'Authorization': this.props.navigation.getParam('accessToken'),
                 },
-                body: JSON.stringify({
-                    name: this.state.name,
-                    nric: this.state.nric,
-                    phoneNumber: this.state.phoneNumber,
-                    address: this.state.address,
-                    state: this.state.state,
-                    postCode: this.state.postcode,
-                    roleId: this.props.navigation.getParam('roleId'),
-                    firstTimeLogin: true,
-                    deviceId: deviceId,
-                    userId: this.props.navigation.getParam('userId'),
-                }),
+                body: bodyData,
+                // body: JSON.stringify({
+                //     name: this.state.name,
+                //     nric: this.state.nric,
+                //     phoneNumber: this.state.phoneNumber,
+                //     address: this.state.address,
+                //     state: this.state.state,
+                //     postCode: this.state.postcode,
+                //     roleId: this.props.navigation.getParam('roleId'),
+                //     firstTimeLogin: true,
+                //     deviceId: deviceId,
+                //     userId: this.props.navigation.getParam('userId'),
+                // }),
             })
             .then((response) => response.json())
             .then((json) => {

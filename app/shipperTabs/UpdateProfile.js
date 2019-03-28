@@ -90,25 +90,39 @@ export default class UpdateProfile extends Component{
                 isSubmit: false,
             })
         }else{
+            var bodyData = new FormData();
+            bodyData.append('userId', loginAsset[0].userId);
+            bodyData.append('deviceId', deviceId);
+            bodyData.append('shipperId', loginAsset[0].loginUserId);
+            bodyData.append('roleId', loginAsset[0].roleId);
+            bodyData.append('name', this.state.name);
+            bodyData.append('nRIC', this.state.nric);
+            bodyData.append('phoneNumber', this.state.phoneNumber);
+            bodyData.append('address', this.state.address);
+            bodyData.append('state', this.state.shipperState);
+            bodyData.append('postCode', this.state.postcode);
+            console.log(bodyData);
+
             fetch(`${myApiUrl}/${updateProfilePath}`, {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    // 'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                     'Authorization': loginAsset[0].accessToken,
                 },
-                body: JSON.stringify({
-                    userId: loginAsset[0].userId,
-                    deviceId: deviceId,
-                    shipperId: loginAsset[0].loginUserId,
-                    roleId: loginAsset[0].roleId,
-                    name: this.state.name,
-                    nRIC: this.state.nric,
-                    phoneNumber: this.state.phoneNumber,
-                    address: this.state.address,
-                    state: this.state.shipperState,
-                    postCode: this.state.postcode,
-                }),
+                body: bodyData,
+                // body: JSON.stringify({
+                //     userId: loginAsset[0].userId,
+                //     deviceId: deviceId,
+                //     shipperId: loginAsset[0].loginUserId,
+                //     roleId: loginAsset[0].roleId,
+                //     name: this.state.name,
+                //     nRIC: this.state.nric,
+                //     phoneNumber: this.state.phoneNumber,
+                //     address: this.state.address,
+                //     state: this.state.shipperState,
+                //     postCode: this.state.postcode,
+                // }),
             })
             .then((response) => response.json())
             .then((json) => {
