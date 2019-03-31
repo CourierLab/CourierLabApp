@@ -5,6 +5,7 @@ import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
+import { TextInputMask } from 'react-native-masked-text';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let updateProfilePath = 'UpdateProfile';
@@ -190,7 +191,7 @@ export default class UpdateProfile extends Component{
                     </View>  
                     <View>
                         <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
-                        <TextInput
+                        {/* <TextInput
                             style={styles.input}
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -199,11 +200,28 @@ export default class UpdateProfile extends Component{
                             placeholder='NRIC'
                             placeholderTextColor='#8E9495'
                             value={this.state.nric}
-                            onChangeText={(text) => this.setState({ nric: text })}  />
+                            onChangeText={(text) => this.setState({ nric: text })}  /> */}
+                        <TextInputMask
+                            style={styles.input}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='NRIC'
+                            placeholderTextColor='#8E9495'
+                            type={'custom'}
+                            options={{
+                                mask: '999999-99-9999', 
+                            }}
+                            value={this.state.nric}
+                            onChangeText={text => {
+                                this.setState({
+                                    nric: text
+                                })
+                            }}
+                        />
                     </View>  
                     <View>
                         <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
-                        <TextInput
+                        {/* <TextInput
                             style={styles.input}
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -212,7 +230,24 @@ export default class UpdateProfile extends Component{
                             placeholder='Phone Number'
                             placeholderTextColor='#8E9495'
                             value={this.state.phoneNumber}
-                            onChangeText={(text) => this.setState({ phoneNumber: text })}  />
+                            onChangeText={(text) => this.setState({ phoneNumber: text })}  /> */}
+                        <TextInputMask
+                            style={styles.input}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='Phone Number'
+                            placeholderTextColor='#8E9495'
+                            type={'custom'}
+                            options={{
+                                mask: '999-99999999', 
+                            }}
+                            value={this.state.phoneNumber}
+                            onChangeText={text => {
+                                this.setState({
+                                    phoneNumber: text
+                                })
+                            }}
+                        />
                     </View>  
                     <View>
                         <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Address: </Text>
@@ -291,7 +326,7 @@ export default class UpdateProfile extends Component{
                     </View>  
                     <View>
                         <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
-                        <TextInput
+                        {/* <TextInput
                             style={styles.input}
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -300,11 +335,28 @@ export default class UpdateProfile extends Component{
                             placeholder='NRIC'
                             placeholderTextColor='#8E9495'
                             value={this.state.nric}
-                            onChangeText={(text) => this.setState({ nric: text })}  />
+                            onChangeText={(text) => this.setState({ nric: text })}  /> */}
+                        <TextInputMask
+                            style={styles.input}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='NRIC'
+                            placeholderTextColor='#8E9495'
+                            type={'custom'}
+                            options={{
+                                mask: '999999-99-9999', 
+                            }}
+                            value={this.state.nric}
+                            onChangeText={text => {
+                                this.setState({
+                                    nric: text
+                                })
+                            }}
+                        />
                     </View>  
                     <View>
                         <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
-                        <TextInput
+                        {/* <TextInput
                             style={styles.input}
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -313,7 +365,24 @@ export default class UpdateProfile extends Component{
                             placeholder='Phone Number'
                             placeholderTextColor='#8E9495'
                             value={this.state.phoneNumber}
-                            onChangeText={(text) => this.setState({ phoneNumber: text })}  />
+                            onChangeText={(text) => this.setState({ phoneNumber: text })}  /> */}
+                        <TextInputMask
+                            style={styles.input}
+                            underlineColorAndroid={'transparent'}
+                            keyboardType='default'
+                            placeholder='Phone Number'
+                            placeholderTextColor='#8E9495'
+                            type={'custom'}
+                            options={{
+                                mask: '999-99999999', 
+                            }}
+                            value={this.state.phoneNumber}
+                            onChangeText={text => {
+                                this.setState({
+                                    phoneNumber: text
+                                })
+                            }}
+                        />
                     </View>  
                     <View>
                         <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Address: </Text>

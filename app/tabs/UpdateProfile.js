@@ -9,6 +9,7 @@ import Spinner from 'react-native-spinkit';
 import ModalSelector from 'react-native-modal-selector';
 import OneSignal from 'react-native-onesignal';
 import ImagePicker from 'react-native-image-picker';
+import { TextInputMask } from 'react-native-masked-text';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let updateProfilePath = 'UpdateProfile';
@@ -331,7 +332,7 @@ export default class UpdateProfile extends Component{
                         </View>
                         <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -340,11 +341,28 @@ export default class UpdateProfile extends Component{
                                 placeholder='NRIC'
                                 placeholderTextColor='#8E9495'
                                 value={this.state.nric}
-                                onChangeText={(text) => this.setState({ nric: text })}  />
+                                onChangeText={(text) => this.setState({ nric: text })}  /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='NRIC'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999999-99-9999', 
+                                }}
+                                value={this.state.nric}
+                                onChangeText={text => {
+                                    this.setState({
+                                        nric: text
+                                    })
+                                }}
+                            />
                         </View>
                         <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -353,7 +371,24 @@ export default class UpdateProfile extends Component{
                                 placeholder='Phone Number'
                                 placeholderTextColor='#8E9495'
                                 value={this.state.phoneNumber}
-                                onChangeText={(text) => this.setState({ phoneNumber: text })}  />
+                                onChangeText={(text) => this.setState({ phoneNumber: text })}  /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Phone Number'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999-99999999', 
+                                }}
+                                value={this.state.phoneNumber}
+                                onChangeText={text => {
+                                    this.setState({
+                                        phoneNumber: text
+                                    })
+                                }}
+                            />
                         </View>
                         {/* <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank: </Text>
@@ -498,7 +533,7 @@ export default class UpdateProfile extends Component{
                         </View>
                         <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -507,11 +542,28 @@ export default class UpdateProfile extends Component{
                                 placeholder='NRIC'
                                 placeholderTextColor='#8E9495'
                                 value={this.state.nric}
-                                onChangeText={(text) => this.setState({ nric: text })}  />
+                                onChangeText={(text) => this.setState({ nric: text })}  /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='NRIC'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999999-99-9999', 
+                                }}
+                                value={this.state.nric}
+                                onChangeText={text => {
+                                    this.setState({
+                                        nric: text
+                                    })
+                                }}
+                            />
                         </View>
                         <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -520,7 +572,24 @@ export default class UpdateProfile extends Component{
                                 placeholder='Phone Number'
                                 placeholderTextColor='#8E9495'
                                 value={this.state.phoneNumber}
-                                onChangeText={(text) => this.setState({ phoneNumber: text })}  />
+                                onChangeText={(text) => this.setState({ phoneNumber: text })}  /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Phone Number'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999-99999999', 
+                                }}
+                                value={this.state.phoneNumber}
+                                onChangeText={text => {
+                                    this.setState({
+                                        phoneNumber: text
+                                    })
+                                }}
+                            />
                         </View>
                         {/* <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank: </Text>

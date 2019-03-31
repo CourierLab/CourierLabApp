@@ -16,6 +16,7 @@ let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 let count = 0;
 let {height, width} = Dimensions.get('window');
+let _this = this;
 
 export default class HistoryOrderDetails extends Component{
     static navigationOptions = {

@@ -7,6 +7,7 @@ import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
 import { connect } from 'react-redux';
 import { login, logout } from '../utils/Actions';
+import { TextInputMask } from 'react-native-masked-text';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let updateProfilePath = 'UpdateProfile';
@@ -198,7 +199,7 @@ class UpdateProfileFirst extends Component{
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 underlineColorAndroid={'transparent'}
@@ -207,11 +208,28 @@ class UpdateProfileFirst extends Component{
                                 placeholder='NRIC'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.nric}
-                                onChangeText={(text) => this.setState({ nric: text })}  />
+                                onChangeText={(text) => this.setState({ nric: text })}  /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='NRIC'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999999-99-9999', 
+                                }}
+                                value={this.state.nric}
+                                onChangeText={text => {
+                                    this.setState({
+                                        nric: text
+                                    })
+                                }}
+                            />
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -220,7 +238,24 @@ class UpdateProfileFirst extends Component{
                                 keyboardType='default'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.phoneNumber}
-                                onChangeText={(text) => this.setState({ phoneNumber: text })} />
+                                onChangeText={(text) => this.setState({ phoneNumber: text })} /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Phone Number'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999-99999999', 
+                                }}
+                                value={this.state.phoneNumber}
+                                onChangeText={text => {
+                                    this.setState({
+                                        phoneNumber: text
+                                    })
+                                }}
+                            />
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>State: </Text>
@@ -291,7 +326,7 @@ class UpdateProfileFirst extends Component{
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 underlineColorAndroid={'transparent'}
@@ -300,11 +335,28 @@ class UpdateProfileFirst extends Component{
                                 placeholder='NRIC'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.nric}
-                                onChangeText={(text) => this.setState({ nric: text })}  />
+                                onChangeText={(text) => this.setState({ nric: text })}  /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='NRIC'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999999-99-9999', 
+                                }}
+                                value={this.state.nric}
+                                onChangeText={text => {
+                                    this.setState({
+                                        nric: text
+                                    })
+                                }}
+                            />
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -313,7 +365,24 @@ class UpdateProfileFirst extends Component{
                                 keyboardType='default'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.phoneNumber}
-                                onChangeText={(text) => this.setState({ phoneNumber: text })} />
+                                onChangeText={(text) => this.setState({ phoneNumber: text })} /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Phone Number'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999-99999999', 
+                                }}
+                                value={this.state.phoneNumber}
+                                onChangeText={text => {
+                                    this.setState({
+                                        phoneNumber: text
+                                    })
+                                }}
+                            />
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>State: </Text>

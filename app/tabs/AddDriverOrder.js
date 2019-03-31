@@ -127,6 +127,24 @@ export default class AddDriverOrder extends Component{
 		.catch(error => console.warn(error));
     }
 
+    getLocationInfo(type, address, lat, long){
+        if(address != '' && lat != '' && long != ''){
+            if(type == 'depart'){
+                this.setState({
+                    departLocation: address,
+                    departLatitude: lat,
+                    departLongitude: long,
+                })
+            }else{
+                this.setState({
+                    arriveLocation: address,
+                    arriveLatitude: lat,
+                    arriveLongitude: long,
+                })
+            }
+        }
+    }
+
     async addOrder(){
         this.setState({
             spinnerVisible: true,
@@ -144,28 +162,32 @@ export default class AddDriverOrder extends Component{
                 isSubmit: false,
             })
         }else{
-            await Geocoder.from(this.state.departLocation)
-            .then(json => {
-                var location = json.results[0].geometry.location;
-                console.log(location);
-                this.setState({
-                    departLatitude: location.lat,
-                    departLongitude: location.lng,
+            if(this.state.departLatitude == '' && this.state.departLongitude == ''){
+                await Geocoder.from(this.state.departLocation)
+                .then(json => {
+                    var location = json.results[0].geometry.location;
+                    console.log(location);
+                    this.setState({
+                        departLatitude: location.lat,
+                        departLongitude: location.lng,
+                    })
                 })
-            })
-            .catch(error => console.warn(error));
+                .catch(error => console.warn(error));
+            }
 
-            await Geocoder.from(this.state.arriveLocation)
-            .then(json => {
-                var location = json.results[0].geometry.location;
-                console.log(location);
-                this.setState({
-                    arriveLatitude: location.lat,
-                    arriveLongitude: location.lng,
-                })
-                console.log('arrivelat ', this.state.arriveLatitude)
-                console.log('arrivelong ', this.state.arriveLongitude)
-            }).catch(error => console.warn(error));
+            if(this.state.arriveLatitude == '' && this.state.arriveLongitude == ''){
+                await Geocoder.from(this.state.arriveLocation)
+                .then(json => {
+                    var location = json.results[0].geometry.location;
+                    console.log(location);
+                    this.setState({
+                        arriveLatitude: location.lat,
+                        arriveLongitude: location.lng,
+                    })
+                    console.log('arrivelat ', this.state.arriveLatitude)
+                    console.log('arrivelong ', this.state.arriveLongitude)
+                }).catch(error => console.warn(error));
+            }
 
             if(this.state.pickUpLatitude === '' || this.state.pickUpLongitude === ''){
                 Alert.alert('Cannot Add', 'The Pick Up location is invalid', [
@@ -273,7 +295,11 @@ export default class AddDriverOrder extends Component{
                 <ScrollView>
                     <View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location: </Text>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location: 
+                                <Text 
+                                    style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                    onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', type: 'depart', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                            </Text>
                             <TextInput
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                 autoCapitalize="none"
@@ -291,7 +317,11 @@ export default class AddDriverOrder extends Component{
                                 style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                 onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', departLocation: ''})}> Pick Location from Map</Text> */}
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Arrive Location: </Text>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Arrive Location: 
+                                <Text 
+                                    style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                    onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', type: 'arrive', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                            </Text>
                             <TextInput
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                 autoCapitalize="none"

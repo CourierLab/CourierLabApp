@@ -15,6 +15,7 @@ let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 let count = 0;
+let _this = this;
 
 export default class HistoryOrderDetails extends Component{
     static navigationOptions = {

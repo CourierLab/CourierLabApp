@@ -10,6 +10,7 @@ import Geocoder from 'react-native-geocoding';
 import DatePicker from 'react-native-datepicker';
 import ModalSelector from 'react-native-modal-selector';
 import ImagePicker from 'react-native-image-picker';
+import { TextInputMask } from 'react-native-masked-text';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let shipperOrderPath = 'ViewPendingDriver';
@@ -68,6 +69,8 @@ export default class EditOrder extends Component{
             selectedLorryType: '',
             selectedLorryTypeId: 0,
             orderImage: '',
+            editedPickUpFromMap: false,
+            editedRecipientAddressFromMap: false,
         }
     }
 
@@ -291,7 +294,27 @@ export default class EditOrder extends Component{
         console.log('image: ', this.state.orderImage)
     }
 
-    editOrder(){
+    getLocationInfo(type, address, lat, long){
+        if(address != '' && lat != '' && long != ''){
+            if(type == 'editPickUp'){
+                this.setState({
+                    pickUpLocation: address,
+                    pickUpLatitude: lat,
+                    pickUpLongitude: long,
+                    editedPickUpFromMap: true,
+                })
+            }else if(type == 'editRecipientAddress'){
+                this.setState({
+                    recipientAddress: address,
+                    recipientAddressLatitude: lat,
+                    recipientAddressLongitude: long,
+                    editedRecipientAddressFromMap: true,
+                })
+            }
+        }
+    }
+
+    async editOrder(){
         this.setState({
             spinnerVisible: true,
             isClicked: true,
@@ -308,16 +331,24 @@ export default class EditOrder extends Component{
                 isSubmit: false,
             })
         }else{
-            Geocoder.from(this.state.pickUpLocation)
-            .then(json => {
-                var location = json.results[0].geometry.location;
-                console.log(location);
-                this.setState({
-                    pickUpLatitude: location.lat,
-                    pickUpLongitude: location.lng,
+            console.log(this.state.editedPickUpFromMap)
+            if(!this.state.editedPickUpFromMap){
+                console.log('lat edit ', this.state.pickUpLatitude)
+                console.log('long edit ', this.state.pickUpLongitude)
+                await Geocoder.from(this.state.pickUpLocation)
+                .then(json => {
+                    var location = json.results[0].geometry.location;
+                    console.log(location);
+                    this.setState({
+                        pickUpLatitude: location.lat,
+                        pickUpLongitude: location.lng,
+                    })
                 })
+                .catch(error => console.warn(error));
+            }
 
-                Geocoder.from(this.state.recipientAddress)
+            if(!this.state.editedRecipientAddressFromMap){
+                await Geocoder.from(this.state.recipientAddress)
                 .then(json => {
                     var location = json.results[0].geometry.location;
                     console.log(location);
@@ -325,101 +356,101 @@ export default class EditOrder extends Component{
                         recipientAddressLatitude: location.lat,
                         recipientAddressLongitude: location.lng,
                     })
-
-                    var bodyData = new FormData();
-                    bodyData.append('pickUpLocation', this.state.pickUpLocation);
-                    bodyData.append('pickUpLocationLatitude', this.state.pickUpLatitude);
-                    bodyData.append('pickUpLocationLongitude', this.state.pickUpLongitude);
-                    bodyData.append('orderDescription', this.state.orderDescription);
-                    bodyData.append('orderWeight', this.state.orderWeight);
-                    bodyData.append('pickUpDateTime', this.state.pickUpDate);
-                    bodyData.append('arrivalDateTime', this.state.expectedArrivalDate);
-                    bodyData.append('favouriteRecipientId', this.state.favRecipientId);
-                    bodyData.append('recipientName', this.state.recipientName);
-                    bodyData.append('recipientAddress', this.state.recipientAddress);
-                    bodyData.append('recipientAddressLatitude', this.state.recipientAddressLatitude);
-                    bodyData.append('recipientAddressLongitude', this.state.recipientAddressLongitude);
-                    bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
-                    bodyData.append('recipientEmailAddress', this.state.recipientEmail);
-                    bodyData.append('recipientPhoneNumber', this.state.recipientPhoneNumber);
-                    bodyData.append('vehicleSpecificationId', this.state.vehicleSpec.toString());
-                    bodyData.append('deviceId', deviceId);
-                    bodyData.append('userId', loginAsset[0].userId);
-                    bodyData.append('shipperOrderId', this.props.navigation.getParam('shipperOrderId'));
-                    bodyData.append('shipperOrderImage', { uri: this.state.orderImage, name: 'orderImage', type: 'image/jpeg' });
-
-                    fetch(`${myApiUrl}/${editOrderPath}`, {
-                        method: 'POST',
-                        headers: new Headers({
-                            // 'Accept': 'application/json',
-                            'Content-Type': 'multipart/form-data',
-                            'Authorization': loginAsset[0].accessToken,
-                        }),
-                        body: bodyData,
-                        // body: JSON.stringify({
-                        //     pickUpLocation: this.state.pickUpLocation,
-                        //     pickUpLocationLatitude: this.state.pickUpLatitude,
-                        //     pickUpLocationLongitude: this.state.pickUpLongitude,
-                        //     orderDescription: this.state.orderDescription,
-                        //     orderWeight: this.state.orderWeight,
-                        //     pickUpDateTime: this.state.pickUpDate,
-                        //     arrivalDateTime: this.state.expectedArrivalDate,
-                        //     favouriteRecipientId: this.state.favRecipientId,
-                        //     recipientName: this.state.recipientName,
-                        //     recipientAddress: this.state.recipientAddress,
-                        //     recipientAddressLatitude: this.state.recipientAddressLatitude,
-                        //     recipientAddressLongitude: this.state.recipientAddressLongitude,
-                        //     lorryTypeId: this.state.selectedLorryTypeId,
-                        //     // recipientState: this.state.recipientState,
-                        //     // recipientPostCode: this.state.recipientPostcode,
-                        //     recipientEmailAddress: this.state.recipientEmail,
-                        //     recipientPhoneNumber: this.state.recipientPhoneNumber,
-                        //     vehicleSpecificationId: this.state.vehicleSpec,
-                        //     deviceId: deviceId,
-                        //     userId: loginAsset[0].userId,
-                        //     shipperOrderId: this.props.navigation.getParam('shipperOrderId'),
-                        // }),
-                    })
-                    .then((response) => response.json())
-                    .then((json) => {
-                        console.log('add driver order ', json);
-                        if(json.succeeded){
-                            this.setState({
-                                spinnerVisible: false,
-                                isClicked: false,
-                                isSubmit: false,
-                            })
-                            Alert.alert('Successfully Edited', json.message, [
-                            {
-                                text: 'OK',
-                                onPress: () => {},
-                            }], {cancelable: false})
-                            this.props.navigation.state.params.rerenderFunction();
-                            this.props.navigation.goBack();
-                        }else{
-                            Alert.alert('Cannot Edit', json.message, [
-                            {
-                                text: 'OK',
-                                onPress: () => {},
-                            }], {cancelable: false})
-                            this.setState({
-                                spinnerVisible: false,
-                                isClicked: false,
-                                isSubmit: false,
-                            })
-                        }
-                    }).catch(err => {
-                        console.log(err);
-                        this.setState({
-                            spinnerVisible: false,
-                            isClicked: false,
-                            isSubmit: false,
-                        })
-                    });
                 })
                 .catch(error => console.warn(error));
+            }
+            console.log('lat ', this.state.pickUpLatitude)
+            console.log('long ', this.state.pickUpLongitude)
+            var bodyData = new FormData();
+            bodyData.append('pickUpLocation', this.state.pickUpLocation);
+            bodyData.append('pickUpLocationLatitude', this.state.pickUpLatitude);
+            bodyData.append('pickUpLocationLongitude', this.state.pickUpLongitude);
+            bodyData.append('orderDescription', this.state.orderDescription);
+            bodyData.append('orderWeight', this.state.orderWeight);
+            bodyData.append('pickUpDateTime', this.state.pickUpDate);
+            bodyData.append('arrivalDateTime', this.state.expectedArrivalDate);
+            bodyData.append('favouriteRecipientId', this.state.favRecipientId);
+            bodyData.append('recipientName', this.state.recipientName);
+            bodyData.append('recipientAddress', this.state.recipientAddress);
+            bodyData.append('recipientAddressLatitude', this.state.recipientAddressLatitude);
+            bodyData.append('recipientAddressLongitude', this.state.recipientAddressLongitude);
+            bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
+            bodyData.append('recipientEmailAddress', this.state.recipientEmail);
+            bodyData.append('recipientPhoneNumber', this.state.recipientPhoneNumber);
+            bodyData.append('vehicleSpecificationId', this.state.vehicleSpec.toString());
+            bodyData.append('deviceId', deviceId);
+            bodyData.append('userId', loginAsset[0].userId);
+            bodyData.append('shipperOrderId', this.props.navigation.getParam('shipperOrderId'));
+            bodyData.append('shipperOrderImage', { uri: this.state.orderImage, name: 'orderImage', type: 'image/jpeg' });
+            console.log(bodyData)
+            fetch(`${myApiUrl}/${editOrderPath}`, {
+                method: 'POST',
+                headers: new Headers({
+                    // 'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': loginAsset[0].accessToken,
+                }),
+                body: bodyData,
+                // body: JSON.stringify({
+                //     pickUpLocation: this.state.pickUpLocation,
+                //     pickUpLocationLatitude: this.state.pickUpLatitude,
+                //     pickUpLocationLongitude: this.state.pickUpLongitude,
+                //     orderDescription: this.state.orderDescription,
+                //     orderWeight: this.state.orderWeight,
+                //     pickUpDateTime: this.state.pickUpDate,
+                //     arrivalDateTime: this.state.expectedArrivalDate,
+                //     favouriteRecipientId: this.state.favRecipientId,
+                //     recipientName: this.state.recipientName,
+                //     recipientAddress: this.state.recipientAddress,
+                //     recipientAddressLatitude: this.state.recipientAddressLatitude,
+                //     recipientAddressLongitude: this.state.recipientAddressLongitude,
+                //     lorryTypeId: this.state.selectedLorryTypeId,
+                //     // recipientState: this.state.recipientState,
+                //     // recipientPostCode: this.state.recipientPostcode,
+                //     recipientEmailAddress: this.state.recipientEmail,
+                //     recipientPhoneNumber: this.state.recipientPhoneNumber,
+                //     vehicleSpecificationId: this.state.vehicleSpec,
+                //     deviceId: deviceId,
+                //     userId: loginAsset[0].userId,
+                //     shipperOrderId: this.props.navigation.getParam('shipperOrderId'),
+                // }),
             })
-            .catch(error => console.warn(error));
+            .then((response) => response.json())
+            .then((json) => {
+                console.log('add driver order ', json);
+                if(json.succeeded){
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                    Alert.alert('Successfully Edited', json.message, [
+                    {
+                        text: 'OK',
+                        onPress: () => {},
+                    }], {cancelable: false})
+                    this.props.navigation.state.params.rerenderFunction();
+                    this.props.navigation.goBack();
+                }else{
+                    Alert.alert('Cannot Edit', json.message, [
+                    {
+                        text: 'OK',
+                        onPress: () => {},
+                    }], {cancelable: false})
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                }
+            }).catch(err => {
+                console.log(err);
+                this.setState({
+                    spinnerVisible: false,
+                    isClicked: false,
+                    isSubmit: false,
+                })
+            });
         }
     }
 
@@ -430,7 +461,11 @@ export default class EditOrder extends Component{
                     {
                         (!this.state.spinnerVisible && !this.state.isClicked) ? <View>
                             <View>
-                                <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: </Text>
+                                <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: 
+                                    <Text 
+                                        style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                        onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Up Location', type: 'editPickUp', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                                </Text>
                                 <TextInput
                                     style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                     autoCapitalize="none"
@@ -595,7 +630,11 @@ export default class EditOrder extends Component{
                                     onChangeText={(text) => this.setState({ recipientName: text })}  />
                             </View>
                             <View>
-                                <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: </Text>
+                                <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: 
+                                    <Text 
+                                        style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                        onPress={(e) => this.props.navigation.navigate('Map', {title: 'Recipient Address', type: 'editRecipientAddress', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                                </Text>
                                 <TextInput
                                     style={styles.input}
                                     autoCapitalize="none"
@@ -624,7 +663,7 @@ export default class EditOrder extends Component{
                             </View>
                             <View>
                                 <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Phone Number: </Text>
-                                <TextInput
+                                {/* <TextInput
                                     style={styles.input}
                                     autoCapitalize="none"
                                     underlineColorAndroid={'transparent'}
@@ -634,7 +673,24 @@ export default class EditOrder extends Component{
                                     placeholder='Recipient Phone Number'
                                     placeholderTextColor='#939ABA'
                                     value={this.state.recipientPhoneNumber}
-                                    onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} />
+                                    onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} /> */}
+                                <TextInputMask
+                                    style={styles.input}
+                                    underlineColorAndroid={'transparent'}
+                                    keyboardType='default'
+                                    placeholder='Recipient Phone Number'
+                                    placeholderTextColor='#939ABA'
+                                    type={'custom'}
+                                    options={{
+                                        mask: '999-99999999', 
+                                    }}
+                                    value={this.state.recipientPhoneNumber}
+                                    onChangeText={text => {
+                                        this.setState({
+                                            recipientPhoneNumber: text
+                                        })
+                                    }}
+                                />
                             </View>
                             <View>
                                 <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Type: </Text>
@@ -1036,7 +1092,11 @@ export default class EditOrder extends Component{
                     {
                         (!this.state.spinnerVisible && !this.state.isClicked) ? <View>
                             <View>
-                                <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: </Text>
+                                <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: 
+                                    <Text 
+                                        style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                        onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Up Location', type: 'editPickUp', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                                </Text>
                                 <TextInput
                                     style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                     autoCapitalize="none"
@@ -1201,7 +1261,11 @@ export default class EditOrder extends Component{
                                     onChangeText={(text) => this.setState({ recipientName: text })}  />
                             </View>
                             <View>
-                                <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: </Text>
+                                <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: 
+                                    <Text 
+                                        style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                        onPress={(e) => this.props.navigation.navigate('Map', {title: 'Recipient Address', type: 'editRecipientAddress', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                                </Text>
                                 <TextInput
                                     style={styles.input}
                                     autoCapitalize="none"
@@ -1230,7 +1294,7 @@ export default class EditOrder extends Component{
                             </View>
                             <View>
                                 <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Phone Number: </Text>
-                                <TextInput
+                                {/* <TextInput
                                     style={styles.input}
                                     autoCapitalize="none"
                                     underlineColorAndroid={'transparent'}
@@ -1240,7 +1304,24 @@ export default class EditOrder extends Component{
                                     placeholder='Recipient Phone Number'
                                     placeholderTextColor='#939ABA'
                                     value={this.state.recipientPhoneNumber}
-                                    onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} />
+                                    onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} /> */}
+                                <TextInputMask
+                                    style={styles.input}
+                                    underlineColorAndroid={'transparent'}
+                                    keyboardType='default'
+                                    placeholder='Recipient Phone Number'
+                                    placeholderTextColor='#939ABA'
+                                    type={'custom'}
+                                    options={{
+                                        mask: '999-99999999', 
+                                    }}
+                                    value={this.state.recipientPhoneNumber}
+                                    onChangeText={text => {
+                                        this.setState({
+                                            recipientPhoneNumber: text
+                                        })
+                                    }}
+                                />
                             </View>
                             <View>
                                 <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Type: </Text>

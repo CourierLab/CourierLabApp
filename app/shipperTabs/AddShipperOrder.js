@@ -10,6 +10,7 @@ import Geocoder from 'react-native-geocoding';
 import DatePicker from 'react-native-datepicker';
 import ModalSelector from 'react-native-modal-selector';
 import ImagePicker from 'react-native-image-picker';
+import { TextInputMask } from 'react-native-masked-text';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let addOrderPath = 'AddShipperOrder';
@@ -217,6 +218,24 @@ export default class AddDriverOrder extends Component{
         console.log('image: ', this.state.orderImage)
     }
 
+    getLocationInfo(type, address, lat, long){
+        if(address != '' && lat != '' && long != ''){
+            if(type == 'pickUp'){
+                this.setState({
+                    pickUpLocation: address,
+                    pickUpLatitude: lat,
+                    pickUpLongitude: long,
+                })
+            }else{
+                this.setState({
+                    recipientAddress: address,
+                    recipientAddressLatitude: lat,
+                    recipientAddressLongitude: long,
+                })
+            }
+        }
+    }
+
     async addOrder(){
         this.setState({
             spinnerVisible: true,
@@ -234,27 +253,31 @@ export default class AddDriverOrder extends Component{
                 isSubmit: false,
             })
         }else{
-            await Geocoder.from(this.state.pickUpLocation)
-            .then(json => {
-                var location = json.results[0].geometry.location;
-                console.log(location);
-                this.setState({
-                    pickUpLatitude: location.lat,
-                    pickUpLongitude: location.lng,
+            if(this.state.pickUpLatitude == '' && this.state.pickUpLongitude == ''){
+                await Geocoder.from(this.state.pickUpLocation)
+                .then(json => {
+                    var location = json.results[0].geometry.location;
+                    console.log(location);
+                    this.setState({
+                        pickUpLatitude: location.lat,
+                        pickUpLongitude: location.lng,
+                    })
                 })
-            })
-            .catch(error => console.warn(error));
+                .catch(error => console.warn(error));
+            }
 
-            await Geocoder.from(this.state.recipientAddress)
-            .then(json => {
-                var location = json.results[0].geometry.location;
-                console.log(location);
-                this.setState({
-                    recipientAddressLatitude: location.lat,
-                    recipientAddressLongitude: location.lng,
+            if(this.state.recipientAddressLatitude == '' && this.state.recipientAddressLongitude == ''){
+                await Geocoder.from(this.state.recipientAddress)
+                .then(json => {
+                    var location = json.results[0].geometry.location;
+                    console.log(location);
+                    this.setState({
+                        recipientAddressLatitude: location.lat,
+                        recipientAddressLongitude: location.lng,
+                    })
                 })
-            })
-            .catch(error => console.warn(error));
+                .catch(error => console.warn(error));
+            }
 
             if(this.state.pickUpLatitude === '' || this.state.pickUpLongitude === ''){
                 Alert.alert('Cannot Add', 'The Pick Up location is invalid', [
@@ -390,7 +413,11 @@ export default class AddDriverOrder extends Component{
                 <ScrollView>
                     <View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: </Text>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: 
+                                <Text 
+                                    style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                    onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Up Location', type: 'pickUp', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                            </Text>
                             <TextInput
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                 autoCapitalize="none"
@@ -555,7 +582,11 @@ export default class AddDriverOrder extends Component{
                                 onChangeText={(text) => this.setState({ recipientName: text })}  />
                         </View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: </Text>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: 
+                                <Text 
+                                    style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                    onPress={(e) => this.props.navigation.navigate('Map', {title: 'Recipient Address', type: 'recipientAddress', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                            </Text>
                             <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
@@ -584,7 +615,7 @@ export default class AddDriverOrder extends Component{
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Phone Number: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 underlineColorAndroid={'transparent'}
@@ -594,7 +625,24 @@ export default class AddDriverOrder extends Component{
                                 placeholder='Recipient Phone Number'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.recipientPhoneNumber}
-                                onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} />
+                                onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Recipient Phone Number'
+                                placeholderTextColor='#939ABA'
+                                type={'custom'}
+                                options={{
+                                    mask: '999-99999999', 
+                                }}
+                                value={this.state.recipientPhoneNumber}
+                                onChangeText={text => {
+                                    this.setState({
+                                        recipientPhoneNumber: text
+                                    })
+                                }}
+                            />
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Type: </Text>
@@ -963,7 +1011,11 @@ export default class AddDriverOrder extends Component{
                 <ScrollView>
                     <View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: </Text>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: 
+                                <Text 
+                                    style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                    onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Up Location', type: 'pickUp', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                            </Text>
                             <TextInput
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                 autoCapitalize="none"
@@ -1128,7 +1180,11 @@ export default class AddDriverOrder extends Component{
                                 onChangeText={(text) => this.setState({ recipientName: text })}  />
                         </View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: </Text>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: 
+                                <Text 
+                                    style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
+                                    onPress={(e) => this.props.navigation.navigate('Map', {title: 'Recipient Address', type: 'recipientAddress', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
+                            </Text>
                             <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
@@ -1157,7 +1213,7 @@ export default class AddDriverOrder extends Component{
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Phone Number: </Text>
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
                                 underlineColorAndroid={'transparent'}
@@ -1167,7 +1223,24 @@ export default class AddDriverOrder extends Component{
                                 placeholder='Recipient Phone Number'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.recipientPhoneNumber}
-                                onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} />
+                                onChangeText={(text) => this.setState({ recipientPhoneNumber: text })} /> */}
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Recipient Phone Number'
+                                placeholderTextColor='#939ABA'
+                                type={'custom'}
+                                options={{
+                                    mask: '999-99999999', 
+                                }}
+                                value={this.state.recipientPhoneNumber}
+                                onChangeText={text => {
+                                    this.setState({
+                                        recipientPhoneNumber: text
+                                    })
+                                }}
+                            />
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Type: </Text>

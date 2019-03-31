@@ -71,6 +71,7 @@ const tabThreeStack = createStackNavigator({
     ConfirmedOrderDetail: { screen: ConfirmedOrderDetailScreen },
     Scanner: { screen: ScannerScreen },
     Verification: { screen: VerificationScreen },
+    Map: { screen: MapScreen },
 },
 {
     navigationOptions: {

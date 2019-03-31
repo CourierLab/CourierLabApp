@@ -18,12 +18,14 @@ import ConfirmShipperDriverOrderScreen from './ConfirmShipperDriverOrder';
 import PendingConfirmationDetailScreen from './PendingConfirmationDetail';
 import PendingPaymentScreen from './PendingPayment';
 import PendingPaymentDetailScreen from './PendingPaymentDetail';
+import MapScreen from '../tabs/Map';
 
 const tabOneStack = createStackNavigator({
     DriverOrder: { screen: DriverOrderScreen },
     DriverOrderDetails: { screen: DriverOrderDetailsScreen },
     AddOrder: { screen: AddOrderScreen },
     ConfirmShipperDriverOrder: { screen: ConfirmShipperDriverOrderScreen },
+    Map: { screen: MapScreen },
 },
 {
     navigationOptions: {
@@ -64,6 +66,7 @@ const tabThreeStack = createStackNavigator({
     AddShipperOrder : { screen: AddShipperOrderScreen },
     EditOrder : { screen: EditOrderScreen },
     PendingPaymentDetail : { screen: PendingPaymentDetailScreen },
+    Map: { screen: MapScreen },
 },
 {
     navigationOptions: {
