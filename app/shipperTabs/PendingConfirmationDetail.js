@@ -137,8 +137,12 @@ export default class PendingConfirmationDetail extends Component{
                     text: 'OK',
                     onPress: () => {}
                 }], {cancelable: false})
-                this.props.navigation.state.params.rerenderFunction();
-                this.props.navigation.goBack();
+                if(this.props.navigation.getParam('fromNotification') == undefined || this.props.navigation.getParam('fromNotification') == ''){
+                    this.props.navigation.state.params.rerenderFunction();
+                    this.props.navigation.goBack();
+                }else if(this.props.navigation.getParam('fromNotification')){
+                    this.props.navigation.navigate('PendingConfirmation')
+                }
             }else{
                 Alert.alert('Cannot Accept', json.message, [
                 {
@@ -184,8 +188,12 @@ export default class PendingConfirmationDetail extends Component{
                     text: 'OK',
                     onPress: () => {}
                 }], {cancelable: false})
-                this.props.navigation.state.params.rerenderFunction();
-                this.props.navigation.goBack();
+                if(this.props.navigation.getParam('fromNotification') == undefined || this.props.navigation.getParam('fromNotification') == ''){
+                    this.props.navigation.state.params.rerenderFunction();
+                    this.props.navigation.goBack();
+                }else if(this.props.navigation.getParam('fromNotification')){
+                    this.props.navigation.navigate('PendingConfirmation')
+                }
             }else{
                 Alert.alert('Cannot Reject', json.message, [
                 {

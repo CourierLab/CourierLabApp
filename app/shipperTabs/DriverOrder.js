@@ -90,14 +90,14 @@ export default class Home extends Component{
                             loginAsset[0].accessTokenExpiredDate = json.results.accessTokenExpiredDate;
                             loginAsset[0].refreshToken = json.results.newRefreshToken;
                         })
-                        this.props.onLogin(loginAsset[0].email);
+                        _this.props.onLogin(loginAsset[0].email);
                     }else{
                         Alert.alert('Login Expired', 'Please try to login again', [{
                             text: 'OK',
                             onPress: () => {},
                             style: styles.alertText,
                         }], {cancelable: false});
-                        this.props.onLogout();
+                        _this.props.onLogout();
                     }
                 }).catch(err => {
                     console.log(err);
@@ -109,6 +109,7 @@ export default class Home extends Component{
                 if(isPending){
                     _this.props.navigation.navigate('PendingConfirmationDetail', {
                         shipperOrderId: orderId,
+                        fromNotification: true,
                     })
                 }else{
                     _this.props.navigation.navigate('ConfirmedOrderDetail', {

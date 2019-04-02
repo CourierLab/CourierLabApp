@@ -42,6 +42,8 @@ export default class AddOrder extends Component{
             vehicleSpecList: [],
             currentDate: new Date(),
             isSubmit: false,
+            validAddress: false,
+            validRecipientAddress: false,
         }
     }
 
@@ -175,7 +177,12 @@ export default class AddOrder extends Component{
                         departLongitude: location.lng,
                     })
                 })
-                .catch(error => console.warn(error));
+                .catch(error => {
+                    this.setState({
+                        validAddress: true,
+                    })
+                    console.warn(error)
+                });
             }
 
             if(this.state.arriveLatitude == '' && this.state.arriveLongitude == ''){
@@ -189,26 +196,33 @@ export default class AddOrder extends Component{
                     })
                     console.log('arrivelat ', this.state.arriveLatitude)
                     console.log('arrivelong ', this.state.arriveLongitude)
-                }).catch(error => console.warn(error));
+                }).catch(error => {
+                    this.setState({
+                        validRecipientAddress: true,
+                    })
+                    console.warn(error)
+                });
             }
 
-            if(this.state.pickUpLatitude === '' || this.state.pickUpLongitude === ''){
+            if(this.state.validAddress){
                 Alert.alert('Cannot Add', 'The Pick Up location is invalid', [
                 {
                     text: 'OK',
-                    onPress: () => {},
+                    onPress: () => {
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                            departLatitude: '',
+                            departLongitude: '',
+                            arriveLatitude: '',
+                            arriveLongitude: '',
+                            validAddress: false,
+                        })
+                    },
                 }], {cancelable: false})
-                this.setState({
-                    spinnerVisible: false,
-                    isClicked: false,
-                    isSubmit: false,
-                    departLatitude: '',
-                    departLongitude: '',
-                    arriveLatitude: '',
-                    arriveLongitude: '',
-                })
-            }else if(this.state.recipientAddressLatitude === '' || this.state.recipientAddressLatitude === ''){
-                Alert.alert('Cannot Add', 'The Recipient Address is invalid', [
+            }else if(this.state.validRecipientAddress){
+                Alert.alert('Cannot Add', 'The Arrive Location is invalid', [
                 {
                     text: 'OK',
                     onPress: () => {},
@@ -221,6 +235,7 @@ export default class AddOrder extends Component{
                     departLongitude: '',
                     arriveLatitude: '',
                     arriveLongitude: '',
+                    validRecipientAddress: false,
                 })
             }else{
                 fetch(`${myApiUrl}/${addOrderPath}`, {

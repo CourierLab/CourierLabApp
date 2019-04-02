@@ -39,7 +39,13 @@ export default class PendingPayment extends Component{
         setTimeout(() => {
             this.checkInternetConnection();
         }, 500);
-        this.getPendingPayment();
+        this._navListener = this.props.navigation.addListener('willFocus', (playload) => {
+            this.getPendingPayment();
+        });
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
     }
 
     async checkInternetConnection() {

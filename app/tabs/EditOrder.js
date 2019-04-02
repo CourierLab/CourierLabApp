@@ -47,6 +47,7 @@ export default class EditOrder extends Component{
             isSubmit: false,
             editedDepartFromMap: false,
             editedArriveFromMap: false,
+            validAddress: false,
         }
     }
 
@@ -245,7 +246,12 @@ export default class EditOrder extends Component{
                         departLongitude: location.lng,
                     })
                 })
-                .catch(error => console.warn(error));
+                .catch(error => {
+                    this.setState({
+                        validAddress: true,
+                    })
+                    console.warn(error)
+                });
             }
 
             if(!this.state.editedArriveFromMap){
@@ -259,7 +265,12 @@ export default class EditOrder extends Component{
                     })
                     console.log('arrivelat ', this.state.arriveLatitude)
                     console.log('arrivelong ', this.state.arriveLongitude)
-                }).catch(error => console.warn(error));
+                }).catch(error => {
+                    this.setState({
+                        validRecipientAddress: true,
+                    })
+                    console.warn(error)
+                });
             }
 
             // await Geocoder.from(this.state.departLocation)
@@ -283,69 +294,104 @@ export default class EditOrder extends Component{
             //     })
             // }).catch(error => console.warn(error));
 
-            fetch(`${myApiUrl}/${editOrderPath}`, {
-                method: 'POST',
-                headers: new Headers({
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': loginAsset[0].accessToken,
-                }),
-                body: JSON.stringify({
-                    driverOrderId: this.props.navigation.getParam('driverOrderId'),
-                    // carLength: this.state.carLength,
-                    // carWeight: this.state.carWeight,
-                    // carPlateNumber: this.state.carPlateNumber,
-                    orderDescription: this.state.orderDescription,
-                    departLocation: this.state.departLocation,
-                    departLocationLatitude: this.state.departLatitude,
-                    departLocationLongitude: this.state.departLongitude,
-                    arriveLocation: this.state.arriveLocation,
-                    arriveLocationLatitude: this.state.arriveLatitude,
-                    arriveLocationLongitude: this.state.arriveLongitude,
-                    expectedDepartureDate: this.state.expectedDepartureDate,
-                    expectedArrivalDate: this.state.expectedArrivalDate,
-                    vehicleSpecificationId: this.state.vehicleSpec,
-                    driverId: loginAsset[0].loginUserId,
-                    deviceId: deviceId,
-                    userId: loginAsset[0].userId,
-                }),
-            })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log(json);
-                if(json.succeeded){
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
-                    })
-                    Alert.alert('Successfully Edited', json.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => {},
-                    }], {cancelable: false})
-                    this.props.navigation.state.params.rerenderFunction();
-                    this.props.navigation.goBack();
-                }else{
-                    Alert.alert('Cannot Edit', json.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => {},
-                    }], {cancelable: false})
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
-                    })
-                }
-            }).catch(err => {
-                console.log(err);
+            if(this.state.validAddress){
+                Alert.alert('Cannot Add', 'The Pick Up location is invalid', [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                            departLatitude: '',
+                            departLongitude: '',
+                            arriveLatitude: '',
+                            arriveLongitude: '',
+                            validAddress: false,
+                        })
+                    },
+                }], {cancelable: false})
+            }else if(this.state.validRecipientAddress){
+                Alert.alert('Cannot Add', 'The Arrive Location is invalid', [
+                {
+                    text: 'OK',
+                    onPress: () => {},
+                }], {cancelable: false})
                 this.setState({
                     spinnerVisible: false,
                     isClicked: false,
                     isSubmit: false,
+                    departLatitude: '',
+                    departLongitude: '',
+                    arriveLatitude: '',
+                    arriveLongitude: '',
+                    validRecipientAddress: false,
                 })
-            });
+            }else{
+                fetch(`${myApiUrl}/${editOrderPath}`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': loginAsset[0].accessToken,
+                    }),
+                    body: JSON.stringify({
+                        driverOrderId: this.props.navigation.getParam('driverOrderId'),
+                        // carLength: this.state.carLength,
+                        // carWeight: this.state.carWeight,
+                        // carPlateNumber: this.state.carPlateNumber,
+                        orderDescription: this.state.orderDescription,
+                        departLocation: this.state.departLocation,
+                        departLocationLatitude: this.state.departLatitude,
+                        departLocationLongitude: this.state.departLongitude,
+                        arriveLocation: this.state.arriveLocation,
+                        arriveLocationLatitude: this.state.arriveLatitude,
+                        arriveLocationLongitude: this.state.arriveLongitude,
+                        expectedDepartureDate: this.state.expectedDepartureDate,
+                        expectedArrivalDate: this.state.expectedArrivalDate,
+                        vehicleSpecificationId: this.state.vehicleSpec,
+                        driverId: loginAsset[0].loginUserId,
+                        deviceId: deviceId,
+                        userId: loginAsset[0].userId,
+                    }),
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log(json);
+                    if(json.succeeded){
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                        Alert.alert('Successfully Edited', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.props.navigation.state.params.rerenderFunction();
+                        this.props.navigation.goBack();
+                    }else{
+                        Alert.alert('Cannot Edit', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                });
+            }
         }
     }
 

@@ -10,8 +10,21 @@ export default class Map extends Component{
         title: `${navigation.state.params.title}`,
         headerRight: (
             <Icon onPress={() => {
-                _this.props.navigation.state.params.onGoBack(_this.props.navigation.getParam('type'), _this.state.searchLocation, _this.state.lastLat, _this.state.lastLong); 
-                _this.props.navigation.goBack();
+                console.log(_this.state.invalidAddress)
+                if(_this.state.invalidAddress){
+                    Alert.alert('Unable to get the location', 'Please enter a valid location before proceed', [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            _this.setState({
+                                invalidAddress: true,
+                            })
+                        }
+                    }], {cancelable: false})
+                }else{
+                    _this.props.navigation.state.params.onGoBack(_this.props.navigation.getParam('type'), _this.state.searchLocation, _this.state.lastLat, _this.state.lastLong); 
+                    _this.props.navigation.goBack();
+                }
             }} name={'check'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
         ),
     })
@@ -24,6 +37,7 @@ export default class Map extends Component{
             lastLong: null,
             searchLocation: '',
             getLocation: '',
+            invalidAddress: false,
         }
         _this = this;
     }
@@ -135,19 +149,36 @@ export default class Map extends Component{
             }
             this.onRegionChange(region, location.lat, location.lng);
 		})
-		.catch(error => console.warn(error));
+		.catch(error => {
+            Alert.alert('Unable to get the location', 'Please enter a valid location', [
+            {
+                text: 'OK',
+                onPress: () => {
+                    this.setState({
+                        invalidAddress: true,
+                    })
+                }
+            }], {cancelable: false})
+            console.warn(error)
+        });
     }
 
     getAddress(){
         Geocoder.from(this.state.lastLat, this.state.lastLong)
 		.then(json => {
-        	var addressComponent = json.results[0].address_components[0];
+        	var addressComponent = json.results[0];
             console.log(addressComponent);
             this.setState({
-                searchLocation: addressComponent.long_name,
+                searchLocation: addressComponent.formatted_address,
+                invalidAddress: false,
             })
 		})
-		.catch(error => console.warn(error));
+		.catch(error => {
+            this.setState({
+                invalidAddress: true,
+            })
+            console.warn(error)
+        });
     }
 
     render(){
@@ -177,6 +208,7 @@ export default class Map extends Component{
                     onRegionChange={this.onRegionChange.bind(this)}>
                     <MapView.Marker
                         draggable
+                        tracksViewChanges={false}
                         coordinate={{
                             latitude: (this.state.lastLat) || -36.82339,
                             longitude: (this.state.lastLong) || -73.03569,

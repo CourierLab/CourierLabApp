@@ -15,12 +15,14 @@ let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 let {height, width} = Dimensions.get('window');
+let _this = this;
 
 export default class ConfirmedOrderDetail extends Component{
     static navigationOptions = {
         title: 'Order Details',
         headerRight: (
-            <Icon onPress={() => {(_this.state.orderNumber === '' ) ? '' : _this.props.navigation.navigate('GenerateQRCode', { orderNumber: _this.state.orderNumber })}} name={'qrcode'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
+            <Icon onPress={() => { _this.getCode()
+            }} name={'qrcode'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
         ),
     };
     
@@ -30,6 +32,7 @@ export default class ConfirmedOrderDetail extends Component{
             spinnerVisible: false,
             orderSummary: [],
             orderNumber: '',
+            isReady: false,
         };
         _this = this;
     }
@@ -110,6 +113,7 @@ export default class ConfirmedOrderDetail extends Component{
                 this.setState({
                     orderSummary: json.results,
                     orderNumber: json.results.shipperOrder.orderNumber,
+                    isReady: true,
                 });
             }else{
                 Alert.alert('Error', json.message, [
@@ -127,6 +131,14 @@ export default class ConfirmedOrderDetail extends Component{
                 spinnerVisible: false,
             })
         });
+    }
+
+    getCode(){
+        if(this.state.orderNumber !== '' ){
+            this.props.navigation.navigate('GenerateQRCode', { 
+                orderNumber: this.state.orderNumber, 
+            })
+        }
     }
 
     render(){

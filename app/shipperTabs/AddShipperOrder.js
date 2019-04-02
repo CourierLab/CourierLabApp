@@ -67,6 +67,8 @@ export default class AddDriverOrder extends Component{
             selectedLorryType: '',
             selectedLorryTypeId: 0,
             orderImage: '',
+            validAddress: false,
+            validRecipientAddress: false,
         }
     }
 
@@ -263,7 +265,12 @@ export default class AddDriverOrder extends Component{
                         pickUpLongitude: location.lng,
                     })
                 })
-                .catch(error => console.warn(error));
+                .catch(error => {
+                    this.setState({
+                        validAddress: true,
+                    })
+                    console.warn(error)
+                });
             }
 
             if(this.state.recipientAddressLatitude == '' && this.state.recipientAddressLongitude == ''){
@@ -276,10 +283,15 @@ export default class AddDriverOrder extends Component{
                         recipientAddressLongitude: location.lng,
                     })
                 })
-                .catch(error => console.warn(error));
+                .catch(error => {
+                    this.setState({
+                        validRecipientAddress: true,
+                    })
+                    console.warn(error)
+                });
             }
 
-            if(this.state.pickUpLatitude === '' || this.state.pickUpLongitude === ''){
+            if(this.state.validAddress){
                 Alert.alert('Cannot Add', 'The Pick Up location is invalid', [
                 {
                     text: 'OK',
@@ -293,8 +305,9 @@ export default class AddDriverOrder extends Component{
                     pickUpLongitude: '',
                     recipientAddressLatitude: '',
                     recipientAddressLongitude: '',
+                    validAddress: false,
                 })
-            }else if(this.state.recipientAddressLatitude === '' || this.state.recipientAddressLatitude === ''){
+            }else if(this.state.validRecipientAddress){
                 Alert.alert('Cannot Add', 'The Recipient Address is invalid', [
                 {
                     text: 'OK',
@@ -308,6 +321,7 @@ export default class AddDriverOrder extends Component{
                     pickUpLongitude: '',
                     recipientAddressLatitude: '',
                     recipientAddressLongitude: '',
+                    validRecipientAddress: false,
                 })
             }else{
                 var bodyData = new FormData();

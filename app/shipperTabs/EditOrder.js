@@ -71,6 +71,8 @@ export default class EditOrder extends Component{
             orderImage: '',
             editedPickUpFromMap: false,
             editedRecipientAddressFromMap: false,
+            validAddress: false,
+            validRecipientAddress: false,
         }
     }
 
@@ -344,7 +346,12 @@ export default class EditOrder extends Component{
                         pickUpLongitude: location.lng,
                     })
                 })
-                .catch(error => console.warn(error));
+                .catch(error => {
+                    this.setState({
+                        validAddress: true,
+                    })
+                    console.warn(error)
+                });
             }
 
             if(!this.state.editedRecipientAddressFromMap){
@@ -357,100 +364,140 @@ export default class EditOrder extends Component{
                         recipientAddressLongitude: location.lng,
                     })
                 })
-                .catch(error => console.warn(error));
+                .catch(error => {
+                    this.setState({
+                        validRecipientAddress: true,
+                    })
+                    console.warn(error)
+                });
             }
             console.log('lat ', this.state.pickUpLatitude)
             console.log('long ', this.state.pickUpLongitude)
-            var bodyData = new FormData();
-            bodyData.append('pickUpLocation', this.state.pickUpLocation);
-            bodyData.append('pickUpLocationLatitude', this.state.pickUpLatitude);
-            bodyData.append('pickUpLocationLongitude', this.state.pickUpLongitude);
-            bodyData.append('orderDescription', this.state.orderDescription);
-            bodyData.append('orderWeight', this.state.orderWeight);
-            bodyData.append('pickUpDateTime', this.state.pickUpDate);
-            bodyData.append('arrivalDateTime', this.state.expectedArrivalDate);
-            bodyData.append('favouriteRecipientId', this.state.favRecipientId);
-            bodyData.append('recipientName', this.state.recipientName);
-            bodyData.append('recipientAddress', this.state.recipientAddress);
-            bodyData.append('recipientAddressLatitude', this.state.recipientAddressLatitude);
-            bodyData.append('recipientAddressLongitude', this.state.recipientAddressLongitude);
-            bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
-            bodyData.append('recipientEmailAddress', this.state.recipientEmail);
-            bodyData.append('recipientPhoneNumber', this.state.recipientPhoneNumber);
-            bodyData.append('vehicleSpecificationId', this.state.vehicleSpec.toString());
-            bodyData.append('deviceId', deviceId);
-            bodyData.append('userId', loginAsset[0].userId);
-            bodyData.append('shipperOrderId', this.props.navigation.getParam('shipperOrderId'));
-            bodyData.append('shipperOrderImage', { uri: this.state.orderImage, name: 'orderImage', type: 'image/jpeg' });
-            console.log(bodyData)
-            fetch(`${myApiUrl}/${editOrderPath}`, {
-                method: 'POST',
-                headers: new Headers({
-                    // 'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': loginAsset[0].accessToken,
-                }),
-                body: bodyData,
-                // body: JSON.stringify({
-                //     pickUpLocation: this.state.pickUpLocation,
-                //     pickUpLocationLatitude: this.state.pickUpLatitude,
-                //     pickUpLocationLongitude: this.state.pickUpLongitude,
-                //     orderDescription: this.state.orderDescription,
-                //     orderWeight: this.state.orderWeight,
-                //     pickUpDateTime: this.state.pickUpDate,
-                //     arrivalDateTime: this.state.expectedArrivalDate,
-                //     favouriteRecipientId: this.state.favRecipientId,
-                //     recipientName: this.state.recipientName,
-                //     recipientAddress: this.state.recipientAddress,
-                //     recipientAddressLatitude: this.state.recipientAddressLatitude,
-                //     recipientAddressLongitude: this.state.recipientAddressLongitude,
-                //     lorryTypeId: this.state.selectedLorryTypeId,
-                //     // recipientState: this.state.recipientState,
-                //     // recipientPostCode: this.state.recipientPostcode,
-                //     recipientEmailAddress: this.state.recipientEmail,
-                //     recipientPhoneNumber: this.state.recipientPhoneNumber,
-                //     vehicleSpecificationId: this.state.vehicleSpec,
-                //     deviceId: deviceId,
-                //     userId: loginAsset[0].userId,
-                //     shipperOrderId: this.props.navigation.getParam('shipperOrderId'),
-                // }),
-            })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log('add driver order ', json);
-                if(json.succeeded){
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
-                    })
-                    Alert.alert('Successfully Edited', json.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => {},
-                    }], {cancelable: false})
-                    this.props.navigation.state.params.rerenderFunction();
-                    this.props.navigation.goBack();
-                }else{
-                    Alert.alert('Cannot Edit', json.message, [
-                    {
-                        text: 'OK',
-                        onPress: () => {},
-                    }], {cancelable: false})
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                        isSubmit: false,
-                    })
-                }
-            }).catch(err => {
-                console.log(err);
+
+            if(this.state.validAddress){
+                Alert.alert('Cannot Add', 'The Pick Up location is invalid', [
+                {
+                    text: 'OK',
+                    onPress: () => {},
+                }], {cancelable: false})
                 this.setState({
                     spinnerVisible: false,
                     isClicked: false,
                     isSubmit: false,
+                    pickUpLatitude: '',
+                    pickUpLongitude: '',
+                    recipientAddressLatitude: '',
+                    recipientAddressLongitude: '',
+                    validAddress: false,
                 })
-            });
+            }else if(this.state.validRecipientAddress){
+                Alert.alert('Cannot Add', 'The Recipient Address is invalid', [
+                {
+                    text: 'OK',
+                    onPress: () => {},
+                }], {cancelable: false})
+                this.setState({
+                    spinnerVisible: false,
+                    isClicked: false,
+                    isSubmit: false,
+                    pickUpLatitude: '',
+                    pickUpLongitude: '',
+                    recipientAddressLatitude: '',
+                    recipientAddressLongitude: '',
+                    validRecipientAddress: false,
+                })
+            }else{
+                var bodyData = new FormData();
+                bodyData.append('pickUpLocation', this.state.pickUpLocation);
+                bodyData.append('pickUpLocationLatitude', this.state.pickUpLatitude);
+                bodyData.append('pickUpLocationLongitude', this.state.pickUpLongitude);
+                bodyData.append('orderDescription', this.state.orderDescription);
+                bodyData.append('orderWeight', this.state.orderWeight);
+                bodyData.append('pickUpDateTime', this.state.pickUpDate);
+                bodyData.append('arrivalDateTime', this.state.expectedArrivalDate);
+                bodyData.append('favouriteRecipientId', this.state.favRecipientId);
+                bodyData.append('recipientName', this.state.recipientName);
+                bodyData.append('recipientAddress', this.state.recipientAddress);
+                bodyData.append('recipientAddressLatitude', this.state.recipientAddressLatitude);
+                bodyData.append('recipientAddressLongitude', this.state.recipientAddressLongitude);
+                bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
+                bodyData.append('recipientEmailAddress', this.state.recipientEmail);
+                bodyData.append('recipientPhoneNumber', this.state.recipientPhoneNumber);
+                bodyData.append('vehicleSpecificationId', this.state.vehicleSpec.toString());
+                bodyData.append('deviceId', deviceId);
+                bodyData.append('userId', loginAsset[0].userId);
+                bodyData.append('shipperOrderId', this.props.navigation.getParam('shipperOrderId'));
+                bodyData.append('shipperOrderImage', { uri: this.state.orderImage, name: 'orderImage', type: 'image/jpeg' });
+                console.log(bodyData)
+                fetch(`${myApiUrl}/${editOrderPath}`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        // 'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': loginAsset[0].accessToken,
+                    }),
+                    body: bodyData,
+                    // body: JSON.stringify({
+                    //     pickUpLocation: this.state.pickUpLocation,
+                    //     pickUpLocationLatitude: this.state.pickUpLatitude,
+                    //     pickUpLocationLongitude: this.state.pickUpLongitude,
+                    //     orderDescription: this.state.orderDescription,
+                    //     orderWeight: this.state.orderWeight,
+                    //     pickUpDateTime: this.state.pickUpDate,
+                    //     arrivalDateTime: this.state.expectedArrivalDate,
+                    //     favouriteRecipientId: this.state.favRecipientId,
+                    //     recipientName: this.state.recipientName,
+                    //     recipientAddress: this.state.recipientAddress,
+                    //     recipientAddressLatitude: this.state.recipientAddressLatitude,
+                    //     recipientAddressLongitude: this.state.recipientAddressLongitude,
+                    //     lorryTypeId: this.state.selectedLorryTypeId,
+                    //     // recipientState: this.state.recipientState,
+                    //     // recipientPostCode: this.state.recipientPostcode,
+                    //     recipientEmailAddress: this.state.recipientEmail,
+                    //     recipientPhoneNumber: this.state.recipientPhoneNumber,
+                    //     vehicleSpecificationId: this.state.vehicleSpec,
+                    //     deviceId: deviceId,
+                    //     userId: loginAsset[0].userId,
+                    //     shipperOrderId: this.props.navigation.getParam('shipperOrderId'),
+                    // }),
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    console.log('add driver order ', json);
+                    if(json.succeeded){
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                        Alert.alert('Successfully Edited', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.props.navigation.state.params.rerenderFunction();
+                        this.props.navigation.goBack();
+                    }else{
+                        Alert.alert('Cannot Edit', json.message, [
+                        {
+                            text: 'OK',
+                            onPress: () => {},
+                        }], {cancelable: false})
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                });
+            }
         }
     }
 

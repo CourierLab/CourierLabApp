@@ -96,14 +96,14 @@ export default class Home extends Component{
                             loginAsset[0].accessTokenExpiredDate = json.results.accessTokenExpiredDate;
                             loginAsset[0].refreshToken = json.results.newRefreshToken;
                         })
-                        this.props.onLogin(loginAsset[0].email);
+                        _this.props.onLogin(loginAsset[0].email);
                     }else{
                         Alert.alert('Login Expired', 'Please try to login again', [{
                             text: 'OK',
                             onPress: () => {},
                             style: styles.alertText,
                         }], {cancelable: false});
-                        this.props.onLogout();
+                        _this.props.onLogout();
                     }
                 }).catch(err => {
                     console.log(err);
@@ -113,25 +113,26 @@ export default class Home extends Component{
                 //go to main page
                 console.log('not expired yet');
                 if(isPending){
-                    if(Platform.OS === 'ios'){
-                        _this.props.navigation.navigate('PendingConfirmationDetail', {
-                            driverOrderId: orderId,
-                        })
-                    }else{
-                        this.props.navigation.navigate('PendingConfirmationDetail', {
-                            driverOrderId: orderId,
-                        })
-                    }
+                    // if(Platform.OS === 'ios'){
+                    _this.props.navigation.navigate('PendingConfirmationDetail', {
+                        driverOrderId: orderId,
+                        fromNotification: true,
+                    })
+                    // }else{
+                    //     this.props.navigation.navigate('PendingConfirmationDetail', {
+                    //         driverOrderId: orderId,
+                    //     })
+                    // }
                 }else{
-                    if(Platform.OS === 'ios'){
-                        _this.props.navigation.navigate('ConfirmedOrderDetail', {
-                            driverOrderId: orderId,
-                        })
-                    }else{
-                        this.props.navigation.navigate('ConfirmedOrderDetail', {
-                            driverOrderId: orderId,
-                        })
-                    }
+                    // if(Platform.OS === 'ios'){
+                    _this.props.navigation.navigate('ConfirmedOrderDetail', {
+                        driverOrderId: orderId,
+                    })
+                    // }else{
+                    //     this.props.navigation.navigate('ConfirmedOrderDetail', {
+                    //         driverOrderId: orderId,
+                    //     })
+                    // }
                 }            
             }
         }
