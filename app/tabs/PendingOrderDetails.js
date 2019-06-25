@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, StatusBar, isAndroid, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, Alert, StatusBar, Dimensions, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import { styles } from '../utils/Style';
-import { Card } from 'react-native-elements';
+import { Avatar } from 'react-native-elements';
 import Spinner from 'react-native-spinkit';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
@@ -13,6 +13,7 @@ let acceptOrderPath = 'AcceptOrder';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
+let {height, width} = Dimensions.get('window');
 
 export default class PendingOrderDetails extends Component{
     static navigationOptions = {
@@ -174,6 +175,18 @@ export default class PendingOrderDetails extends Component{
                     </View>
                     <View style={styles.columnGap}>
                     </View>
+                    <View style={styles.columnNormal}>
+                        <Text style={styles.columnTitleText}>Order Image</Text>
+                        {
+                            (orderDetails.shipperOrderImage !== '') ? <View style={{flexDirection: 'row', paddingBottom: 10, paddingTop: 10, paddingLeft: 0, paddingRight: 0, justifyContent: 'flex-start', }}>
+                                <Avatar
+                                    size={width-100}
+                                    source={{uri: orderDetails.shipperOrderImage}}
+                                    activeOpacity={0.7}
+                                />
+                            </View> : <View />
+                        }
+                    </View>
                     {/* <View style={styles.columnRowContainer}>
                         <View style={styles.columnRowContent}>
                             <Text style={styles.columnTitleText}>State</Text>
@@ -198,7 +211,7 @@ export default class PendingOrderDetails extends Component{
                 <View style={styles.pendingAcceptButton}>
                     <TouchableOpacity
                         style={styles.buttonContainer}
-                        onPress={() => this.props.navigation.navigate('AddOrder', {
+                        onPress={() => this.props.navigation.navigate('DriverPendingOrder', {
                             shipperOrderId: orderDetails.shipperOrderId
                         })}>
                         <Text style={styles.buttonText}>Select Order</Text>

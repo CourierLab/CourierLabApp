@@ -314,15 +314,24 @@ export default class AddOrder extends Component{
                 <ScrollView>
                     <View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location: 
+                            {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location: 
                                 <Text 
                                     style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                     onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', type: 'depart', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
-                            </Text>
-                            <TextInput
+                            </Text> */}
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location:  </Text>
+                            <TouchableOpacity
+                                style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, borderColor: '#3c4c96', borderWidth: 1, }}
+                                onPress={() => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', type: 'depart', onGoBack: this.getLocationInfo.bind(this)})}>
+                                {
+                                    (this.state.departLocation === '') ? <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#8289AC', }}>Depart Location</Text> :
+                                    <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#3c4c96', }}>{this.state.departLocation}</Text>
+                                }
+                            </TouchableOpacity>
+                            {/* <TextInput
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                 autoCapitalize="none"
-                                autoCorrect={false}
+                                autoCorrect={false} 
                                 underlineColorAndroid={'transparent'}
                                 autoFocus={false}
                                 keyboardType='default'
@@ -330,15 +339,24 @@ export default class AddOrder extends Component{
                                 placeholder='Depart Location'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.departLocation}
-                                onChangeText={(text) => {this.setState({ departLocation: text });}}  />
+                                onChangeText={(text) => {this.setState({ departLocation: text });}}  /> */}
                         </View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Arrive Location: 
+                            {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Arrive Location: 
                                 <Text 
                                     style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                     onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', type: 'arrive', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
-                            </Text>
-                            <TextInput
+                            </Text> */}
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Arrive Location: </Text>
+                            <TouchableOpacity
+                                style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, borderColor: '#3c4c96', borderWidth: 1, }}
+                                onPress={() => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', type: 'arrive', onGoBack: this.getLocationInfo.bind(this)})}>
+                                {
+                                    (this.state.arriveLocation === '') ? <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#8289AC', }}>Arrive Location</Text> :
+                                    <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#3c4c96', }}>{this.state.arriveLocation}</Text>
+                                }
+                            </TouchableOpacity>
+                            {/* <TextInput
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                 autoCapitalize="none"
                                 underlineColorAndroid={'transparent'}
@@ -348,7 +366,7 @@ export default class AddOrder extends Component{
                                 placeholder='Arrive Location'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.arriveLocation}
-                                onChangeText={(text) => this.setState({ arriveLocation: text })}  />
+                                onChangeText={(text) => this.setState({ arriveLocation: text })}  /> */}
                         </View>
                         {/* <Text 
                                 style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}

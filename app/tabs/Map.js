@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, TextInput, Text, View, Alert, PermissionsAndroid, Platform, } from 'react-native';
+import { StyleSheet, TextInput, Dimensions, Text, View, Alert, PermissionsAndroid, Platform, TouchableOpacity, Modal, ScrollView, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NetworkConnection from '../utils/NetworkConnection';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
-  
+import RNGooglePlaces from 'react-native-google-places';
+import { ListItem } from 'react-native-elements';
+
+let { height, width } = Dimensions.get('window');
+
 export default class Map extends Component{
     static navigationOptions = ({ navigation }) => ({
         title: `${navigation.state.params.title}`,
@@ -38,8 +42,15 @@ export default class Map extends Component{
             searchLocation: '',
             getLocation: '',
             invalidAddress: false,
+            nearbyLocation: null,
+            nearbyList: [],
+            modalVisible: false,
         }
         _this = this;
+    }
+
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
     }
 
     async requestLocationPermission() {
@@ -74,7 +85,7 @@ export default class Map extends Component{
         } catch (err) {
           console.warn(err);
         }
-      }
+    }
 
     componentDidMount() {
         setTimeout(() => {
@@ -129,6 +140,7 @@ export default class Map extends Component{
     }
       
     onRegionChange(region, lastLat, lastLong) {
+        console.log(region)
         this.setState({
             mapRegion: region,
             lastLat: lastLat || this.state.lastLat,
@@ -136,14 +148,15 @@ export default class Map extends Component{
         });
     }
 
-    getCoordination(){
-        Geocoder.from(this.state.searchLocation)
+    async getCoordination(){
+        console.log(this.state.searchLocation)
+        await Geocoder.from(this.state.searchLocation)
 		.then(json => {
 			var location = json.results[0].geometry.location;
             console.log(json.results[0].geometry);
             let region = {
-                latitude:       location.lat,
-                longitude:      location.lng,
+                latitude: location.lat,
+                longitude: location.lng,
                 latitudeDelta:  0.00922*1.5,
                 longitudeDelta: 0.00421*1.5
             }
@@ -163,14 +176,24 @@ export default class Map extends Component{
         });
     }
 
-    getAddress(){
-        Geocoder.from(this.state.lastLat, this.state.lastLong)
+    async getAddress(){
+        let region = {
+            latitude: this.state.lastLat,
+            longitude: this.state.lastLong,
+            latitudeDelta:  0.00922*1.5,
+            longitudeDelta: 0.00421*1.5
+        }
+        this.setState({
+            mapRegion: region,
+        })
+        await Geocoder.from(this.state.lastLat, this.state.lastLong)
 		.then(json => {
         	var addressComponent = json.results[0];
-            console.log(addressComponent);
+            console.log(json);
             this.setState({
                 searchLocation: addressComponent.formatted_address,
                 invalidAddress: false,
+                nearbyLocation: addressComponent.address_components[1].long_name,
             })
 		})
 		.catch(error => {
@@ -179,33 +202,31 @@ export default class Map extends Component{
             })
             console.warn(error)
         });
+
+        console.log(this.state.searchLocation)
+        this.searchFilterFunction()
+    }
+
+    async searchFilterFunction(){
+        await RNGooglePlaces.getAutocompletePredictions(this.state.searchLocation)
+        .then((results) => {
+            console.log(results)
+            this.setState({
+                nearbyList: results,
+            })
+        }).catch((error) => 
+            console.log(error.message)
+        );
     }
 
     render(){
         return(
             <View style={styles.container}>
-                <TextInput
-                    style={styles.input}
-                    autoCapitalize="none"
-                    underlineColorAndroid={'transparent'}
-                    autoCorrect={false}
-                    keyboardType='default'
-                    returnKeyLabel="next"
-                    placeholder='Search Location'
-                    placeholderTextColor='#939ABA'
-                    value={this.state.searchLocation}
-                    onChangeText={(text) => {
-                        this.setState({ searchLocation: text })
-                    }}  
-                    onEndEditing={() => {
-                        console.log('ended')
-                        this.getCoordination()
-                    }}/>
                 <MapView
                     provider={PROVIDER_GOOGLE}
                     style={styles.map}
                     region={this.state.mapRegion}
-                    onRegionChange={this.onRegionChange.bind(this)}>
+                    onRegionChange={() => this.onRegionChange.bind(this)}>
                     <MapView.Marker
                         draggable
                         tracksViewChanges={false}
@@ -218,10 +239,72 @@ export default class Map extends Component{
                             this.setState({
                                 lastLat: e.nativeEvent.coordinate.latitude,
                                 lastLong: e.nativeEvent.coordinate.longitude,
+                            }, function(){
+                                this.getAddress()
                             })
-                            this.getAddress()
                         }} />
                 </MapView>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}> 
+                    <View style={{flex: 1, }}>
+                        <View styl={{justifyContent: 'center', alignItems:'flex-end',}}>
+                            <TouchableOpacity
+                                style={{height: (Platform.OS === 'ios') ? height*0.1 : height*0.07, backgroundColor: '#3c4c96',}}
+                                onPress={() => {
+                                    this.setModalVisible(!this.state.modalVisible)
+                                }}>
+                                <Icon name={'times'} size={25} color={'#fff'} style={{justifyContent: 'center', alignSelf:'flex-end', bottom: 0, right: 20, top: (Platform.OS === 'ios') ? height*0.055 : height*0.02,}}/>
+                            </TouchableOpacity>
+                        </View>
+                        <TextInput
+                            style={{height: 50, backgroundColor: '#fff', margin: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
+                            autoCapitalize="none"
+                            underlineColorAndroid={'transparent'}
+                            autoCorrect={false}
+                            keyboardType='default'
+                            returnKeyLabel="next"
+                            placeholder='Search Location'
+                            placeholderTextColor='#939ABA'
+                            value={this.state.searchLocation}
+                            onChangeText={(text) => {
+                                this.setState({ searchLocation: text })
+                            }}  
+                            onEndEditing={() => {
+                                console.log('ended')
+                                this.searchFilterFunction()
+                            }}
+                        />
+                        <View style={{borderTopWidth: 1, borderColor: '#DBDBDB',}} />
+                        <ScrollView styl={{justifyContent: 'center', alignItems:'flex-start',}}>
+                            {(this.state.nearbyList !== []) ? this.state.nearbyList.map((item, index) => (
+                                <ListItem 
+                                    key={index}
+                                    bottomDivider={true}
+                                    title={ <Text style={{fontSize: 15, fontFamily: 'Raleway-Regular', padding: 0,}}>{item.primaryText}</Text> }
+                                    subtitle={ <Text style={{fontSize: 13, fontFamily: 'Raleway-Regular', padding: 0,}}> {item.fullText}</Text> }
+                                    onPress={() => {
+                                        this.setState({ 
+                                            searchLocation: item.fullText,
+                                        }, function(){
+                                            this.getCoordination()
+                                        })
+                                        this.setModalVisible(!this.state.modalVisible)
+                                    }}
+                                />)) : <View/>
+                            }
+                        </ScrollView>
+                    </View>
+                </Modal>
+                <TouchableOpacity
+                    style={{height: 50, backgroundColor: '#fff', borderColor: '#3c4c96', borderWidth: 1, padding: 10, position: 'absolute', top: 10, left: 10, right: 10, zIndex: 9999,}}
+                    onPress={() => this.setModalVisible(true)}>
+                    <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#3c4c96', }}>{this.state.searchLocation}</Text>
+                </TouchableOpacity>
             </View>
         )
     }

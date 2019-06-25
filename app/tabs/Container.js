@@ -24,11 +24,14 @@ import UpdateProfileScreen from './UpdateProfile';
 import UpcomingOrderScreen from './UpcomingOrder';
 import UpdateLorryScreen from './UpdateLorry';
 import LorryScreen from './Lorry';
+import DriverPendingOrderScreen from './DriverPendingOrder';
 
 const tabOneStack = createStackNavigator({
     Home: { screen: HomeScreen },
     PendingOrderDetails: { screen: PendingOrderDetailsScreen },
+    DriverPendingOrder: { screen: DriverPendingOrderScreen },
     AddOrder: { screen: AddOrderScreen },
+    SelectShipperOrder: { screen: SelectShipperOrderScreen },
     ConfirmDriverShipperOrder: { screen: ConfirmDriverShipperOrderScreen },
     Map: { screen: MapScreen },
 },
