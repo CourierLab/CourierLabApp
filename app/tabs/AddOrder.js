@@ -349,7 +349,7 @@ export default class AddOrder extends Component{
                             {/* <TextInput
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                 autoCapitalize="none"
-                                autoCorrect={false} 
+                                autoCorrect={false}
                                 underlineColorAndroid={'transparent'}
                                 autoFocus={false}
                                 keyboardType='default'
@@ -357,7 +357,7 @@ export default class AddOrder extends Component{
                                 placeholder='Depart Location'
                                 placeholderTextColor='#939ABA'
                                 value={this.state.departLocation}
-                                onChangeText={(text) => {this.setState({ departLocation: text });}}  /> */}
+                                onChangeText={(text) => {this.setState({ departLocation: text });}}  />
                         </View>
                         <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Depart Location  </Text>
@@ -738,6 +738,7 @@ export default class AddOrder extends Component{
                             onPress={(e) => this.addOrder()}>
                             <Text style={this.state.isSubmit ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>Add Order</Text>
                         </TouchableOpacity>
+                    </View>
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

@@ -11,7 +11,6 @@
 #import <React/RCTRootView.h>
 #import <React/RCTLinkingManager.h>
 #import <GoogleMaps/GoogleMaps.h>
-#import <GooglePlaces/GooglePlaces.h>
 
 @implementation AppDelegate
 /*@synthesize oneSignal = _oneSignal;*/
@@ -26,7 +25,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-  [GMSPlacesClient provideAPIKey:@"AIzaSyAdcGNa8bP_-NQN38IM6Ua11jN0sCnX6D4"];
   [GMSServices provideAPIKey:@"AIzaSyAdcGNa8bP_-NQN38IM6Ua11jN0sCnX6D4"];
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];

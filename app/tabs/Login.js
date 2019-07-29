@@ -41,7 +41,7 @@ class Login extends Component{
         };
     }
 
-    async componentWillMount(){
+    componentWillMount(){
         console.log(loginAsset[0]);
         console.log(DeviceInfo.getModel())
         let now = new Date();
@@ -49,7 +49,7 @@ class Login extends Component{
             if(new Date(loginAsset[0].accessTokenExpiredDate) < now){
                 //refresh token
                 console.log('expired token calling');
-                await fetch(`${myApiUrl}/${refreshTokenPath}?userId=` + loginAsset[0].userId + `&deviceId=` + deviceId, {
+                fetch(`${myApiUrl}/${refreshTokenPath}?userId=` + loginAsset[0].userId + `&deviceId=` + deviceId, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -69,19 +69,11 @@ class Login extends Component{
                         })
                         this.props.onLogin(loginAsset[0].email);
                     }else{
-                        // Alert.alert('Login Expired', 'Please try to login again', [{
-                        //     text: 'OK',
-                        //     onPress: () => {},
-                        //     style: styles.alertText,
-                        // }], {cancelable: false});
-                        realm.write(() => {
-                            realm.delete(loginAsset);
-                        })
-                        this.setState({ 
-                            spinnerVisible: false,
-                            isSubmit: false,
-                        });
-                        OneSignal.deleteTag("userId");
+                        Alert.alert('Login Expired', 'Please try to login again', [{
+                            text: 'OK',
+                            onPress: () => {},
+                            style: styles.alertText,
+                        }], {cancelable: false});
                         this.props.onLogout();
                     }
                 }).catch(err => {

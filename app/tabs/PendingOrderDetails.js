@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, StatusBar, Dimensions, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, Alert, StatusBar, isAndroid, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,7 +10,7 @@ import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import { styles } from '../utils/Style';
-import { Avatar } from 'react-native-elements';
+import { Card } from 'react-native-elements';
 import Spinner from 'react-native-spinkit';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
@@ -18,7 +18,6 @@ let acceptOrderPath = 'AcceptOrder';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
-let {height, width} = Dimensions.get('window');
 
 export default class PendingOrderDetails extends Component{
     static navigationOptions = {
@@ -335,6 +334,7 @@ export default class PendingOrderDetails extends Component{
                     </View>
                     <View style={styles.columnGap}>
                     </View>
+<<<<<<< HEAD
                     <View style={styles.columnNormal}>
                         <Text style={styles.columnTitleText}>Order Image</Text>
                         {
@@ -347,6 +347,8 @@ export default class PendingOrderDetails extends Component{
                             </View> : <View />
                         }
                     </View> */}
+=======
+>>>>>>> parent of 636a50d... User Deletion Function
                     {/* <View style={styles.columnRowContainer}>
                         <View style={styles.columnRowContent}>
                             <Text style={styles.columnTitleText}>State</Text>
@@ -370,7 +372,7 @@ export default class PendingOrderDetails extends Component{
                 <View style={styles.pendingAcceptButton}>
                     <TouchableOpacity
                         style={styles.buttonContainer}
-                        onPress={() => this.props.navigation.navigate('DriverPendingOrder', {
+                        onPress={() => this.props.navigation.navigate('AddOrder', {
                             shipperOrderId: orderDetails.shipperOrderId
                         })}>
                         <Text style={{color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>Select Order</Text>

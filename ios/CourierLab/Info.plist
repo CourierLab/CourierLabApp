@@ -42,7 +42,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
 	<string>20</string>
+=======
+	<string>12</string>
+>>>>>>> parent of 636a50d... User Deletion Function
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

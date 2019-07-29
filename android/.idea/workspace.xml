@@ -20,6 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="59a23772-a54a-474b-a256-0d70c24880ea" name="Default" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_appcompat_appcompat_1_0_0_aar.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_browser_browser_1_0_0_aar.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cardview_cardview_1_0_0_aar.xml" afterDir="false" />
@@ -258,6 +259,25 @@
       <change beforePath="$PROJECT_DIR$/../ios/CourierLab/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/CourierLab/Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package.json" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/index.android.bundle" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/index.android.bundle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/index.android.bundle.meta" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/index.android.bundle.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/AddOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/AddOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/AddShipperOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/AddShipperOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/ConfirmedOrderDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/ConfirmedOrderDetail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/DriverOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/DriverOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/EditOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/EditOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/PendingConfirmationDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/PendingConfirmationDetail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/shipperTabs/PendingPayment.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/shipperTabs/PendingPayment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/tabs/AddDriverOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/AddDriverOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/tabs/AddOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/AddOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/tabs/EditOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/EditOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/tabs/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/tabs/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/Map.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/tabs/PendingConfirmationDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/tabs/PendingConfirmationDetail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/CourierLab/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/CourierLab/Info.plist" afterDir="false" />
+>>>>>>> parent of 636a50d... User Deletion Function
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -291,6 +311,7 @@
     <session id="1277872853">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+<<<<<<< HEAD
           <entry key="project.closed" value="52" />
           <entry key="project.open.time.1" value="7" />
           <entry key="project.open.time.10" value="1" />
@@ -302,26 +323,50 @@
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="5" />
           <entry key="project.opened" value="52" />
+=======
+          <entry key="project.closed" value="27" />
+          <entry key="project.open.time.1" value="6" />
+          <entry key="project.open.time.10" value="1" />
+          <entry key="project.open.time.2" value="1" />
+          <entry key="project.open.time.5" value="8" />
+          <entry key="project.open.time.6" value="7" />
+          <entry key="project.open.time.7" value="2" />
+          <entry key="project.open.time.8" value="2" />
+          <entry key="project.opened" value="27" />
+>>>>>>> parent of 636a50d... User Deletion Function
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
+<<<<<<< HEAD
           <entry key="gradle" value="130" />
           <entry key="java" value="82" />
           <entry key="properties" value="19" />
           <entry key="xml" value="156" />
+=======
+          <entry key="gradle" value="6" />
+          <entry key="java" value="66" />
+          <entry key="xml" value="58" />
+>>>>>>> parent of 636a50d... User Deletion Function
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
+<<<<<<< HEAD
           <entry key="Groovy" value="130" />
           <entry key="JAVA" value="82" />
           <entry key="Properties" value="19" />
           <entry key="XML" value="156" />
+=======
+          <entry key="Groovy" value="6" />
+          <entry key="JAVA" value="66" />
+          <entry key="XML" value="58" />
+>>>>>>> parent of 636a50d... User Deletion Function
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+<<<<<<< HEAD
           <entry key="bat" value="4" />
           <entry key="gradle" value="31" />
           <entry key="gradlew" value="6" />
@@ -330,10 +375,20 @@
           <entry key="png" value="27" />
           <entry key="properties" value="10" />
           <entry key="xml" value="42" />
+=======
+          <entry key="bat" value="2" />
+          <entry key="gradle" value="13" />
+          <entry key="gradlew" value="3" />
+          <entry key="java" value="14" />
+          <entry key="png" value="4" />
+          <entry key="properties" value="5" />
+          <entry key="xml" value="26" />
+>>>>>>> parent of 636a50d... User Deletion Function
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
+<<<<<<< HEAD
           <entry key="Groovy" value="31" />
           <entry key="IDEA_MODULE" value="3" />
           <entry key="Image" value="27" />
@@ -341,6 +396,14 @@
           <entry key="PLAIN_TEXT" value="10" />
           <entry key="Properties" value="10" />
           <entry key="XML" value="42" />
+=======
+          <entry key="Groovy" value="13" />
+          <entry key="Image" value="4" />
+          <entry key="JAVA" value="14" />
+          <entry key="PLAIN_TEXT" value="5" />
+          <entry key="Properties" value="5" />
+          <entry key="XML" value="26" />
+>>>>>>> parent of 636a50d... User Deletion Function
         </counts>
       </usages-collector>
     </session>
@@ -350,23 +413,36 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="375">
               <caret line="25" column="62" selection-start-line="25" selection-start-column="62" selection-end-line="25" selection-end-column="62" />
+=======
+            <state relative-caret-position="450">
+              <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
+>>>>>>> parent of 636a50d... User Deletion Function
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/launch_screen.xml">
           <provider editor-type-id="text-editor">
             <state relative-caret-position="285">
               <caret line="19" selection-start-line="19" selection-end-line="19" />
+=======
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
+>>>>>>> parent of 636a50d... User Deletion Function
             </state>
           </provider>
           <provider selected="true" editor-type-id="android-designer2" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/courierlab/MainApplication.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
@@ -376,24 +452,65 @@
                 <element signature="e#1956#1957#0" expanded="true" />
                 <element signature="e#1989#1990#0" expanded="true" />
               </folding>
+=======
+        <entry file="file://$PROJECT_DIR$/gradlew">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gradle.properties">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2505">
+              <caret line="167" column="69" selection-start-line="167" selection-start-column="69" selection-end-line="167" selection-end-column="69" />
+>>>>>>> parent of 636a50d... User Deletion Function
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/courierlab/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
               <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+=======
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" column="27" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+            </state>
+          </provider>
+          <provider editor-type-id="android-manifest" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
+>>>>>>> parent of 636a50d... User Deletion Function
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/background_splash.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
               <caret line="18" selection-start-line="18" selection-end-line="18" />
+=======
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="34" selection-start-line="1" selection-start-column="34" selection-end-line="1" selection-end-column="34" />
+>>>>>>> parent of 636a50d... User Deletion Function
             </state>
           </provider>
         </entry>
@@ -413,12 +530,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="480">
               <caret line="32" column="1" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
+=======
+            <state relative-caret-position="150">
+              <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+>>>>>>> parent of 636a50d... User Deletion Function
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/app.iml">
           <provider selected="true" editor-type-id="text-editor" />
@@ -446,6 +572,8 @@
           <provider editor-type-id="android-manifest" />
         </entry>
       </file>
+=======
+>>>>>>> parent of 636a50d... User Deletion Function
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -3961,6 +4089,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/courierlab/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/settings.gradle" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/../node_modules/react-native-splash-screen/android/build.gradle" />
         <option value="$PROJECT_DIR$/../node_modules/react-native-image-picker/android/gradle.properties" />
         <option value="$PROJECT_DIR$/../node_modules/react-native-image-picker/android/build.gradle" />
@@ -3975,6 +4104,10 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/courierlab/SplashActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/layout.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/launch_screen.xml" />
+=======
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/courierlab/MainApplication.java" />
+>>>>>>> parent of 636a50d... User Deletion Function
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
       </list>
     </option>
@@ -3992,6 +4125,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+<<<<<<< HEAD
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -4003,6 +4137,9 @@
           <select />
         </subPane>
       </pane>
+=======
+      <pane id="PackagesPane" />
+>>>>>>> parent of 636a50d... User Deletion Function
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -4045,6 +4182,17 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="courierlab" type="462c0819:PsiDirectoryNode" />
             </path>
+<<<<<<< HEAD
+=======
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="AndroidView">
+        <subPane>
+          <expand>
+>>>>>>> parent of 636a50d... User Deletion Function
             <path>
               <item name="CourierLab" type="b2602c69:ProjectViewProjectNode" />
               <item name="android" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
@@ -4105,7 +4253,7 @@
     <property name="ExportApk.SignV1" value="true" />
     <property name="ExportApk.SignV2" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
-    <property name="device.picker.selection" value="Pixel_2_XL_API_27" />
+    <property name="device.picker.selection" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="android.sdk-updates" />
   </component>
@@ -4232,7 +4380,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
+<<<<<<< HEAD
     <frame x="0" y="23" width="1680" height="996" extended-state="0" />
+=======
+    <frame x="0" y="23" width="1680" height="998" extended-state="6" />
+>>>>>>> parent of 636a50d... User Deletion Function
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1904762" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -4253,6 +4405,7 @@
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4993895" weight="0.32853982" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.501221" side_tool="true" weight="0.3288889" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
+<<<<<<< HEAD
       <window_info active="true" anchor="bottom" id="Build" order="11" sideWeight="0.4993895" visible="true" weight="0.34181416" />
       <window_info anchor="bottom" id="Android Profiler" order="12" show_stripe_button="false" weight="0.32964602" />
       <window_info anchor="right" id="Assistant" order="0" weight="0.32967034" />
@@ -4265,6 +4418,19 @@
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="right" id="Preview" order="9" />
+=======
+      <window_info active="true" anchor="bottom" id="Build" order="11" sideWeight="0.4993895" visible="true" weight="0.30463576" />
+      <window_info anchor="bottom" id="Android Profiler" order="12" show_stripe_button="false" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Device File Explorer" order="3" side_tool="true" weight="0.32967034" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Gradle" order="5" weight="0.32967034" />
+      <window_info anchor="right" id="Theme Preview" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Preview" order="8" />
+>>>>>>> parent of 636a50d... User Deletion Function
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -4302,12 +4468,20 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/../node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/permissions/PermissionUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="33" selection-start-line="4" selection-start-column="33" selection-end-line="4" selection-end-column="33" />
         </state>
       </provider>
+=======
+    <entry file="file://$USER_HOME$/.gradle/wrapper/dists/gradle-4.6-all/bcst21l2brirad8k2ben1letg/gradle-4.6/src/core-api/org/gradle/api/artifacts/dsl/DependencyHandler.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../node_modules/react-native-camera/android/build.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+>>>>>>> parent of 636a50d... User Deletion Function
     </entry>
     <entry file="file://$PROJECT_DIR$/../node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ResponseHelper.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -4323,7 +4497,21 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/../node_modules/react-native-image-picker/android/build.gradle">
+=======
+    <entry file="file://$PROJECT_DIR$/local.properties" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/courierlab/SplashActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/com/courierlab/BuildConfig.java" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/launch_screen.xml">
+      <provider editor-type-id="android-designer2" />
+>>>>>>> parent of 636a50d... User Deletion Function
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1125">
           <caret line="75" column="1" selection-start-line="75" selection-start-column="1" selection-end-line="75" selection-end-column="1" />
@@ -4347,6 +4535,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/CourierLab.iml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -4363,18 +4552,32 @@
           <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
         </state>
       </provider>
+=======
+    <entry file="file://$PROJECT_DIR$/gradlew.bat">
+      <provider selected="true" editor-type-id="text-editor" />
+>>>>>>> parent of 636a50d... User Deletion Function
     </entry>
     <entry file="file://$PROJECT_DIR$/../node_modules/react-native-maps/lib/android/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="285">
           <caret line="19" column="48" selection-start-line="19" selection-start-column="48" selection-end-line="19" selection-end-column="48" />
+=======
+        <state relative-caret-position="450">
+          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
+>>>>>>> parent of 636a50d... User Deletion Function
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../node_modules/react-native-maps/lib/android/src/main/java/com/airbnb/android/react/maps/AirMapView.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="945">
           <caret line="63" column="13" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
+=======
+        <state relative-caret-position="315">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+>>>>>>> parent of 636a50d... User Deletion Function
         </state>
       </provider>
     </entry>
@@ -4385,7 +4588,11 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/gradle.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="330">
           <caret line="22" column="24" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="24" />
         </state>
@@ -4435,15 +4642,32 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/node_modules_reactnavigationstack_dist_views_assets_backicon.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
+=======
+        <state relative-caret-position="2505">
+          <caret line="167" column="69" selection-start-line="167" selection-start-column="69" selection-end-line="167" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> parent of 636a50d... User Deletion Function
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="34" selection-start-line="1" selection-start-column="34" selection-end-line="1" selection-end-column="34" />
         </state>
       </provider>
+<<<<<<< HEAD
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor" />
+=======
+>>>>>>> parent of 636a50d... User Deletion Function
     </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
@@ -4474,6 +4698,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/courierlab/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="60">
           <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
         </state>
@@ -4490,12 +4715,17 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+=======
+        <state relative-caret-position="150">
+          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+>>>>>>> parent of 636a50d... User Deletion Function
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
@@ -4520,6 +4750,12 @@
           <folding>
             <element signature="e#1397#1415#0" expanded="true" />
           </folding>
+=======
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="27" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+>>>>>>> parent of 636a50d... User Deletion Function
         </state>
       </provider>
       <provider editor-type-id="android-manifest" />

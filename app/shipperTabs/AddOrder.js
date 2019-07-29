@@ -20,7 +20,6 @@ let addOrderPath = 'AddShipperOrder';
 let vehicleSpecPath = 'GetVehicleSpecification';
 let favRecipientPath = 'GetFavouriteRecipient';
 let getLorryTypePath = 'GetLorryType';
-let getNumberOfManPowerTrolley = 'GetManPowerAndTrolleyDetails';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
@@ -99,7 +98,6 @@ export default class AddOrder extends Component{
         this.getVehicleSpec();
         this.getFavRecipient();
         this.getLorryType();
-        this.getNumberOfManPowerandTrolley();
         Geocoder.init('AIzaSyCgGvYKsFv6HeUdTF-8FdE389pYjBOolvc');
     }
 
@@ -203,53 +201,6 @@ export default class AddOrder extends Component{
                 this.setState({
                     lorryTypeList: json.results,
                 });
-            } 
-        }).catch(err => {
-            console.log(err);
-        });
-    }
-
-    getNumberOfManPowerandTrolley(){
-        fetch(`${myApiUrl}/${getNumberOfManPowerTrolley}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': loginAsset[0].accessToken,
-            },
-        })
-        .then((response) => response.json())
-        .then((json) => {
-            if(json.succeeded){
-                this.setState({
-                    manPowerPrice: json.results.manPowerPrice,
-                    trolleyPrice: json.results.trolleyPrice,
-                });
-
-                for(let i=0; i<json.results.maxManPowerAmount; i++){
-                    this.setState(prevState => ({
-                        totalNumberOfManPowerList: [...prevState.totalNumberOfManPowerList, 
-                            {
-                                "id": i,
-                                "manPowerValue": i+1,
-                            }
-                        ]
-                    }))
-                }
-
-                for(let i=0; i<json.results.maxTrolleyAmount; i++){
-                    this.setState(prevState => ({
-                        totalNumberOfTrolleyList: [...prevState.totalNumberOfTrolleyList, 
-                            {
-                                "id": i,
-                                "trolleyValue": i+1,
-                            }
-                        ]
-                    }))
-                }
-
-                console.log('man ', this.state.totalNumberOfManPowerList)
-                console.log('trolley ', this.state.totalNumberOfTrolleyList)
             } 
         }).catch(err => {
             console.log(err);
@@ -462,8 +413,6 @@ export default class AddOrder extends Component{
                 bodyData.append('recipientAddressLatitude', this.state.recipientAddressLatitude);
                 bodyData.append('recipientAddressLongitude', this.state.recipientAddressLongitude);
                 bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
-                bodyData.append('numberOfManPower', this.state.selectedNumberOfManPower);
-                bodyData.append('numberOfTrolley', this.state.selectedNumberOfTrolley);
                 bodyData.append('recipientEmailAddress', this.state.recipientEmail);
                 bodyData.append('recipientPhoneNumber', this.state.recipientPhoneNumber);
                 bodyData.append('vehicleSpecificationId', this.state.vehicleSpec.toString());
@@ -566,7 +515,7 @@ export default class AddOrder extends Component{
                             <Text style={{fontSize: 18, alignItems: 'center', textAlign: 'center', fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D', paddingLeft: 10,}}>PICK UP DETAILS</Text>
                         </View>
                         <View>
-                            {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: 
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: 
                                 <Text 
                                     style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                     onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Up Location', type: 'pickUp', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
@@ -752,7 +701,7 @@ export default class AddOrder extends Component{
                                 onChangeText={(text) => this.setState({ recipientName: text })}  />
                         </View>
                         <View>
-                            {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: 
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: 
                                 <Text 
                                     style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                     onPress={(e) => this.props.navigation.navigate('Map', {title: 'Recipient Address', type: 'recipientAddress', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
