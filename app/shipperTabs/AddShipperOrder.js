@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, ScrollView, Platform,  } from 'react-native';
+import { Text, TextInput, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, ScrollView, Platform, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
 import MyRealm from '../utils/Realm';
@@ -18,6 +18,7 @@ let addOrderPath = 'AddShipperOrder';
 let vehicleSpecPath = 'GetVehicleSpecification';
 let favRecipientPath = 'GetFavouriteRecipient';
 let getLorryTypePath = 'GetLorryType';
+let getNumberOfManPowerTrolley = 'GetManPowerAndTrolleyDetails';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
@@ -76,6 +77,12 @@ export default class AddDriverOrder extends Component{
             orderImage3: '',
             validAddress: false,
             validRecipientAddress: false,
+            manPowerPrice: '',
+            totalNumberOfManPowerList: [],
+            selectedNumberOfManPower: 0,
+            trolleyPrice: '',
+            totalNumberOfTrolleyList: [],
+            selectedNumberOfTrolley: 0,
         }
     }
 
@@ -90,6 +97,7 @@ export default class AddDriverOrder extends Component{
         this.getVehicleSpec();
         this.getFavRecipient();
         this.getLorryType();
+        this.getNumberOfManPowerandTrolley();
         Geocoder.init('AIzaSyCgGvYKsFv6HeUdTF-8FdE389pYjBOolvc');
     }
 
@@ -193,6 +201,53 @@ export default class AddDriverOrder extends Component{
                 this.setState({
                     lorryTypeList: json.results,
                 });
+            } 
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    getNumberOfManPowerandTrolley(){
+        fetch(`${myApiUrl}/${getNumberOfManPowerTrolley}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': loginAsset[0].accessToken,
+            },
+        })
+        .then((response) => response.json())
+        .then((json) => {
+            if(json.succeeded){
+                this.setState({
+                    manPowerPrice: json.results.manPowerPrice,
+                    trolleyPrice: json.results.trolleyPrice,
+                });
+
+                for(let i=0; i<json.results.maxManPowerAmount; i++){
+                    this.setState(prevState => ({
+                        totalNumberOfManPowerList: [...prevState.totalNumberOfManPowerList, 
+                            {
+                                "id": i,
+                                "manPowerValue": i+1,
+                            }
+                        ]
+                    }))
+                }
+
+                for(let i=0; i<json.results.maxTrolleyAmount; i++){
+                    this.setState(prevState => ({
+                        totalNumberOfTrolleyList: [...prevState.totalNumberOfTrolleyList, 
+                            {
+                                "id": i,
+                                "trolleyValue": i+1,
+                            }
+                        ]
+                    }))
+                }
+
+                console.log('man ', this.state.totalNumberOfManPowerList)
+                console.log('trolley ', this.state.totalNumberOfTrolleyList)
             } 
         }).catch(err => {
             console.log(err);
@@ -404,6 +459,8 @@ export default class AddDriverOrder extends Component{
                 bodyData.append('recipientAddressLatitude', this.state.recipientAddressLatitude);
                 bodyData.append('recipientAddressLongitude', this.state.recipientAddressLongitude);
                 bodyData.append('lorryTypeId', this.state.selectedLorryTypeId);
+                bodyData.append('numberOfManPower', this.state.selectedNumberOfManPower);
+                bodyData.append('numberOfTrolley', this.state.selectedNumberOfTrolley);
                 bodyData.append('recipientEmailAddress', this.state.recipientEmail);
                 bodyData.append('recipientPhoneNumber', this.state.recipientPhoneNumber);
                 bodyData.append('vehicleSpecificationId', this.state.vehicleSpec.toString());
@@ -505,7 +562,7 @@ export default class AddDriverOrder extends Component{
                             <Text style={{fontSize: 18, alignItems: 'center', textAlign: 'center', fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D', paddingLeft: 10,}}>PICK UP DETAILS</Text>
                         </View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: 
+                            {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Pick Up Location: 
                                 <Text 
                                     style={{fontSize: 12, color: '#3c4c96', fontFamily: 'AvenirLTStd-Roman', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                     onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Up Location', type: 'pickUp', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
@@ -850,7 +907,7 @@ export default class AddDriverOrder extends Component{
                                 onChangeText={(text) => this.setState({ recipientName: text })}  />
                         </View>
                         <View>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: 
+                            {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Recipient Address: 
                                 <Text 
                                     style={{fontSize: 12, color: '#3c4c96', fontFamily: 'AvenirLTStd-Roman', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                     onPress={(e) => this.props.navigation.navigate('Map', {title: 'Recipient Address', type: 'recipientAddress', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
@@ -1791,6 +1848,54 @@ export default class AddDriverOrder extends Component{
                                     underlineColorAndroid={'transparent'}
                                     placeholderTextColor='#939ABA'
                                     value={this.state.selectedLorryType}/>
+                            </ModalSelector>
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>No. of ManPower (RM {this.state.manPowerPrice} per man): </Text>
+                            <ModalSelector
+                                data={this.state.totalNumberOfManPowerList}
+                                supportedOrientations={['portrait']}
+                                keyExtractor= {item => item.id}
+                                labelExtractor= {item => item.manPowerValue}
+                                accessible={true}
+                                scrollViewAccessibilityLabel={'Scrollable options'}
+                                cancelButtonAccessibilityLabel={'Cancel Button'}
+                                onChange={(option)=>{ 
+                                    this.setState({
+                                        selectedNumberOfManPower: option.manPowerValue,
+                                    })
+                                }}>
+                                <TextInput
+                                    style={{height: 50, backgroundColor: '#fff', marginBottom: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, marginLeft: 0, marginRight: 0, fontFamily: 'Raleway-Bold',}}
+                                    editable={false}
+                                    placeholder='Select No. of ManPower'
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor='#939ABA'
+                                    value={this.state.selectedNumberOfManPower.toString()}/>
+                                </ModalSelector>
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>No. of Trolley (RM {this.state.trolleyPrice} per trolley): </Text>
+                            <ModalSelector
+                                data={this.state.totalNumberOfTrolleyList}
+                                supportedOrientations={['portrait']}
+                                keyExtractor= {item => item.id}
+                                labelExtractor= {item => item.trolleyValue}
+                                accessible={true}
+                                scrollViewAccessibilityLabel={'Scrollable options'}
+                                cancelButtonAccessibilityLabel={'Cancel Button'}
+                                onChange={(option)=>{ 
+                                    this.setState({
+                                        selectedNumberOfTrolley: option.trolleyValue
+                                    })
+                                }}>
+                                <TextInput
+                                    style={{height: 50, backgroundColor: '#fff', marginBottom: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, marginLeft: 0, marginRight: 0, fontFamily: 'Raleway-Bold',}}
+                                    editable={false}
+                                    placeholder='Select No. of Trolley'
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor='#939ABA'
+                                    value={this.state.selectedNumberOfTrolley.toString()}/>
                             </ModalSelector>
                         </View>
                         <View>

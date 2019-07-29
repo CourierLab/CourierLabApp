@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, Alert, ScrollView, TouchableOpacity, Linking, Platform, Dimensions, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,7 +12,7 @@ import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import { styles } from '../utils/Style';
 import Spinner from 'react-native-spinkit';
-import { Card, Badge, } from 'react-native-elements';
+import { Card, Badge, Avatar, } from 'react-native-elements';
 import ProgressBar from 'react-native-progress/Bar';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
@@ -20,6 +20,7 @@ let orderSummaryPath = 'OrderSummary';
 let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
+let {height, width} = Dimensions.get('window');
 
 export default class ConfirmedOrderDetail extends Component{
     static navigationOptions = {
@@ -689,7 +690,6 @@ export default class ConfirmedOrderDetail extends Component{
                                 </View>
                             </View>
                         </View>
-<<<<<<< HEAD
                         <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Order Image: </Text>
                             {
@@ -702,8 +702,6 @@ export default class ConfirmedOrderDetail extends Component{
                                 </View> : <View />
                             }
                         </View> */}
-=======
->>>>>>> parent of 636a50d... User Deletion Function
                         {/* <View style={{flexDirection: 'column',}}>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 14,}}>Recipient State: </Text>
                             <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 18,}}>{this.state.orderSummary.shipperOrder.recipientState}</Text>
