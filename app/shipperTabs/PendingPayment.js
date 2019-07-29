@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, Alert, StatusBar, isAndroid, SafeAreaView, ScrollView, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
@@ -20,7 +23,11 @@ let count = 0;
 
 export default class PendingPayment extends Component{
     static navigationOptions = {
-        title: 'Pending Payment',
+        // title: 'Pending Payment',
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <FeatherIcon name="file-text" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>Pending Payment</Text>
+            </View>,
     };
     
     constructor(props){
@@ -158,21 +165,30 @@ export default class PendingPayment extends Component{
 
     render(){
         var pendingView = <View style={styles.noListContainer}>
-                            <Text style={styles.noListText}>No Pending Payment</Text> 
+                            <Text style={{color: '#9B9B9B', fontSize: 14, fontFamily: 'AvenirLTStd-Roman', paddingTop: 10,}}>No Pending Payment</Text> 
                           </View>;
         console.log(this.state.pendingPaymentData);
         if(this.state.pendingPaymentData !== [] && this.state.pendingPaymentData.length > 0){
             pendingView = this.state.pendingPaymentData.map((item, index) => (
                 <ListItem 
                     key={index}
-                    bottomDivider={true}
-                    rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
-                    title={ <Text style={styles.listItemText}>{item.bookingNumber}</Text> }
+                    // bottomDivider={true}
+                    // rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
+                    // title={ <Text style={styles.listItemText}>{item.bookingNumber}</Text> }
                     subtitle={
-                        <View style={styles.listItemView}>
-                            <View style={{flexDirection: 'row',}}>
-                                <Icon name={'money'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                <Text style={styles.listItemText}>  RM {item.totalPrice} </Text> 
+                        // <View style={styles.listItemView}>
+                        //     <View style={{flexDirection: 'row',}}>
+                        //         <Icon name={'money'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                        //         <Text style={styles.listItemText}>  RM {item.totalPrice} </Text> 
+                        //     </View>
+                        // </View>
+                        <View style={{margin: 0, padding: 20, marginBottom: -15, backgroundColor: '#EFEFEF', borderRadius: 20,}}>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between', }}>
+                                <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.bookingNumber}</Text>
+                                <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>more info</Text>
+                            </View>
+                            <View style={{flexDirection: 'row', paddingTop: 10,}}>
+                                <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>RM {item.totalPrice}</Text>
                             </View>
                         </View>
                     }
@@ -200,22 +216,20 @@ export default class PendingPayment extends Component{
                         {(this.state.isScrollSpinner) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
                             <Spinner
                                 isVisible={this.state.isScrollSpinner}
-                                type={'9CubeGrid'}
-                                color='#3c4c96'
-                                paddingLeft={20}
-                                size={50}/>
+                                type={'ThreeBounce'}
+                                color='#F4D549'
+                                size={30}/>
                                 </View> : (this.state.noMoreData) ? <View style={styles.noListContainer}>
-                                    <Text style={styles.noListText}>No More Pending Payment</Text> 
+                                    <Text style={{color: '#9B9B9B', fontSize: 14, fontFamily: 'AvenirLTStd-Roman', paddingTop: 10,}}>No More Pending Payment</Text> 
                                 </View>
                             : <View/>
                         }
                     </View> : <View style={{marginBottom: 20, alignItems: 'center', marginTop: 20,}}>
                         <Spinner
                             isVisible={this.state.spinnerVisible}
-                            type={'9CubeGrid'}
-                            color='#3c4c96'
-                            paddingLeft={20}
-                            size={50}/>
+                            type={'ThreeBounce'}
+                            color='#F4D549'
+                            size={30}/>
                     </View>
                 }
             </ScrollView>

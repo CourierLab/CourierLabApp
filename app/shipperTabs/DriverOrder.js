@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, StatusBar, isAndroid, SafeAreaView, ScrollView, } from 'react-native';
+import { View, Text, Alert, StatusBar, isAndroid, Image, ScrollView, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
@@ -20,7 +23,10 @@ let count = 0;
 
 export default class Home extends Component{
     static navigationOptions = {
-        title: 'Pending Driver Order',
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <FeatherIcon name="truck" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>Pending Driver Order</Text>
+            </View>,
     };
     
     constructor(props){
@@ -234,21 +240,40 @@ export default class Home extends Component{
 
     render(){
         var pendingView = <View style={styles.noListContainer}>
-                            <Text style={styles.noListText}>No Pending Driver Order</Text> 
+                            <Text style={{color: '#9B9B9B', fontSize: 14, fontFamily: 'AvenirLTStd-Roman', paddingTop: 10,}}>No Pending Driver Order</Text> 
                           </View>;
         console.log(this.state.pendingOrderData);
         if(this.state.pendingOrderData !== [] && this.state.pendingOrderData.length > 0){
             pendingView = this.state.pendingOrderData.map((item, index) => (
                 <ListItem 
                     key={index}
-                    bottomDivider={true}
-                    rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
-                    title={ <Text style={styles.listItemText}>{item.orderNumber}</Text> }
+                    bottomDivider={false}
+                    containerStyle={{paddingTop: 15, paddingLeft: 10, paddingRight: 10, paddingBottom: 0,}}
+                    // rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
+                    // title={ <Text style={styles.listItemText}>{item.orderNumber}</Text> }
                     subtitle={
-                        <View style={styles.listItemView}>
-                            {(item.orderDescription !== "") ? <View style={styles.iconView}>
+                        // <View style={styles.listItemView}>
+                        <View style={{margin: 0, padding: 20, backgroundColor: '#EFEFEF', borderRadius: 20,}}>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between', }}>
+                                <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.orderNumber}</Text>
+                                <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>more info</Text>
+                            </View>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, }}>
+                                <View style={{flexDirection: 'column', width: '40%',}}>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.departLocation}</Text>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>{item.expectedDepartureDate}</Text>
+                                </View>
+                                <View style={{flexDirection: 'column', width: '20%', justifyContent: 'center',}}>
+                                    <AntIcon name="swapright" size={40} color="#2C2E6D" style={{paddingLeft: 5, paddingRight: 5,}}/>
+                                </View>
+                                <View style={{flexDirection: 'column', width: '40%',}}>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.arriveLocation}</Text>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>{item.expectedArrivalDate}</Text>
+                                </View>
+                            </View>
+                            {/* {(item.orderDescription !== "") ? <View style={styles.iconView}>
                                     <Icon name={'info'} size={15} color={'#3c4c96'} style={{marginLeft: 3, marginRight: 6}}/>
-                                    <Text style={styles.listItemText}> {item.orderDescription}</Text>    
+                                    <Text style={styles.listItemText}> {item.orderDescription}</Text>
                                 </View> : <View/>
                             }
                             <View style={{flexDirection: 'row',}}>
@@ -266,7 +291,7 @@ export default class Home extends Component{
                             <View style={{flexDirection: 'row', marginLeft: 20,}}>
                                 <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
                                 <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>    
-                            </View>
+                            </View> */}
                         </View>
                     }
                     onPress={() => this.props.navigation.navigate('DriverOrderDetails', {
@@ -292,22 +317,20 @@ export default class Home extends Component{
                         {(this.state.isScrollSpinner) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
                             <Spinner
                                 isVisible={this.state.isScrollSpinner}
-                                type={'9CubeGrid'}
-                                color='#3c4c96'
-                                paddingLeft={20}
-                                size={50}/>
+                                type={'ThreeBounce'}
+                                color='#F4D549'
+                                size={30}/>
                                 </View> : (this.state.noMoreData) ? <View style={styles.noListContainer}>
-                                    <Text style={styles.noListText}>No More Driver Order</Text> 
+                                    <Text style={{color: '#9B9B9B', fontSize: 14, fontFamily: 'AvenirLTStd-Roman', paddingTop: 10,}}>No More Driver Order</Text> 
                                 </View>
                             : <View/>
                         }
                     </View> : <View style={{marginBottom: 20, alignItems: 'center', marginTop: 20,}}>
                         <Spinner
                             isVisible={this.state.spinnerVisible}
-                            type={'9CubeGrid'}
-                            color='#3c4c96'
-                            paddingLeft={20}
-                            size={50}/>
+                            type={'ThreeBounce'}
+                            color='#F4D549'
+                            size={30}/>
                     </View>
                 }
             </ScrollView>

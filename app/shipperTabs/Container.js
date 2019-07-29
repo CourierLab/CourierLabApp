@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { Text, View, } from 'react-native';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import DriverOrderScreen from './DriverOrder';
 import PendingConfirmationScreen from './PendingConfirmation';
 import ShipperHistoryScreen from './ShipperHistory';
@@ -18,6 +19,7 @@ import ConfirmShipperDriverOrderScreen from './ConfirmShipperDriverOrder';
 import PendingConfirmationDetailScreen from './PendingConfirmationDetail';
 import PendingPaymentScreen from './PendingPayment';
 import PendingPaymentDetailScreen from './PendingPaymentDetail';
+import ShipperPendingOrderScreen from './ShipperPendingOrder';
 import MapScreen from '../tabs/Map';
 
 const tabOneStack = createStackNavigator({
@@ -25,17 +27,20 @@ const tabOneStack = createStackNavigator({
     DriverOrderDetails: { screen: DriverOrderDetailsScreen },
     AddOrder: { screen: AddOrderScreen },
     ConfirmShipperDriverOrder: { screen: ConfirmShipperDriverOrderScreen },
+    ShipperPendingOrder: { screen: ShipperPendingOrderScreen },
+    SelectDriverOrder : { screen: SelectDriverOrderScreen },
     Map: { screen: MapScreen },
 },
 {
     navigationOptions: {
         headerStyle: {
-            backgroundColor: '#3c4c96',
+            backgroundColor: '#2C2E6D',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
             fontWeight: 'bold',
-            fontFamily: 'Raleway-Bold',
+            fontFamily: 'AvenirLTStd-Black',
+            fontSize: 16,
         },
     }
 });
@@ -47,12 +52,13 @@ const tabTwoStack = createStackNavigator({
 {
     navigationOptions: {
         headerStyle: {
-            backgroundColor: '#3c4c96',
+            backgroundColor: '#2C2E6D',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
             fontWeight: 'bold',
-            fontFamily: 'Raleway-Bold',
+            fontFamily: 'AvenirLTStd-Black',
+            fontSize: 16,
         },
     }
 });
@@ -71,12 +77,13 @@ const tabThreeStack = createStackNavigator({
 {
     navigationOptions: {
         headerStyle: {
-            backgroundColor: '#3c4c96',
+            backgroundColor: '#2C2E6D',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
             fontWeight: 'bold',
-            fontFamily: 'Raleway-Bold',
+            fontFamily: 'AvenirLTStd-Black',
+            fontSize: 16,
         },
     }
 });
@@ -88,12 +95,13 @@ const tabFourStack = createStackNavigator({
 {
     navigationOptions: {
         headerStyle: {
-            backgroundColor: '#3c4c96',
+            backgroundColor: '#2C2E6D',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
             fontWeight: 'bold',
-            fontFamily: 'Raleway-Bold',
+            fontFamily: 'AvenirLTStd-Black',
+            fontSize: 16,
         },
     }
 });
@@ -105,12 +113,13 @@ const tabFiveStack = createStackNavigator({
 {
     navigationOptions: {
         headerStyle: {
-            backgroundColor: '#3c4c96',
+            backgroundColor: '#2C2E6D',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
             fontWeight: 'bold',
-            fontFamily: 'Raleway-Bold',
+            fontFamily: 'AvenirLTStd-Black',
+            fontSize: 16,
         },
     }
 });
@@ -130,20 +139,47 @@ export default createBottomTabNavigator({
             if(routeName === 'Driver Order'){
                 iconName = 'truck';
             }else if(routeName === 'Pending Confirmation'){
-                iconName = 'tasks';
+                iconName = 'server';
             }else if(routeName === 'Shipper Order'){
                 iconName = 'shopping-cart';
             }else if(routeName === 'Profile'){
                 iconName = 'user';
             }else if(routeName === 'Pending Payment'){
-                iconName = 'dollar';
+                iconName = 'file-text';
             }
-            return <Icon name={iconName} size={25} color={tintColor} />;
+            return <FeatherIcon name={iconName} size={20} color={tintColor} />;
+        },
+        tabBarLabel: ({ focused, tintColor }) => {
+            const { routeName } = navigation.state;
+            let labelName;
+            if(routeName === 'Driver Order'){
+                labelName = routeName;
+            }else if(routeName === 'Pending Confirmation'){
+                labelName = routeName;
+            }else if(routeName === 'Shipper Order'){
+                labelName = routeName;
+            }else if(routeName === 'Profile'){
+                labelName = routeName;
+            }else if(routeName === 'Pending Payment'){
+                labelName = routeName;
+            }
+            return (<View style={{flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center',}}>
+                <Text numberOfLines={2} style={{textAlign: 'center', fontSize: 10, fontFamily: 'AvenirLTStd-Roman', color: tintColor,}}>{labelName}</Text>
+            </View>);
         },
     }),
     tabBarOptions: {
         activeTintColor: '#ffbb16',
-        inactiveTintColor: '#3c4c96',
+        inactiveTintColor: '#2C2E6D',
+        style: {
+            backgroundColor: '#EFEFEF',
+            justifyContent: 'center',
+            alignContent: 'center',
+        },
+        labelStyle: {
+            fontSize: 10,
+            fontFamily: 'AvenirLTStd-Roman',
+        },
     },
 });
 

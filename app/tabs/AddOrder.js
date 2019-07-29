@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, ScrollView,  } from 'react-native';
+import { Text, TextInput, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, ScrollView, Platform, } from 'react-native';
 import { styles } from '../utils/Style';
 import NetworkConnection from '../utils/NetworkConnection';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
 import DeviceInfo from 'react-native-device-info';
@@ -18,7 +21,11 @@ let loginAsset = realm.objects('LoginAsset');
   
 export default class AddOrder extends Component{
     static navigationOptions = {
-        title: 'Add Order',
+        // title: 'Add Order',
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <FeatherIcon name="file-plus" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>Add Order</Text>
+            </View>,
     }
     
     constructor(props){
@@ -156,13 +163,14 @@ export default class AddOrder extends Component{
         if(this.state.departLocation === "" || this.state.arriveLocation === "" || this.state.carLength === "" || this.state.carWeight === "" || this.state.carPlateNumber === "" || this.state.expectedDepartureDate === "" || this.state.expectedArrivalDate === "" || this.state.vehicleSpec === ""){
             Alert.alert('Cannot Add', "Please key in Depart Location, Arrive Location, Car Length(m), Car Weight(kg), Car Plate Number, Expected Departure Date, Expected Arrival Date and Vechicle Specification", [{
                 text: 'OK',
-                onPress: () => {},
+                onPress: () => {
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                },
             }], {cancelable: false});
-            this.setState({
-                spinnerVisible: false,
-                isClicked: false,
-                isSubmit: false,
-            })
         }else{
             console.log(this.state.expectedDepartureDate);
             console.log(this.state.expectedArrivalDate);
@@ -225,18 +233,19 @@ export default class AddOrder extends Component{
                 Alert.alert('Cannot Add', 'The Arrive Location is invalid', [
                 {
                     text: 'OK',
-                    onPress: () => {},
+                    onPress: () => {
+                        this.setState({
+                            spinnerVisible: false,
+                            isClicked: false,
+                            isSubmit: false,
+                            departLatitude: '',
+                            departLongitude: '',
+                            arriveLatitude: '',
+                            arriveLongitude: '',
+                            validRecipientAddress: false,
+                        })
+                    },
                 }], {cancelable: false})
-                this.setState({
-                    spinnerVisible: false,
-                    isClicked: false,
-                    isSubmit: false,
-                    departLatitude: '',
-                    departLongitude: '',
-                    arriveLatitude: '',
-                    arriveLongitude: '',
-                    validRecipientAddress: false,
-                })
             }else{
                 fetch(`${myApiUrl}/${addOrderPath}`, {
                     method: 'POST',
@@ -278,13 +287,14 @@ export default class AddOrder extends Component{
                         Alert.alert('Cannot Add', json.message, [
                         {
                             text: 'OK',
-                            onPress: () => {},
+                            onPress: () => {
+                                this.setState({
+                                    spinnerVisible: false,
+                                    isClicked: false,
+                                    isSubmit: false,
+                                })
+                            },
                         }], {cancelable: false})
-                        this.setState({
-                            spinnerVisible: false,
-                            isClicked: false,
-                            isSubmit: false,
-                        })
                     }
                 }).catch(err => {
                     console.log(err);
@@ -302,24 +312,32 @@ export default class AddOrder extends Component{
         let spinnerView = this.state.isClicked ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20,}}> 
                     <Spinner
                         isVisible={this.state.spinnerVisible}
-                        type={'9CubeGrid'}
-                        color='#3c4c96'
-                        paddingLeft={20}
-                        size={50}/>
+                        type={'ThreeBounce'}
+                        color='#F4D549'
+                        size={30}/>
                 </View> : <View/>;
 
         const { vehicleSpec } = this.state;
         return(
-            <KeyboardAvoidingView style={styles.container}>
-                <ScrollView>
-                    <View>
+            <KeyboardAvoidingView style={{backgroundColor: '#fff', padding: 10,}}>
+                <ScrollView ref={ref => this.scrollView = ref}
+                    onContentSizeChange={(contentWidth, contentHeight)=>{
+                        if(this.state.isClicked){
+                            this.scrollView.scrollToEnd({animated: true});
+                        }
+                    }}>
+                    <View style={{margin: 0, paddingLeft: 15, paddingRight: 15, paddingTop: 20, paddingBottom: 20, backgroundColor: '#EFEFEF', borderRadius: 20,}}>
                         <View>
+                            <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: -20, marginBottom: -10, }}>
+                                <Image resizeMode='contain' style={{width: '10%',}} source={require('../assets/shipper.png')} />
+                                <Text style={{fontSize: 18, alignItems: 'center', textAlign: 'center', fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D', paddingLeft: 10,}}>DEPART DETAILS</Text>
+                            </View>
                             {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location: 
                                 <Text 
                                     style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                     onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', type: 'depart', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
                             </Text> */}
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location:  </Text>
+                            {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Depart Location:  </Text>
                             <TouchableOpacity
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, borderColor: '#3c4c96', borderWidth: 1, }}
                                 onPress={() => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', type: 'depart', onGoBack: this.getLocationInfo.bind(this)})}>
@@ -327,7 +345,7 @@ export default class AddOrder extends Component{
                                     (this.state.departLocation === '') ? <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#8289AC', }}>Depart Location</Text> :
                                     <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#3c4c96', }}>{this.state.departLocation}</Text>
                                 }
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                             {/* <TextInput
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
                                 autoCapitalize="none"
@@ -342,11 +360,187 @@ export default class AddOrder extends Component{
                                 onChangeText={(text) => {this.setState({ departLocation: text });}}  /> */}
                         </View>
                         <View>
-                            {/* <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Arrive Location: 
-                                <Text 
-                                    style={{fontSize: 12, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
-                                    onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', type: 'arrive', onGoBack: this.getLocationInfo.bind(this)})}> Pick Location from Map</Text>
-                            </Text> */}
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Depart Location  </Text>
+                            <TouchableOpacity
+                                style={{height: 40, backgroundColor: '#EFEFEF', padding: 10, borderColor: '#A3A9C4', borderWidth: 1, }}
+                                onPress={() => this.props.navigation.navigate('Map', {title: 'Pick Depart Location', type: 'depart', onGoBack: this.getLocationInfo.bind(this)})}>
+                                {
+                                    (this.state.departLocation === '') ? <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#A3A9C4', }}>Depart Location</Text> :
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', }}>{this.state.departLocation}</Text>
+                                }
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Arrive Location  </Text>
+                            <TouchableOpacity
+                                style={{height: 40, backgroundColor: '#EFEFEF', padding: 10, borderColor: '#A3A9C4', borderWidth: 1, }}
+                                onPress={() => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', type: 'arrive', onGoBack: this.getLocationInfo.bind(this)})}>
+                                {
+                                    (this.state.arriveLocation === '') ? <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#A3A9C4', }}>Arrive Location</Text> :
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', }}>{this.state.arriveLocation}</Text>
+                                }
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Lorry Plate Number </Text>
+                            <TextInput
+                                style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                returnKeyLabel="next"
+                                keyboardType={'default'}
+                                placeholder='Lorry Plate Number'
+                                placeholderTextColor='#A3A9C4'
+                                value={this.state.lorryPlateNumber}
+                                onChangeText={(text) => this.setState({ lorryPlateNumber: text })} 
+                                editable={false}/>
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Order Description </Text>
+                            <TextInput
+                                style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                autoCapitalize="none"
+                                underlineColorAndroid={'transparent'}
+                                autoCorrect={false}
+                                returnKeyLabel="next"
+                                keyboardType={'default'}
+                                placeholder='Order Description'
+                                placeholderTextColor='#A3A9C4'
+                                value={this.state.orderDescription}
+                                onChangeText={(text) => this.setState({ orderDescription: text })} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Expected Departure Date </Text>
+                            <DatePicker
+                                style={{width: '100%', marginBottom: 5, height: 40,}}
+                                customStyles={{
+                                    dateTouchBody: {
+                                        width: '100%',
+                                        height: 40,
+                                        backgroundColor: '#EFEFEF',
+                                        marginBottom: 0,
+                                        padding: 0,
+                                    },
+                                    placeholderText: {
+                                        fontFamily: 'AvenirLTStd-Roman',
+                                        color: '#A3A9C4',
+                                        fontSize: 14,
+                                        justifyContent: 'flex-start',
+                                        alignContent: 'flex-start',
+                                        textAlign: 'left',
+                                    },
+                                    dateText: {
+                                        fontFamily: 'AvenirLTStd-Roman',
+                                        color: '#3c4c96',
+                                        fontSize: 14,
+                                        textAlign: 'left',
+                                    },
+                                    dateInput: {
+                                        width: '100%',
+                                        height: 40,
+                                        backgroundColor: '#EFEFEF',
+                                        borderColor: '#A3A9C4',
+                                        borderWidth: 1,
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'flex-start',
+                                        padding: 10,
+                                    },
+                                }}
+                                placeholder={'Expected Departure Date'}
+                                date={this.state.expectedDepartureDate}
+                                mode="datetime"
+                                format="DD/MM/YYYY h:mm a"
+                                is24Hour={false}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                showIcon={false}
+                                onDateChange={(datetime) => {this.setState({expectedDepartureDate: datetime});}} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Expected Arrival Date </Text>
+                            <DatePicker
+                                style={{width: '100%', marginBottom: 5, height: 40,}}
+                                customStyles={{
+                                    dateTouchBody: {
+                                        width: '100%',
+                                        height: 40,
+                                        backgroundColor: '#EFEFEF',
+                                        marginBottom: 0,
+                                        padding: 0,
+                                    },
+                                    placeholderText: {
+                                        fontFamily: 'AvenirLTStd-Roman',
+                                        color: '#A3A9C4',
+                                        fontSize: 14,
+                                        justifyContent: 'flex-start',
+                                        alignContent: 'flex-start',
+                                        textAlign: 'left',
+                                    },
+                                    dateText: {
+                                        fontFamily: 'AvenirLTStd-Roman',
+                                        color: '#3c4c96',
+                                        fontSize: 14,
+                                        textAlign: 'left',
+                                    },
+                                    dateInput: {
+                                        width: '100%',
+                                        height: 40,
+                                        backgroundColor: '#EFEFEF',
+                                        borderColor: '#A3A9C4',
+                                        borderWidth: 1,
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'flex-start',
+                                        padding: 10,
+                                    },
+                                }}
+                                placeholder={'Expected Arrival Date'}
+                                date={this.state.expectedArrivalDate}
+                                mode="datetime"
+                                format="DD/MM/YYYY h:mm a"
+                                is24Hour={false}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                showIcon={false}
+                                onDateChange={(datetime) => {this.setState({expectedArrivalDate: datetime});}} />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Vechicle Spec </Text>
+                            <MultiSelect
+                                hideTags
+                                style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', backgroundColor: '#EFEFEF', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, paddingLeft: 10, height: 40,}}
+                                items={this.state.vehicleSpecList}
+                                underlineColorAndroid={'transparent'}
+                                uniqueKey="vehicleSpecificationId"
+                                ref={(component) => { this.multiSelect = component }}
+                                onSelectedItemsChange={this.onSelectedItemsChange}
+                                selectedItems={this.state.vehicleSpec}
+                                selectText="Select Vechicle Spec"
+                                searchInputPlaceholderText="Search Vehicle Spec"
+                                onChangeInput={ (text)=> console.log(text)}
+                                altFontFamily="AvenirLTStd-Roman"
+                                fontFamily="AvenirLTStd-Roman"
+                                itemFontSize={14}
+                                fontSize={14}
+                                styleTextDropdownSelected={{backgroundColor: '#EFEFEF', color: '#3c4c96', }}
+                                styleDropdownMenu={{backgroundColor: '#EFEFEF', borderColor: '#A3A9C4', borderWidth: 1, paddingLeft: 10, }}
+                                styleDropdownMenuSubsection={(Platform.OS === 'ios') ? {backgroundColor: '#EFEFEF', } : {backgroundColor: '#EFEFEF', height: 30,}}
+                                styleTextDropdown={{backgroundColor: '#EFEFEF', color: '#A3A9C4', }}
+                                tagRemoveIconColor="#3c4c96"
+                                tagBorderColor="#3c4c96"
+                                tagTextColor="#3c4c96"
+                                selectedItemTextColor="#3c4c96"
+                                selectedItemIconColor="#3c4c96"
+                                itemTextColor="#3c4c96"
+                                displayKey="vehicleSpecificationName"
+                                searchInputStyle={{ color: '#3c4c96', height: 40,}}
+                                submitButtonColor="#2C2E6D"
+                                submitButtonText="Done"
+                            />
+                        </View>
+
+
+                        {/* <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Arrive Location: </Text>
                             <TouchableOpacity
                                 style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, borderColor: '#3c4c96', borderWidth: 1, }}
@@ -356,18 +550,7 @@ export default class AddOrder extends Component{
                                     <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#3c4c96', }}>{this.state.arriveLocation}</Text>
                                 }
                             </TouchableOpacity>
-                            {/* <TextInput
-                                style={{height: 50, backgroundColor: '#fff', marginBottom: 5, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
-                                autoCapitalize="none"
-                                underlineColorAndroid={'transparent'}
-                                autoCorrect={false}
-                                keyboardType='default'
-                                returnKeyLabel="next"
-                                placeholder='Arrive Location'
-                                placeholderTextColor='#939ABA'
-                                value={this.state.arriveLocation}
-                                onChangeText={(text) => this.setState({ arriveLocation: text })}  /> */}
-                        </View>
+                        </View> */}
                         {/* <Text 
                                 style={{fontSize: 15, color: '#3c4c96', fontFamily: 'Raleway-Regular', textAlign: 'left', marginBottom: 15, textDecorationStyle: 'solid', textDecorationLine: 'underline',}}
                                 onPress={(e) => this.props.navigation.navigate('Map', {title: 'Pick Arrive Location', arriveLocation: ''})}> Pick Location from Map</Text> */}
@@ -399,7 +582,7 @@ export default class AddOrder extends Component{
                                 value={this.state.lorryWeight} 
                                 editable={false}/>
                         </View> */}
-                        <View>
+                        {/* <View>
                             <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Lorry Plate Number: </Text>
                             <TextInput
                                 style={styles.input}
@@ -542,18 +725,18 @@ export default class AddOrder extends Component{
                                 submitButtonColor="#3c4c96"
                                 submitButtonText="Done"
                             />
-                        </View>
+                        </View> */}
                         <View>
                             {this.multiSelect ? this.multiSelect.getSelectedItemsExt(this.state.vehicleSpec) : null}
                         </View>
+                        {spinnerView}
                     </View>
-                    {spinnerView}
-                    <View style={{paddingTop: 10,}}>
+                    <View style={this.state.isSubmit ? {backgroundColor: '#F4D549', borderRadius: 20, paddingLeft: 10, paddingRight: 10, marginLeft: 0, marginRight: 0, marginBottom: 20, marginTop: 20,} : {backgroundColor: '#2C2E6D', borderRadius: 20, paddingLeft: 10, paddingRight: 10, marginLeft: 0, marginRight: 0, marginBottom: 20, marginTop: 20,}}>
                         <TouchableOpacity
                             disabled={this.state.isSubmit}
-                            style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
+                            style={this.state.isSubmit ? {backgroundColor: '#F4D549', borderRadius: 20, paddingVertical: 15,} : styles.buttonContainer}
                             onPress={(e) => this.addOrder()}>
-                            <Text style={styles.buttonText}>Add Order</Text>
+                            <Text style={this.state.isSubmit ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>Add Order</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

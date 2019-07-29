@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, TouchableOpacity, Dimensions, Text, } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginScreen from './Login';
@@ -7,6 +8,8 @@ import RegisterScreen from './Register';
 import UpdateProfileFirstScreen from '../shipperTabs/UpdateProfileFirst';
 import UpdateLorryFirstScreen from '../tabs/UpdateLorryFirst';
 // import SplashScreen from './SplashScreen';
+
+let {height, width} = Dimensions.get('window');
 
 export default createStackNavigator({
     Login: { screen: LoginScreen },
@@ -21,11 +24,11 @@ export default createStackNavigator({
     navigationOptions: {
         headerStyle: {
             backgroundColor: '#3c4c96',
+            height: height * 0.25,
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
-            fontWeight: 'bold',
-            fontFamily: 'Raleway-Bold',
+            fontFamily: 'AvenirLTStd-Roman',
         },
     }
 });

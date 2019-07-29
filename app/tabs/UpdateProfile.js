@@ -7,6 +7,11 @@ import { Avatar } from 'react-native-elements';
 import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
 import ModalSelector from 'react-native-modal-selector';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import OctiIcon from 'react-native-vector-icons/Octicons';
 import OneSignal from 'react-native-onesignal';
 import ImagePicker from 'react-native-image-picker';
 import { TextInputMask } from 'react-native-masked-text';
@@ -18,9 +23,15 @@ let deviceId = DeviceInfo.getUniqueID();
 let realm = new MyRealm();
 let loginAsset = realm.objects('LoginAsset');
 
+_this = this;
+
 export default class UpdateProfile extends Component{
     static navigationOptions = {
-        title: 'Update Profile',
+        // title: 'Update Profile',
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <FeatherIcon name="user" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>Update Profile</Text>
+            </View>,
     };
     
     constructor(props){
@@ -201,13 +212,14 @@ export default class UpdateProfile extends Component{
         if(this.state.name === '' || this.state.nric === '' || this.state.phoneNumber === '' || this.state.selectedBankId === '' || this.state.bankAccountNumber === ''){
             Alert.alert('Cannot Update', "Please key in Name, NRIC, Phone Number, Bank and Bank Account Number", [{
                 text: 'OK',
-                onPress: () => {},
+                onPress: () => {
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                        isSubmit: false,
+                    })
+                },
             }], {cancelable: false});
-            this.setState({
-                spinnerVisible: false,
-                isClicked: false,
-                isSubmit: false,
-            })
         }else{
             var bodyData = new FormData();
             bodyData.append('name', this.state.name);
@@ -278,13 +290,14 @@ export default class UpdateProfile extends Component{
                 }else{
                     Alert.alert('Cannot Update', json.message, [{
                         text: 'OK',
-                        onPress: () => {},
+                        onPress: () => {
+                            this.setState({ 
+                                spinnerVisible: false, 
+                                isSubmit: false,
+                                isClicked: false,
+                            });
+                        },
                     }], {cancelable: false});
-                    this.setState({ 
-                        spinnerVisible: false, 
-                        isSubmit: false,
-                        isClicked: false,
-                    });
                 }
             }).catch(err => {
                 console.log(err);
@@ -300,8 +313,330 @@ export default class UpdateProfile extends Component{
 
     render(){
         return(
-            (Platform.OS === 'ios') ? <KeyboardAvoidingView behavior="padding" style={{flex: 1, backgroundColor: '#fff',}}>
-                <ScrollView>
+            (Platform.OS === 'ios') ? <KeyboardAvoidingView behavior="padding" style={{flex: 1, backgroundColor: '#fff', paddingTop: 0, paddingLeft: 20, paddingRight: 20, paddingBottom: 20,}}>
+                <ScrollView style={{paddingTop: 20,}} ref={ref => this.scrollView = ref}
+                    onContentSizeChange={(contentWidth, contentHeight)=>{
+                        if(this.state.isClicked){
+                            this.scrollView.scrollToEnd({animated: true});
+                        }
+                    }}>
+                    <View>
+                        <View style={{margin: 0, paddingLeft: 15, paddingRight: 15, paddingTop: 20, paddingBottom: 20, backgroundColor: '#EFEFEF', borderRadius: 20,}}>
+                            <View style={{flexDirection: 'column', paddingBottom: 0, paddingTop: 0, justifyContent: 'center', }}>
+                                <Avatar
+                                    size="large"
+                                    rounded
+                                    source={{uri: this.state.driverImage}}
+                                    onPress={() => this.openImage()}
+                                    activeOpacity={0.7}
+                                    containerStyle={{justifyContent: 'center', alignSelf: 'center',}}
+                                />
+                                <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 14, fontFamily: 'AvenirLTStd-Medium', justifyContent: 'center', alignSelf: 'center',}}
+                                    onPress={() => this.openImage()}>
+                                    Change Profile Picture
+                                </Text>
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Name  </Text>
+                                <TextInput
+                                    style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                    autoCapitalize="none"
+                                    underlineColorAndroid={'transparent'}
+                                    autoCorrect={false}
+                                    keyboardType='default'
+                                    returnKeyLabel="next"
+                                    placeholder='Name'
+                                    placeholderTextColor='#A3A9C4'
+                                    value={this.state.name}
+                                    onChangeText={(text) => this.setState({ name: text })}  />
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>NRIC  </Text>
+                                <TextInputMask
+                                    style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                    underlineColorAndroid={'transparent'}
+                                    keyboardType='default'
+                                    placeholder='NRIC'
+                                    placeholderTextColor='#8E9495'
+                                    type={'custom'}
+                                    options={{
+                                        mask: '999999-99-9999', 
+                                    }}
+                                    value={this.state.nric}
+                                    onChangeText={text => {
+                                        this.setState({
+                                            nric: text
+                                        })
+                                    }}
+                                />
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Phone Number   </Text>
+                                <TextInputMask
+                                    style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                    underlineColorAndroid={'transparent'}
+                                    keyboardType='default'
+                                    placeholder='Phone Number'
+                                    placeholderTextColor='#8E9495'
+                                    type={'custom'}
+                                    options={{
+                                        mask: '999-99999999', 
+                                    }}
+                                    value={this.state.phoneNumber}
+                                    onChangeText={text => {
+                                        this.setState({
+                                            phoneNumber: text
+                                        })
+                                    }}
+                                />
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Bank  </Text>
+                                <ModalSelector
+                                    data={this.state.bankList}
+                                    supportedOrientations={['portrait']}
+                                    keyExtractor= {item => item.bankId}
+                                    labelExtractor= {item => item.bankName}
+                                    accessible={true}
+                                    scrollViewAccessibilityLabel={'Scrollable options'}
+                                    cancelButtonAccessibilityLabel={'Cancel Button'}
+                                    onChange={(option)=>{ 
+                                        this.setState({
+                                            selectedBank: option.bankName,
+                                            selectedBankId: option.bankId,
+                                        })
+                                    }}>
+                                    <TextInput
+                                        style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                        editable={false}
+                                        placeholder='Select Bank'
+                                        underlineColorAndroid={'transparent'}
+                                        placeholderTextColor='#A3A9C4'
+                                        value={this.state.selectedBank}/>
+                                </ModalSelector>
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Bank Account Number</Text>
+                                <TextInput
+                                    style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                    autoCapitalize="none"
+                                    underlineColorAndroid={'transparent'}
+                                    autoCorrect={false}
+                                    keyboardType='default'
+                                    returnKeyLabel="next"
+                                    placeholder='Bank Account Number'
+                                    placeholderTextColor='#A3A9C4'
+                                    value={this.state.bankAccountNumber}
+                                    onChangeText={(text) => this.setState({ bankAccountNumber: text })}  />
+                            </View>
+                            <View style={{paddingLeft: 0, paddingRight: 0, paddingTop: 0, }}>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Driver IC </Text>
+                                <View style={{flexDirection: 'row',}}>
+                                    {
+                                        (this.state.driverIC !== "") ? <View style={{flexDirection: 'row',}}>
+                                            <Image resizeMode="cover" source={{ uri: this.state.driverIC }} style={{width: 40, height: 30, marginLeft: 0, marginRight: 0,}} /> 
+                                            <TouchableOpacity
+                                                style={{backgroundColor: '#F2BB45', marginLeft: 10, marginRight: 10, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                                onPress={(e) => this.openImage2()}>
+                                                <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
+                                            </TouchableOpacity>
+                                        </View> 
+                                        : <TouchableOpacity
+                                            style={{backgroundColor: '#F2BB45', marginLeft: 0, marginRight: 0, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                            onPress={(e) => this.openImage2()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                            <View style={{paddingLeft: 0, paddingRight: 0, paddingTop: 0, }}>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Driver License </Text>
+                                <View style={{flexDirection: 'row',}}>
+                                    {
+                                        (this.state.driverLicense !== "") ? <View style={{flexDirection: 'row',}}>
+                                            <Image resizeMode="cover" source={{ uri: this.state.driverLicense }} style={{width: 40, height: 30, marginLeft: 0, marginRight: 0,}} /> 
+                                            <TouchableOpacity
+                                                style={{backgroundColor: '#F2BB45', marginLeft: 10, marginRight: 10, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                                onPress={(e) => this.openImage3()}>
+                                                <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
+                                            </TouchableOpacity>
+                                        </View> 
+                                        : <TouchableOpacity
+                                            style={{backgroundColor: '#F2BB45', marginLeft: 0, marginRight: 0, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                            onPress={(e) => this.openImage3()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* <View style={{flexDirection: 'column', paddingBottom: 20, paddingTop: 20, justifyContent: 'center', }}>
+                            <Avatar
+                                size="xlarge"
+                                rounded
+                                source={{uri: this.state.driverImage}}
+                                onPress={() => this.openImage()}
+                                activeOpacity={0.7}
+                                containerStyle={{justifyContent: 'center', alignSelf: 'center',}}
+                            />
+                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold', justifyContent: 'center', textDecorationLine: 'underline', alignSelf: 'center',}}
+                                onPress={() => this.openImage()}>
+                                Change Profile Picture
+                            </Text>
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Name: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Name'
+                                placeholderTextColor='#8E9495'
+                                value={this.state.name}
+                                onChangeText={(text) => this.setState({ name: text })}  />
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='NRIC'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999999-99-9999', 
+                                }}
+                                value={this.state.nric}
+                                onChangeText={text => {
+                                    this.setState({
+                                        nric: text
+                                    })
+                                }}
+                            />
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
+                            <TextInputMask
+                                style={styles.input}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Phone Number'
+                                placeholderTextColor='#8E9495'
+                                type={'custom'}
+                                options={{
+                                    mask: '999-99999999', 
+                                }}
+                                value={this.state.phoneNumber}
+                                onChangeText={text => {
+                                    this.setState({
+                                        phoneNumber: text
+                                    })
+                                }}
+                            />
+                        </View>
+                        <View>
+                            <Text style={{paddingLeft: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 20, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank: </Text>
+                            <ModalSelector
+                                data={this.state.bankList}
+                                supportedOrientations={['portrait']}
+                                keyExtractor= {item => item.bankId}
+                                labelExtractor= {item => item.bankName}
+                                accessible={true}
+                                scrollViewAccessibilityLabel={'Scrollable options'}
+                                cancelButtonAccessibilityLabel={'Cancel Button'}
+                                onChange={(option)=>{ 
+                                    this.setState({
+                                        selectedBank: option.bankName,
+                                        selectedBankId: option.bankId,
+                                    })
+                                }}>
+                                <TextInput
+                                    style={{height: 50, backgroundColor: '#fff', marginBottom: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, marginLeft: 15, marginRight: 15, fontFamily: 'Raleway-Bold',}}
+                                    editable={false}
+                                    placeholder='Select Bank'
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor='#939ABA'
+                                    value={this.state.selectedBank}/>
+                            </ModalSelector>
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank Account Number: </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                underlineColorAndroid={'transparent'}
+                                keyboardType='default'
+                                placeholder='Bank Account Number'
+                                placeholderTextColor='#8E9495'
+                                value={this.state.bankAccountNumber}
+                                onChangeText={(text) => this.setState({ bankAccountNumber: text })}  />
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver IC: </Text>
+                            <View style={{flexDirection: 'row',}}>
+                                {
+                                    (this.state.driverIC !== "") ? <View style={{flexDirection: 'row',}}>
+                                        <Image resizeMode="cover" source={{ uri: this.state.driverIC }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
+                                        <TouchableOpacity
+                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                            onPress={(e) => this.openImage2()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <TouchableOpacity
+                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                        onPress={(e) => this.openImage2()}>
+                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        </View>
+                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
+                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver License: </Text>
+                            <View style={{flexDirection: 'row',}}>
+                                {
+                                    (this.state.driverLicense !== "") ? <View style={{flexDirection: 'row',}}>
+                                        <Image resizeMode="cover" source={{ uri: this.state.driverLicense }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
+                                        <TouchableOpacity
+                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                            onPress={(e) => this.openImage3()}>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <TouchableOpacity
+                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                        onPress={(e) => this.openImage3()}>
+                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                    </TouchableOpacity>
+                                }
+                            </View>
+                        </View> */}
+                        {
+                            (this.state.isClicked) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20, paddingLeft: 20, paddingRight: 20,}}> 
+                                <Spinner
+                                    isVisible={this.state.spinnerVisible}
+                                    type={'ThreeBounce'}
+                                    color='#F4D549'
+                                    size={30}/>
+                            </View> : <View/>
+                        }
+                    </View>
+                    <View style={this.state.isSubmit ? {backgroundColor: '#F4D549', borderRadius: 20, paddingLeft: 10, paddingRight: 10, marginLeft: 0, marginRight: 0, marginBottom: 20, marginTop: 20,} : {backgroundColor: '#2C2E6D', borderRadius: 20, paddingLeft: 10, paddingRight: 10, marginLeft: 0, marginRight: 0, marginBottom: 20, marginTop: 20,}}>
+                        <TouchableOpacity
+                            disabled={this.state.isSubmit}
+                            style={this.state.isSubmit ? {backgroundColor: '#F4D549', borderRadius: 20, paddingVertical: 15,} : styles.buttonContainer}
+                            onPress={(e) => this.updateProfile(e)}>
+                            <Text style={this.state.isSubmit ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>Update</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView> : <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff', paddingTop: 0, paddingLeft: 20, paddingRight: 20, paddingBottom: 20,}}>
+                {/* <ScrollView>
                     <View>
                         <View style={{flexDirection: 'column', paddingBottom: 20, paddingTop: 20, justifyContent: 'center', }}>
                             <Avatar
@@ -332,16 +667,6 @@ export default class UpdateProfile extends Component{
                         </View>
                         <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
-                            {/* <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='NRIC'
-                                placeholderTextColor='#8E9495'
-                                value={this.state.nric}
-                                onChangeText={(text) => this.setState({ nric: text })}  /> */}
                             <TextInputMask
                                 style={styles.input}
                                 underlineColorAndroid={'transparent'}
@@ -362,16 +687,6 @@ export default class UpdateProfile extends Component{
                         </View>
                         <View style={{paddingLeft: 15, paddingRight: 15,}}>
                             <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
-                            {/* <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='Phone Number'
-                                placeholderTextColor='#8E9495'
-                                value={this.state.phoneNumber}
-                                onChangeText={(text) => this.setState({ phoneNumber: text })}  /> */}
                             <TextInputMask
                                 style={styles.input}
                                 underlineColorAndroid={'transparent'}
@@ -390,19 +705,6 @@ export default class UpdateProfile extends Component{
                                 }}
                             />
                         </View>
-                        {/* <View style={{paddingLeft: 15, paddingRight: 15,}}>
-                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank: </Text>
-                            <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='Name'
-                                placeholderTextColor='#8E9495'
-                                value={this.state.name}
-                                onChangeText={(text) => this.setState({ bank: text })}  />
-                        </View> */}
                         <View>
                             <Text style={{paddingLeft: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 20, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank: </Text>
                             <ModalSelector
@@ -500,205 +802,179 @@ export default class UpdateProfile extends Component{
                             <Text style={styles.buttonText}>Update</Text>
                         </TouchableOpacity>
                     </View>
-                </ScrollView>
-            </KeyboardAvoidingView> : <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff',}}>
-                <ScrollView>
+                </ScrollView> */}
+                <ScrollView style={{paddingTop: 20,}} ref={ref => this.scrollView = ref}
+                    onContentSizeChange={(contentWidth, contentHeight)=>{
+                        if(this.state.isClicked){
+                            this.scrollView.scrollToEnd({animated: true});
+                        }
+                    }}>
                     <View>
-                        <View style={{flexDirection: 'column', paddingBottom: 20, paddingTop: 20, justifyContent: 'center', }}>
-                            <Avatar
-                                size="xlarge"
-                                rounded
-                                source={{uri: this.state.driverImage}}
-                                onPress={() => this.openImage()}
-                                activeOpacity={0.7}
-                                containerStyle={{justifyContent: 'center', alignSelf: 'center',}}
-                            />
-                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold', justifyContent: 'center', textDecorationLine: 'underline', alignSelf: 'center',}}
-                                onPress={() => this.openImage()}>
-                                Change Profile Picture
-                            </Text>
-                        </View>
-                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
-                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Name: </Text>
-                            <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='Name'
-                                placeholderTextColor='#8E9495'
-                                value={this.state.name}
-                                onChangeText={(text) => this.setState({ name: text })}  />
-                        </View>
-                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
-                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>NRIC: </Text>
-                            {/* <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='NRIC'
-                                placeholderTextColor='#8E9495'
-                                value={this.state.nric}
-                                onChangeText={(text) => this.setState({ nric: text })}  /> */}
-                            <TextInputMask
-                                style={styles.input}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='NRIC'
-                                placeholderTextColor='#8E9495'
-                                type={'custom'}
-                                options={{
-                                    mask: '999999-99-9999', 
-                                }}
-                                value={this.state.nric}
-                                onChangeText={text => {
-                                    this.setState({
-                                        nric: text
-                                    })
-                                }}
-                            />
-                        </View>
-                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
-                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Phone Number: </Text>
-                            {/* <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='Phone Number'
-                                placeholderTextColor='#8E9495'
-                                value={this.state.phoneNumber}
-                                onChangeText={(text) => this.setState({ phoneNumber: text })}  /> */}
-                            <TextInputMask
-                                style={styles.input}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='Phone Number'
-                                placeholderTextColor='#8E9495'
-                                type={'custom'}
-                                options={{
-                                    mask: '999-99999999', 
-                                }}
-                                value={this.state.phoneNumber}
-                                onChangeText={text => {
-                                    this.setState({
-                                        phoneNumber: text
-                                    })
-                                }}
-                            />
-                        </View>
-                        {/* <View style={{paddingLeft: 15, paddingRight: 15,}}>
-                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank: </Text>
-                            <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='Name'
-                                placeholderTextColor='#8E9495'
-                                value={this.state.name}
-                                onChangeText={(text) => this.setState({ bank: text })}  />
-                        </View> */}
-                        <View>
-                            <Text style={{paddingLeft: 20, paddingTop: 5, paddingBottom: 5, paddingRight: 20, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank: </Text>
-                            <ModalSelector
-                                data={this.state.bankList}
-                                supportedOrientations={['portrait']}
-                                keyExtractor= {item => item.bankId}
-                                labelExtractor= {item => item.bankName}
-                                accessible={true}
-                                scrollViewAccessibilityLabel={'Scrollable options'}
-                                cancelButtonAccessibilityLabel={'Cancel Button'}
-                                onChange={(option)=>{ 
-                                    this.setState({
-                                        selectedBank: option.bankName,
-                                        selectedBankId: option.bankId,
-                                    })
-                                }}>
+                        <View style={{margin: 0, paddingLeft: 15, paddingRight: 15, paddingTop: 20, paddingBottom: 20, backgroundColor: '#EFEFEF', borderRadius: 20,}}>
+                            <View style={{flexDirection: 'column', paddingBottom: 0, paddingTop: 0, justifyContent: 'center', }}>
+                                <Avatar
+                                    size="large"
+                                    rounded
+                                    source={{uri: this.state.driverImage}}
+                                    onPress={() => this.openImage()}
+                                    activeOpacity={0.7}
+                                    containerStyle={{justifyContent: 'center', alignSelf: 'center',}}
+                                />
+                                <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 14, fontFamily: 'AvenirLTStd-Medium', justifyContent: 'center', alignSelf: 'center',}}
+                                    onPress={() => this.openImage()}>
+                                    Change Profile Picture
+                                </Text>
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Name  </Text>
                                 <TextInput
-                                    style={{height: 50, backgroundColor: '#fff', marginBottom: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, marginLeft: 15, marginRight: 15, fontFamily: 'Raleway-Bold',}}
-                                    editable={false}
-                                    placeholder='Select Bank'
+                                    style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                    autoCapitalize="none"
                                     underlineColorAndroid={'transparent'}
-                                    placeholderTextColor='#939ABA'
-                                    value={this.state.selectedBank}/>
-                            </ModalSelector>
-                        </View>
-                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
-                            <Text style={{paddingLeft: 0, paddingTop: 5, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank Account Number: </Text>
-                            <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                underlineColorAndroid={'transparent'}
-                                keyboardType='default'
-                                placeholder='Bank Account Number'
-                                placeholderTextColor='#8E9495'
-                                value={this.state.bankAccountNumber}
-                                onChangeText={(text) => this.setState({ bankAccountNumber: text })}  />
-                        </View>
-                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver IC: </Text>
-                            <View style={{flexDirection: 'row',}}>
-                                {
-                                    (this.state.driverIC !== "") ? <View style={{flexDirection: 'row',}}>
-                                        <Image resizeMode="cover" source={{ uri: this.state.driverIC }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
-                                        <TouchableOpacity
-                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                    autoCorrect={false}
+                                    keyboardType='default'
+                                    returnKeyLabel="next"
+                                    placeholder='Name'
+                                    placeholderTextColor='#A3A9C4'
+                                    value={this.state.name}
+                                    onChangeText={(text) => this.setState({ name: text })}  />
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>NRIC  </Text>
+                                <TextInputMask
+                                    style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                    underlineColorAndroid={'transparent'}
+                                    keyboardType='default'
+                                    placeholder='NRIC'
+                                    placeholderTextColor='#8E9495'
+                                    type={'custom'}
+                                    options={{
+                                        mask: '999999-99-9999', 
+                                    }}
+                                    value={this.state.nric}
+                                    onChangeText={text => {
+                                        this.setState({
+                                            nric: text
+                                        })
+                                    }}
+                                />
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Phone Number   </Text>
+                                <TextInputMask
+                                    style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                    underlineColorAndroid={'transparent'}
+                                    keyboardType='default'
+                                    placeholder='Phone Number'
+                                    placeholderTextColor='#8E9495'
+                                    type={'custom'}
+                                    options={{
+                                        mask: '999-99999999', 
+                                    }}
+                                    value={this.state.phoneNumber}
+                                    onChangeText={text => {
+                                        this.setState({
+                                            phoneNumber: text
+                                        })
+                                    }}
+                                />
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Bank  </Text>
+                                <ModalSelector
+                                    data={this.state.bankList}
+                                    supportedOrientations={['portrait']}
+                                    keyExtractor= {item => item.bankId}
+                                    labelExtractor= {item => item.bankName}
+                                    accessible={true}
+                                    scrollViewAccessibilityLabel={'Scrollable options'}
+                                    cancelButtonAccessibilityLabel={'Cancel Button'}
+                                    onChange={(option)=>{ 
+                                        this.setState({
+                                            selectedBank: option.bankName,
+                                            selectedBankId: option.bankId,
+                                        })
+                                    }}>
+                                    <TextInput
+                                        style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                        editable={false}
+                                        placeholder='Select Bank'
+                                        underlineColorAndroid={'transparent'}
+                                        placeholderTextColor='#A3A9C4'
+                                        value={this.state.selectedBank}/>
+                                </ModalSelector>
+                            </View>
+                            <View>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Bank Account Number</Text>
+                                <TextInput
+                                    style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
+                                    autoCapitalize="none"
+                                    underlineColorAndroid={'transparent'}
+                                    autoCorrect={false}
+                                    keyboardType='default'
+                                    returnKeyLabel="next"
+                                    placeholder='Bank Account Number'
+                                    placeholderTextColor='#A3A9C4'
+                                    value={this.state.bankAccountNumber}
+                                    onChangeText={(text) => this.setState({ bankAccountNumber: text })}  />
+                            </View>
+                            <View style={{paddingLeft: 0, paddingRight: 0, paddingTop: 0, }}>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Driver IC </Text>
+                                <View style={{flexDirection: 'row',}}>
+                                    {
+                                        (this.state.driverIC !== "") ? <View style={{flexDirection: 'row',}}>
+                                            <Image resizeMode="cover" source={{ uri: this.state.driverIC }} style={{width: 40, height: 30, marginLeft: 0, marginRight: 0,}} /> 
+                                            <TouchableOpacity
+                                                style={{backgroundColor: '#F2BB45', marginLeft: 10, marginRight: 10, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                                onPress={(e) => this.openImage2()}>
+                                                <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
+                                            </TouchableOpacity>
+                                        </View> 
+                                        : <TouchableOpacity
+                                            style={{backgroundColor: '#F2BB45', marginLeft: 0, marginRight: 0, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150,}}
                                             onPress={(e) => this.openImage2()}>
-                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
                                         </TouchableOpacity>
-                                    </View>
-                                    : <TouchableOpacity
-                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
-                                        onPress={(e) => this.openImage2()}>
-                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
-                                    </TouchableOpacity>
-                                }
+                                    }
+                                </View>
                             </View>
-                        </View>
-                        <View style={{paddingLeft: 15, paddingRight: 15,}}>
-                            <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Driver License: </Text>
-                            <View style={{flexDirection: 'row',}}>
-                                {
-                                    (this.state.driverLicense !== "") ? <View style={{flexDirection: 'row',}}>
-                                        <Image resizeMode="cover" source={{ uri: this.state.driverLicense }} style={{width: 50, height: 40, marginLeft: 5, marginRight: 0,}} /> 
-                                        <TouchableOpacity
-                                            style={{backgroundColor: '#3c4c96', marginLeft: 20, marginRight: 20, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150, }}
+                            <View style={{paddingLeft: 0, paddingRight: 0, paddingTop: 0, }}>
+                                <Text style={{paddingLeft: 0, paddingTop: 10, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'AvenirLTStd-Heavy',}}>Driver License </Text>
+                                <View style={{flexDirection: 'row',}}>
+                                    {
+                                        (this.state.driverLicense !== "") ? <View style={{flexDirection: 'row',}}>
+                                            <Image resizeMode="cover" source={{ uri: this.state.driverLicense }} style={{width: 40, height: 30, marginLeft: 0, marginRight: 0,}} /> 
+                                            <TouchableOpacity
+                                                style={{backgroundColor: '#F2BB45', marginLeft: 10, marginRight: 10, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                                onPress={(e) => this.openImage3()}>
+                                                <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
+                                            </TouchableOpacity>
+                                        </View> 
+                                        : <TouchableOpacity
+                                            style={{backgroundColor: '#F2BB45', marginLeft: 0, marginRight: 0, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150,}}
                                             onPress={(e) => this.openImage3()}>
-                                            <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
+                                            <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
                                         </TouchableOpacity>
-                                    </View>
-                                    : <TouchableOpacity
-                                        style={{backgroundColor: '#3c4c96', marginLeft: 0, marginRight: 0, marginBottom: 5, marginTop: 0, paddingVertical: 10, width: 150,}}
-                                        onPress={(e) => this.openImage3()}>
-                                        <Text style={{color: '#fff', textAlign: 'center', fontWeight: '700', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Choose Image</Text>
-                                    </TouchableOpacity>
-                                }
+                                    }
+                                </View>
                             </View>
                         </View>
+                        {
+                            (this.state.isClicked) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20, paddingLeft: 20, paddingRight: 20,}}> 
+                                <Spinner
+                                    isVisible={this.state.spinnerVisible}
+                                    type={'ThreeBounce'}
+                                    color='#F4D549'
+                                    size={30}/>
+                            </View> : <View/>
+                        }
                     </View>
-                    {
-                        (this.state.isClicked) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20, paddingLeft: 20, paddingRight: 20,}}> 
-                            <Spinner
-                                isVisible={this.state.spinnerVisible}
-                                type={'9CubeGrid'}
-                                color='#3c4c96'
-                                paddingLeft={20}
-                                size={50}/>
-                        </View> : <View/>
-                    }
-                    <View style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingLeft: 10, paddingRight: 10, marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10,} : {backgroundColor: '#3c4c96', paddingLeft: 10, paddingRight: 10, marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 20,}}>
+                    <View style={this.state.isSubmit ? {backgroundColor: '#F4D549', borderRadius: 20, paddingLeft: 10, paddingRight: 10, marginLeft: 0, marginRight: 0, marginBottom: 20, marginTop: 20,} : {backgroundColor: '#2C2E6D', borderRadius: 20, paddingLeft: 10, paddingRight: 10, marginLeft: 0, marginRight: 0, marginBottom: 20, marginTop: 20,}}>
                         <TouchableOpacity
                             disabled={this.state.isSubmit}
-                            style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15, paddingLeft: 10, paddingRight: 10,} : {backgroundColor: '#3c4c96', paddingVertical: 15, paddingLeft: 10, paddingRight: 10,}}
+                            style={this.state.isSubmit ? {backgroundColor: '#F4D549', borderRadius: 20, paddingVertical: 15,} : styles.buttonContainer}
                             onPress={(e) => this.updateProfile(e)}>
-                            <Text style={styles.buttonText}>Update</Text>
+                            <Text style={this.state.isSubmit ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>Update</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

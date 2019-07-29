@@ -4,10 +4,15 @@
     <item
         android:drawable="@color/blue"/>
 
-    <item
-        android:width="200dp"
-        android:height="200dp"
-        android:drawable="@mipmap/logo"
-        android:gravity="center" />
+    <!--<item-->
+        <!--android:width="200dp"-->
+        <!--android:height="200dp"-->
+        <!--android:drawable="@mipmap/logo"-->
+        <!--android:gravity="center" />-->
+    <item>
+        <bitmap
+            android:gravity="fill_horizontal|fill_vertical"
+            android:src="@drawable/background_screen"/>
+    </item>
 
 </layer-list>

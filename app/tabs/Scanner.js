@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Alert, Vibration, Animated, StyleSheet, Dimensions, } from 'react-native';
-import Camera from 'react-native-camera';
+import {RNCamera} from 'react-native-camera';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
@@ -14,7 +15,11 @@ let loginAsset = realm.objects('LoginAsset');
 
 export default class Scanner extends Component {
     static navigationOptions = {
-        title: 'Scanner',
+        // title: 'Scanner',
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <MaterialComIcon name="qrcode-scan" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>Scanner</Text>
+            </View>,
     };
 
     constructor(props) {
@@ -100,9 +105,9 @@ export default class Scanner extends Component {
         console.log('camera')
         return (
             <View style={{flex: 1, flexDirection: 'row',}}>
-                <Camera
+                <RNCamera
                     style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}
-                    aspect={Camera.constants.Aspect.fill}
+                    aspect={RNCamera.Constants.Aspect}
                     onBarCodeRead={(e) => {
                         console.log('open scanner', e);
                         if(!this.state.isScanned){
@@ -113,7 +118,7 @@ export default class Scanner extends Component {
                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent', marginBottom: 100}}>
                         <View style={{height: 250, width: 250, borderWidth: 2, borderColor: '#ffbb16', backgroundColor: 'transparent'}}/>
                     </View>
-                </Camera>
+                </RNCamera>
             </View>
         )
     }

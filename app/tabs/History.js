@@ -7,6 +7,9 @@ import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
 import { SearchBar, ListItem, Badge, } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let driverOrderPath = 'ViewDriverOrder';
@@ -17,9 +20,13 @@ let count = 0;
 
 export default class History extends Component{
     static navigationOptions = {
-        title: 'Order History',
+        // title: 'Order History',
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <FeatherIcon name="truck" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>Order History</Text>
+            </View>,
         headerRight: (
-            <Icon onPress={() => _this.props.navigation.navigate('AddDriverOrder')} name={'plus'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
+            <EntypoIcon onPress={() => _this.props.navigation.navigate('AddDriverOrder')} name={'plus'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
         ),
     };
     
@@ -232,56 +239,79 @@ export default class History extends Component{
 
     render(){
         var acceptedView = <View style={styles.noListContainer}>
-                            <Text style={styles.noListText}>No Driver Order</Text> 
+                            <Text style={{color: '#9B9B9B', fontSize: 14, fontFamily: 'AvenirLTStd-Roman', paddingTop: 10,}}>No Driver Order</Text> 
                           </View>;
         if(this.state.searchItem !== ''){
             if(this.state.filterData.length != 0){
                 acceptedView = this.state.filterData.map((item, index) => (
                     <ListItem 
                         key={index}
-                        bottomDivider={true}
-                        rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
-                        title={ <Text style={styles.listItemText}>{item.orderNumber}</Text> }
+                        // bottomDivider={true}
+                        // rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
+                        // title={ <Text style={styles.listItemText}>{item.orderNumber}</Text> }
                         subtitle={
-                            <View style={{paddingTop: 5,}}>
-                                <View style={styles.iconView}>
-                                {(item.orderDescription !== "") ? <View style={styles.iconView}>
-                                    <Icon name={'info'} size={15} color={'#3c4c96'} style={{marginLeft: 3, marginRight: 6}}/>
-                                    <Text style={styles.listItemText}> {item.orderDescription}</Text>    
-                                    </View> : <View/>
-                                }    
+                            // <View style={{paddingTop: 5,}}>
+                            //     <View style={styles.iconView}>
+                            //     {(item.orderDescription !== "") ? <View style={styles.iconView}>
+                            //         <Icon name={'info'} size={15} color={'#3c4c96'} style={{marginLeft: 3, marginRight: 6}}/>
+                            //         <Text style={styles.listItemText}> {item.orderDescription}</Text>    
+                            //         </View> : <View/>
+                            //     }    
+                            //     </View>
+                            //     <View style={{flexDirection: 'row',}}>
+                            //         <Icon name={'map-pin'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                            //         <Text style={styles.listItemText}>  {item.departLocation} </Text> 
+                            //     </View>
+                            //     <View style={{flexDirection: 'row', marginLeft: 20,}}>
+                            //         <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                            //         <Text style={styles.listItemText}>  {item.arriveLocation}</Text>    
+                            //     </View>
+                            //     <View style={styles.iconView}>
+                            //         <Icon name={'calendar'} size={15} color={'#3c4c96'} />
+                            //         <Text style={styles.listItemText}> {item.expectedDepartureDate} </Text>
+                            //     </View>
+                            //     <View style={{flexDirection: 'row', marginLeft: 20,}}>
+                            //         <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                            //         <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>   
+                            //     </View>
+                            //     <View style={styles.iconView}>
+                            //         <Icon name={'bookmark'} size={15} color={'#3c4c96'} />
+                            //         <Text style={styles.listItemText}>  {item.orderStatus}</Text>
+                            //     </View>
+                            //     <View style={styles.listItemView}>
+                            //         {(item.isMatch) ? <Badge
+                            //                 value={item.isMatchDescription}
+                            //                 textStyle={{ color: '#fff', fontWeight: 'bold', fontSize: 12, }}
+                            //                 containerStyle={{backgroundColor: 'green', width: 90, marginTop: 10, marginLeft: 5,}}
+                            //             />  : <Badge
+                            //                 value={item.isMatchDescription}
+                            //                 textStyle={{ color: '#3c4c96', fontWeight: 'bold', fontSize: 12, }}
+                            //                 containerStyle={{backgroundColor: '#e0e0e0', width: 90, marginTop: 10, marginLeft: 5,}}
+                            //             /> 
+                            //         }
+                            //     </View>
+                            // </View>
+
+                            <View style={{margin: 0, padding: 20, marginBottom: -10, backgroundColor: '#EFEFEF', borderRadius: 20,}}>
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', }}>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.orderNumber}</Text>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>more info</Text>
                                 </View>
-                                <View style={{flexDirection: 'row',}}>
-                                    <Icon name={'map-pin'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.departLocation} </Text> 
+                                <View style={{flexDirection: 'row', paddingTop: 10,}}>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>{item.isMatchDescription}</Text>
                                 </View>
-                                <View style={{flexDirection: 'row', marginLeft: 20,}}>
-                                    <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.arriveLocation}</Text>    
-                                </View>
-                                <View style={styles.iconView}>
-                                    <Icon name={'calendar'} size={15} color={'#3c4c96'} />
-                                    <Text style={styles.listItemText}> {item.expectedDepartureDate} </Text>
-                                </View>
-                                <View style={{flexDirection: 'row', marginLeft: 20,}}>
-                                    <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>   
-                                </View>
-                                <View style={styles.iconView}>
-                                    <Icon name={'bookmark'} size={15} color={'#3c4c96'} />
-                                    <Text style={styles.listItemText}>  {item.orderStatus}</Text>
-                                </View>
-                                <View style={styles.listItemView}>
-                                    {(item.isMatch) ? <Badge
-                                            value={item.isMatchDescription}
-                                            textStyle={{ color: '#fff', fontWeight: 'bold', fontSize: 12, }}
-                                            containerStyle={{backgroundColor: 'green', width: 90, marginTop: 10, marginLeft: 5,}}
-                                        />  : <Badge
-                                            value={item.isMatchDescription}
-                                            textStyle={{ color: '#3c4c96', fontWeight: 'bold', fontSize: 12, }}
-                                            containerStyle={{backgroundColor: '#e0e0e0', width: 90, marginTop: 10, marginLeft: 5,}}
-                                        /> 
-                                    }
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, }}>
+                                    <View style={{flexDirection: 'column', width: '40%',}}>
+                                        <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.departLocation}</Text>
+                                        <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>{item.expectedDepartureDate}</Text>
+                                    </View>
+                                    <View style={{flexDirection: 'column', width: '20%', justifyContent: 'center',}}>
+                                        <AntIcon name="swapright" size={40} color="#2C2E6D" style={{paddingLeft: 5, paddingRight: 5,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', width: '40%',}}>
+                                        <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.arriveLocation}</Text>
+                                        <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>{item.expectedArrivalDate}</Text>
+                                    </View>
                                 </View>
                             </View>
                         }
@@ -295,7 +325,7 @@ export default class History extends Component{
                 ))
             }else{
                 acceptedView = <View style={styles.noListContainer}>
-                                <Text style={styles.noListText}>No Result</Text> 
+                                <Text style={{color: '#9B9B9B', fontSize: 14, fontFamily: 'AvenirLTStd-Roman', paddingTop: 10,}}>No Result</Text> 
                               </View>;
             }
         }else{
@@ -303,49 +333,71 @@ export default class History extends Component{
                 acceptedView = this.state.driverOrderData.map((item, index) => (
                     <ListItem 
                         key={index}
-                        bottomDivider={true}
-                        rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
-                        title={ <Text style={styles.listItemText}>{item.orderNumber}</Text> }
+                        // bottomDivider={true}
+                        // rightIcon={<Icon name='chevron-right' color='#3c4c96' style={{marginLeft: 3, marginRight: 20}}/>}
+                        // title={ <Text style={styles.listItemText}>{item.orderNumber}</Text> }
                         subtitle={
-                            <View style={{paddingTop: 5, }}>
-                                <View style={styles.iconView}>
-                                {(item.orderDescription !== "") ? <View style={styles.iconView}>
-                                    <Icon name={'info'} size={15} color={'#3c4c96'} style={{marginLeft: 3, marginRight: 6}}/>
-                                    <Text style={styles.listItemText}> {item.orderDescription}</Text>    
-                                    </View> : <View/>
-                                }    
+                            // <View style={{paddingTop: 5, }}>
+                            //     <View style={styles.iconView}>
+                            //     {(item.orderDescription !== "") ? <View style={styles.iconView}>
+                            //         <Icon name={'info'} size={15} color={'#3c4c96'} style={{marginLeft: 3, marginRight: 6}}/>
+                            //         <Text style={styles.listItemText}> {item.orderDescription}</Text>    
+                            //         </View> : <View/>
+                            //     }    
+                            //     </View>
+                            //     <View style={{flexDirection: 'row',}}>
+                            //         <Icon name={'map-pin'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                            //         <Text style={styles.listItemText}>  {item.departLocation} </Text> 
+                            //     </View>
+                            //     <View style={{flexDirection: 'row', marginLeft: 20,}}>
+                            //         <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                            //         <Text style={styles.listItemText}>  {item.arriveLocation}</Text>    
+                            //     </View>
+                            //     <View style={styles.iconView}>
+                            //         <Icon name={'calendar'} size={15} color={'#3c4c96'} />
+                            //         <Text style={styles.listItemText}> {item.expectedDepartureDate} </Text>
+                            //     </View>
+                            //     <View style={{flexDirection: 'row', marginLeft: 20,}}>
+                            //         <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
+                            //         <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>   
+                            //     </View>
+                            //     <View style={styles.iconView}>
+                            //         <Icon name={'bookmark'} size={15} color={'#3c4c96'} />
+                            //         <Text style={styles.listItemText}>  {item.orderStatus}</Text>
+                            //     </View>
+                            //     <View>
+                            //         {(item.isMatch) ? <Badge
+                            //                 value={item.isMatchDescription}
+                            //                 textStyle={{ color: '#fff', fontWeight: 'bold', fontSize: 12, }}
+                            //                 containerStyle={{backgroundColor: 'green', width: 90, marginTop: 10, marginLeft: 5,}}
+                            //             />  : <Badge
+                            //                 value={item.isMatchDescription}
+                            //                 textStyle={{ color: '#3c4c96', fontWeight: 'bold', fontSize: 12, }}
+                            //                 containerStyle={{backgroundColor: '#e0e0e0', width: 90, marginTop: 10, marginLeft: 5,}}
+                            //             /> 
+                            //         }
+                            //     </View>
+                            // </View>
+                            <View style={{margin: 0, padding: 20, marginBottom: -10, backgroundColor: '#EFEFEF', borderRadius: 20,}}>
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', }}>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.orderNumber}</Text>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>more info</Text>
                                 </View>
-                                <View style={{flexDirection: 'row',}}>
-                                    <Icon name={'map-pin'} size={15} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.departLocation} </Text> 
+                                <View style={{flexDirection: 'row', paddingTop: 10,}}>
+                                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>{item.isMatchDescription}</Text>
                                 </View>
-                                <View style={{flexDirection: 'row', marginLeft: 20,}}>
-                                    <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.arriveLocation}</Text>    
-                                </View>
-                                <View style={styles.iconView}>
-                                    <Icon name={'calendar'} size={15} color={'#3c4c96'} />
-                                    <Text style={styles.listItemText}> {item.expectedDepartureDate} </Text>
-                                </View>
-                                <View style={{flexDirection: 'row', marginLeft: 20,}}>
-                                    <Icon name={'long-arrow-right'} size={13} color={'#3c4c96'} style={{marginLeft: 2}}/>
-                                    <Text style={styles.listItemText}>  {item.expectedArrivalDate}</Text>   
-                                </View>
-                                <View style={styles.iconView}>
-                                    <Icon name={'bookmark'} size={15} color={'#3c4c96'} />
-                                    <Text style={styles.listItemText}>  {item.orderStatus}</Text>
-                                </View>
-                                <View>
-                                    {(item.isMatch) ? <Badge
-                                            value={item.isMatchDescription}
-                                            textStyle={{ color: '#fff', fontWeight: 'bold', fontSize: 12, }}
-                                            containerStyle={{backgroundColor: 'green', width: 90, marginTop: 10, marginLeft: 5,}}
-                                        />  : <Badge
-                                            value={item.isMatchDescription}
-                                            textStyle={{ color: '#3c4c96', fontWeight: 'bold', fontSize: 12, }}
-                                            containerStyle={{backgroundColor: '#e0e0e0', width: 90, marginTop: 10, marginLeft: 5,}}
-                                        /> 
-                                    }
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, }}>
+                                    <View style={{flexDirection: 'column', width: '40%',}}>
+                                        <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.departLocation}</Text>
+                                        <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>{item.expectedDepartureDate}</Text>
+                                    </View>
+                                    <View style={{flexDirection: 'column', width: '20%', justifyContent: 'center',}}>
+                                        <AntIcon name="swapright" size={40} color="#2C2E6D" style={{paddingLeft: 5, paddingRight: 5,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', width: '40%',}}>
+                                        <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Black', color: '#2C2E6D',}}>{item.arriveLocation}</Text>
+                                        <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#2C2E6D',}}>{item.expectedArrivalDate}</Text>
+                                    </View>
                                 </View>
                             </View>
                         }
@@ -366,7 +418,9 @@ export default class History extends Component{
                 <SearchBar
                     platform={Platform.OS}
                     lightTheme
-                    containerStyle={{backgroundColor:'#fff', borderBottomColor: '#e0e0e0', borderBottomWidth: 1,}}
+                    containerStyle={{backgroundColor:'#fff', borderBottomColor: '#EFEFEF', borderBottomWidth: 1,}}
+                    inputStyle={{color: '#3c4c96',}}
+                    placeholderTextColor='#A3A9C4'
                     value={this.state.searchItem}
                     onChangeText={(text) => {
                         this.searchFilterFunction(text);
@@ -377,7 +431,7 @@ export default class History extends Component{
                         })
                     }}
                     placeholder='Search' /> 
-                <ScrollView style={styles.historyView}
+                <ScrollView style={{paddingBottom: 20,}}
                     onScroll={({nativeEvent}) => {
                         // console.log('scrolling ', nativeEvent);
                         if (this.isCloseToBottom(nativeEvent)) {
@@ -397,21 +451,19 @@ export default class History extends Component{
                         (this.state.spinnerVisible) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
                                 <Spinner
                                     isVisible={this.state.spinnerVisible}
-                                    type={'9CubeGrid'}
-                                    color='#3c4c96'
-                                    paddingLeft={20}
-                                    size={50}/>
+                                    type={'ThreeBounce'}
+                                    color='#F4D549'
+                                    size={30}/>
                             </View> : <View>
                                 {acceptedView}
                                 {(this.state.isScrollSpinner) ? <View style={{marginBottom: 20, marginTop: 20, alignItems: 'center',}}>
                                         <Spinner
                                             isVisible={this.state.isScrollSpinner}
-                                            type={'9CubeGrid'}
-                                            color='#3c4c96'
-                                            paddingLeft={20}
-                                            size={50}/>
+                                            type={'ThreeBounce'}
+                                            color='#F4D549'
+                                            size={30}/>
                                     </View> : (this.state.noMoreData) ? <View style={styles.noListContainer}>
-                                        <Text style={styles.noListText}>No More Driver Order</Text> 
+                                        <Text style={{color: '#9B9B9B', fontSize: 14, fontFamily: 'AvenirLTStd-Roman', paddingTop: 10,}}>No More Driver Order</Text> 
                                     </View>
                                     : <View/>
                                 }

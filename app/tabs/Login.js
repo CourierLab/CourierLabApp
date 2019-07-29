@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, Text, TextInput,  View, Platform, Image, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
+import { ScrollView, Text, TextInput,  View, Platform, Image, TouchableOpacity, KeyboardAvoidingView, Alert, ImageBackground, Modal, } from 'react-native';
 import { styles } from '../utils/Style';
 import { login, logout } from '../utils/Actions';
 import NetworkConnection from '../utils/NetworkConnection';
+import SimIcon from 'react-native-vector-icons/SimpleLineIcons';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import Spinner from 'react-native-spinkit';
 import OneSignal from 'react-native-onesignal';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let loginPath = 'Login';
@@ -31,6 +33,11 @@ class Login extends Component{
             password: '',
             spinnerVisible: false,
             isSubmit: false,
+            isRegister: false,
+            modalVisible: false,
+            forgetEmail: '',
+            forgetSpinnerVisible: false,
+            isForgetSubmit: false,
         };
     }
 
@@ -130,13 +137,14 @@ class Login extends Component{
         if(this.state.email === "" || this.state.password === ""){
             Alert.alert('Cannot Sign In', 'Please key in Username/Email Address and Password', [{
                 text: 'OK',
-                onPress: () => {},
+                onPress: () => {
+                    this.setState({
+                        spinnerVisible: false,
+                        isSubmit: false,
+                    })
+                },
                 style: styles.alertText,
             }], {cancelable: false});
-            this.setState({
-                spinnerVisible: false,
-                isSubmit: false,
-            })
         }else{
             fetch(`${myApiUrl}/${loginPath}`, {
                 method: 'POST',
@@ -255,13 +263,14 @@ class Login extends Component{
                 }else{
                     Alert.alert('Cannot Sign In', json.message, [{
                         text: 'OK',
-                        onPress: () => {},
+                        onPress: () => {
+                            this.setState({ 
+                                spinnerVisible: false, 
+                                isSubmit: false,
+                            });
+                        },
                         style: styles.alertText,
                     }], {cancelable: false});
-                    this.setState({ 
-                        spinnerVisible: false, 
-                        isSubmit: false,
-                    });
                 }
             }).catch(err => {
                 console.log(err);
@@ -270,113 +279,286 @@ class Login extends Component{
         e.preventDefault();
     }
 
+    forgotPassword(e){
+        this.setState({
+            forgetSpinnerVisible: true,
+            isForgetSubmit: true,
+        })
+
+        if(this.state.forgetEmail === ""){
+            Alert.alert('Failed to Forgot Password', 'Please key in Email Address', [{
+                text: 'OK',
+                onPress: () => {
+                    this.setState({
+                        forgetSpinnerVisible: false,
+                        isForgetSubmit: false,
+                    })
+                },
+            }], {cancelable: false});
+        }else{
+            fetch(`${myApiUrl}/${forgotPasswordPath}?emailAddress=` + this.state.forgetEmail, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log(json);
+                if(json.succeeded){
+                    Alert.alert('Successfully Forgot Password', json.message, [{
+                        text: 'OK',
+                        onPress: () => {
+                            this.setState({
+                                forgetSpinnerVisible: false,
+                                isForgetSubmit: false,
+                            })
+                        },
+                    }], {cancelable: false});
+                    this.props.navigation.goBack();
+                }else{
+                    Alert.alert('Failed to Forgot Password', json.message, [{
+                        text: 'OK',
+                        onPress: () => {
+                            this.setState({
+                                forgetSpinnerVisible: false,
+                                isForgetSubmit: false,
+                            })
+                        },
+                    }], {cancelable: false});
+                }
+            }).catch(err => {
+                console.log(err);
+                this.setState({
+                    forgetSpinnerVisible: false,
+                    isForgetSubmit: false,
+                })
+            })
+            e.preventDefault();
+        }
+    }
+
     render(){
-        let alt = (this.state.route === 'Login') ? 'ForgotPassword' : 'Login';
-        console.log(deviceModel == 'iPhone 5s');
-        let iosView = (deviceModel == 'iPhone 5s') ? <KeyboardAvoidingView behavior="padding" style={{backgroundColor: '#fff', padding: 20,}}>
-        <ScrollView>
-        <View style={styles.loginContainer}>
-            <Image resizeMode="contain" style={styles.logo} source={require('../assets/logoBackground.png')} />
-            <Text style={[styles.title, {color: '#fff'}]}>LINERS</Text>
-        </View>
-        <View style={styles.spinnerView}>
-            <Spinner
-                isVisible={this.state.spinnerVisible}
-                type={'9CubeGrid'}
-                color='#3c4c96'
-                paddingLeft={20}
-                size={50}/>
-        </View>
-        <View style={styles.formContainer}>
-            <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                underlineColorAndroid={'transparent'}
-                autoCorrect={false}
-                autoFocus={false}
-                keyboardType='email-address'
-                returnKeyLabel="next"
-                placeholder='Username'
-                placeholderTextColor='#939ABA'
-                value={this.state.email}
-                onChangeText={(text) => this.setState({ email: text })}  />
-            <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                underlineColorAndroid={'transparent'}
-                autoCorrect={false}
-                returnKeyLabel="go"
-                placeholder='Password'
-                placeholderTextColor='#939ABA'
-                secureTextEntry={true}
-                value={this.state.password}
-                onChangeText={(text) => this.setState({ password: text })} />
-            <View style={{margin: 7}}/>
-            <TouchableOpacity
-                disabled={this.state.isSubmit}
-                style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
-                onPress={(e) => this.userLogin(e)}>
-                <Text style={styles.buttonText}>{this.state.route}</Text>
-            </TouchableOpacity>
-            <Text style={styles.forgotText} onPress={() => this.props.navigation.navigate('ForgotPassword')}>Forgot Password</Text>
-            <Text style={{fontSize: 17, color: '#3c4c96', textAlign: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 0, paddingBottom: 10, fontFamily: 'Raleway-Bold',}} onPress={() => this.props.navigation.navigate('Register')}>Register as Shipper</Text>
-        </View>
-        </ScrollView>
-    </KeyboardAvoidingView> : <KeyboardAvoidingView behavior="padding" style={{flex: 1, backgroundColor: '#fff', padding: 20,}}>
-        <View style={styles.loginContainer}>
-            <Image resizeMode="contain" style={styles.logo} source={require('../assets/logoBackground.png')} />
-            <Text style={[styles.title, {color: '#fff'}]}>LINERS</Text>
-        </View>
-        <View style={styles.spinnerView}>
-            <Spinner
-                isVisible={this.state.spinnerVisible}
-                type={'9CubeGrid'}
-                color='#3c4c96'
-                paddingLeft={20}
-                size={50}/>
-        </View>
-        <View style={styles.formContainer}>
-            <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                underlineColorAndroid={'transparent'}
-                autoCorrect={false}
-                autoFocus={false}
-                keyboardType='email-address'
-                returnKeyLabel="next"
-                placeholder='Username'
-                placeholderTextColor='#939ABA'
-                value={this.state.email}
-                onChangeText={(text) => this.setState({ email: text })}  />
-            <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                underlineColorAndroid={'transparent'}
-                autoCorrect={false}
-                returnKeyLabel="go"
-                placeholder='Password'
-                placeholderTextColor='#939ABA'
-                secureTextEntry={true}
-                value={this.state.password}
-                onChangeText={(text) => this.setState({ password: text })} />
-            <View style={{margin: 7}}/>
-            <TouchableOpacity
-                disabled={this.state.isSubmit}
-                style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
-                onPress={(e) => this.userLogin(e)}>
-                <Text style={styles.buttonText}>{this.state.route}</Text>
-            </TouchableOpacity>
-            <Text style={styles.forgotText} onPress={() => this.props.navigation.navigate('ForgotPassword')}>Forgot Password</Text>
-            <Text style={{fontSize: 17, color: '#3c4c96', textAlign: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 0, paddingBottom: 10, fontFamily: 'Raleway-Bold',}} onPress={() => this.props.navigation.navigate('Register')}>Register as Shipper</Text>
-        </View>
-    </KeyboardAvoidingView>
+        // let alt = (this.state.route === 'Login') ? 'ForgotPassword' : 'Login';
+        // console.log(deviceModel == 'iPhone 5s');
+    //     let iosView = (deviceModel == 'iPhone 5s') ? <KeyboardAvoidingView behavior="padding" style={{backgroundColor: '#fff', padding: 0,}}>
+    //     <ImageBackground source={require('../assets/backgroundImg.png')} style={{width: '100%', height: '100%'}}>
+    //     <ScrollView>
+    //     <View style={{padding: 0, alignItems: 'center', justifyContent: 'center',}}>
+    //         <Image resizeMode="contain" style={[styles.logo, {position: 'relative',}]} source={require('../assets/liner.png')} />
+    //     </View>
+    //     <View style={{paddingLeft: 40, paddingRight: 40, paddingTop: 20, paddingBottom: 20,}}>
+    //         <TextInput
+    //             style={{height: 40, backgroundColor: 'transparent', borderBottomWidth: 1, borderBottomColor: '#fff', marginBottom: 10, paddingTop: 10, paddingBottom: 0, paddingLeft: 0, paddingRight: 10, color: '#fff', fontSize: 18, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman',}}
+    //             autoCapitalize="none"
+    //             underlineColorAndroid={'transparent'}
+    //             autoCorrect={false}
+    //             autoFocus={false}
+    //             keyboardType='email-address'
+    //             returnKeyLabel="next"
+    //             placeholder='Username'
+    //             placeholderTextColor='#8D92BB'
+    //             value={this.state.email}
+    //             onChangeText={(text) => this.setState({ email: text })}  />
+    //         <TextInput
+    //             style={{height: 40, backgroundColor: 'transparent', borderBottomWidth: 1, borderBottomColor: '#fff', marginBottom: 10, paddingTop: 10, paddingBottom: 0, paddingLeft: 0, paddingRight: 10, color: '#fff', fontSize: 18, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman',}}
+    //             autoCapitalize="none"
+    //             underlineColorAndroid={'transparent'}
+    //             autoCorrect={false}
+    //             returnKeyLabel="go"
+    //             placeholder='Password'
+    //             placeholderTextColor='#8D92BB'
+    //             secureTextEntry={true}
+    //             value={this.state.password}
+    //             onChangeText={(text) => this.setState({ password: text })} />
+    //         <View style={{flexDirection: 'row',}}>
+    //             <Icon name={'question-circle'} size={15} color={'#EDD04B'} style={{paddingBottom: 10, paddingTop: 5,}}/>
+    //             <Text style={{fontSize: 14, color: '#8D92BB', paddingBottom: 10, paddingLeft: 10, paddingTop: 5, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman',}} onPress={() => this.props.navigation.navigate('ForgotPassword')}>FORGOT PASSWORD</Text>
+    //         </View>
+    //     </View>
+    //     </ScrollView>
+    //     </ImageBackground>
+    // </KeyboardAvoidingView> : <KeyboardAvoidingView behavior="padding" style={{flex: 1, backgroundColor: '#fff', padding: 0,}}>
+    //     <ImageBackground source={require('../assets/backgroundImg.png')} style={{width: '100%', height: '100%', justifyContent: 'center',}}>
+    //     <View style={[{padding: 20, alignItems: 'center', justifyContent: 'center',}]}>
+    //         <Image resizeMode="contain" style={styles.logo} source={require('../assets/liner.png')} />
+    //     </View>
+    //     <View style={[{padding: 40,}]}>
+    //         <TextInput
+    //             style={{height: 40, backgroundColor: 'transparent', borderBottomWidth: 1, borderBottomColor: '#fff', marginBottom: 10, paddingTop: 10, paddingBottom: 0, paddingLeft: 0, paddingRight: 10, color: '#fff', fontSize: 18, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman',}}
+    //             autoCapitalize="none"
+    //             underlineColorAndroid={'transparent'}
+    //             autoCorrect={false}
+    //             autoFocus={false}
+    //             keyboardType='email-address'
+    //             returnKeyLabel="next"
+    //             placeholder='Username'
+    //             placeholderTextColor='#8D92BB'
+    //             value={this.state.email}
+    //             onChangeText={(text) => this.setState({ email: text })}  />
+    //         <TextInput
+    //             style={{height: 40, backgroundColor: 'transparent', borderBottomWidth: 1, borderBottomColor: '#fff', marginBottom: 10, paddingTop: 10, paddingBottom: 0, paddingLeft: 0, paddingRight: 10, color: '#fff', fontSize: 18, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman',}}
+    //             autoCapitalize="none"
+    //             underlineColorAndroid={'transparent'}
+    //             autoCorrect={false}
+    //             returnKeyLabel="go"
+    //             placeholder='Password'
+    //             placeholderTextColor='#8D92BB'
+    //             secureTextEntry={true}
+    //             value={this.state.password}
+    //             onChangeText={(text) => this.setState({ password: text })} />
+    //         <View style={{flexDirection: 'row',}}>
+    //             <Icon name={'question-circle'} size={15} color={'#EDD04B'} style={{paddingBottom: 10, paddingTop: 5,}}/>
+    //             <Text style={{fontSize: 14, color: '#8D92BB', paddingBottom: 10, paddingLeft: 10, paddingTop: 5, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman',}} onPress={() => this.props.navigation.navigate('ForgotPassword')}>FORGOT PASSWORD</Text>
+    //         </View>
+    //         <Text style={{fontSize: 17, color: '#3c4c96', textAlign: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 0, paddingBottom: 10, fontFamily: 'AvenirLTStd-Roman',}} onPress={() => this.props.navigation.navigate('Register')}>Register as Shipper</Text>
+    //     </View>
+    //     </ImageBackground>
+    // </KeyboardAvoidingView>
         return(
-            (Platform.OS === 'ios') ? iosView : <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff', padding: 20,}}>
-                <View style={styles.loginContainer}>
-                    <Image resizeMode="contain" style={styles.logo} source={require('../assets/logoBackground.png')} />
-                    <Text style={[styles.title, {color: '#fff'}]}>LINERS</Text>
+            (Platform.OS === 'ios') ? <KeyboardAvoidingView behavior="padding" style={{flex: 1, backgroundColor: '#fff', padding: 0,}}>
+                {
+                    (this.state.modalVisible) ? <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.modalVisible}>
+                        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,.4)', position: 'absolute', top: 0, right: 0, bottom: 0, left: 0}}>
+                            <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}> 
+                                <View style={{backgroundColor: '#2C2E6D', width: '80%', flexDirection: 'row', justifyContent: 'space-between',}}>
+                                    <Text style={{fontSize: 16, color: '#fff', fontFamily: 'AvenirLTStd-Heavy', paddingLeft: 20, paddingRight: 20, paddingBottom: 20, paddingTop: 25, textAlign: 'center', }}>FORGET PASSWORD</Text>
+                                    <SimIcon name="close" size={25} color="#fff" style={{paddingRight: 20, alignItems: 'flex-end', textAlign: 'right', paddingBottom: 20, paddingTop: 20,}} onPress={() => {this.setState({ modalVisible: false,})}}/>
+                                </View>
+                                <View style={{backgroundColor: '#fff', width: '80%', flexDirection: 'row', padding: 10,}}>
+                                    <TextInput
+                                        style={{color: '#2C2E6D', fontFamily: 'AvenirLTStd-Medium', fontSize: 16, padding: 20, width: '70%', borderWidth: 1, borderColor: '#D0D0D0',}}
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
+                                        underlineColorAndroid={'transparent'}
+                                        autoFocus={false}
+                                        keyboardType='default'
+                                        placeholder='Email Address'
+                                        placeholderTextColor='#A3A3A3'
+                                        value={this.state.forgetEmail}
+                                        onChangeText={(text) => this.setState({ forgetEmail: text })} />
+                                    <TouchableOpacity
+                                        disabled={this.state.isForgetSubmit}
+                                        style={this.state.isForgetSubmit ? {backgroundColor: '#F4D549', paddingVertical: 20, width: '30%',} : {backgroundColor: '#2C2E6D', paddingVertical: 20, width: '30%',}}
+                                        onPress={(e) => this.forgotPassword(e)}>
+                                        <Text style={this.state.isForgetSubmit ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black', paddingTop: 5,} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black', paddingTop: 5,}}>SEND</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{alignItems: 'center', justifyContent: 'flex-end', }}>
+                                    <Spinner
+                                        isVisible={this.state.forgetSpinnerVisible}
+                                        type={'ThreeBounce'}
+                                        color='#F4D549'
+                                        size={30}/>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal> : <View/>
+                }
+                <View style={{flex: 1, flexDirection: 'row',}}>
+                    <View style={this.state.isSubmit ? {backgroundColor: '#F4D549', flex: 1,} : {backgroundColor: '#2C2E6D', flex: 1,}}>
+                    </View>
+                    <View style={this.state.isRegister ? {backgroundColor: '#F4D549', flex: 1,} : {backgroundColor: '#2C2E6D', flex: 1,}}>
+                    </View>
+                    <View style={{position: 'absolute', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', marginTop: -35, }}>
+                        <ImageBackground source={require('../assets/backgroundImg.png')} style={{zIndex: 9999, width: '100%', height: '100%', justifyContent: 'center', }} imageStyle={{ borderRadius: 40, }}>
+                            <View style={[{padding: 20, alignItems: 'center', justifyContent: 'center',}]}>
+                                <Image resizeMode="contain" style={styles.logo} source={require('../assets/liner.png')} />
+                                {/* <Text style={[styles.title, {color: '#fff'}]}>LINERS</Text> */}
+                            </View>
+                            <View style={[{padding: 40,}]}>
+                                <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#fff', marginBottom: 20,}}>
+                                        <Text style={{fontSize: 16, color: '#fff', fontFamily: 'AvenirLTStd-Heavy', marginBottom: -15, marginRight: 5, }}>LOGIN</Text>
+                                        <TextInput
+                                            style={{width: '80%', height: 40, backgroundColor: 'transparent', marginBottom: 0, paddingTop: 10, paddingBottom: 0, paddingLeft: 0, paddingRight: 10, color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman', textAlign: 'right',}}
+                                            autoCapitalize="none"
+                                            underlineColorAndroid={'transparent'}
+                                            autoCorrect={false}
+                                            autoFocus={false}
+                                            keyboardType='email-address'
+                                            returnKeyLabel="next"
+                                            placeholder='Enter Username'
+                                            placeholderTextColor='#8D92BB'
+                                            value={this.state.email}
+                                            onChangeText={(text) => this.setState({ email: text })}  />
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#fff', marginBottom: 20,}}>
+                                        <Text style={{fontSize: 16, color: '#fff', fontFamily: 'AvenirLTStd-Heavy', marginBottom: -15, marginRight: 5, }}>PASSWORD</Text>
+                                        <TextInput
+                                            style={{width: '65%', height: 40, backgroundColor: 'transparent', marginBottom: 0, paddingTop: 10, paddingBottom: 0, paddingLeft: 0, paddingRight: 10, color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman', textAlign: 'right',}}
+                                            autoCapitalize="none"
+                                            underlineColorAndroid={'transparent'}
+                                            autoCorrect={false}
+                                            returnKeyLabel="go"
+                                            placeholder='Enter Password'
+                                            placeholderTextColor='#8D92BB'
+                                            secureTextEntry={true}
+                                            value={this.state.password}
+                                            onChangeText={(text) => this.setState({ password: text })} />
+                                    </View>
+                                </View>
+                                {/* <View style={{margin: 7}}/> */}
+                                {/* <TouchableOpacity
+                                    disabled={this.state.isSubmit}
+                                    style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
+                                    onPress={(e) => this.userLogin(e)}>
+                                    <Text style={styles.buttonText}>{this.state.route}</Text>
+                                </TouchableOpacity> */}
+                                <View style={{flexDirection: 'row', paddingLeft: 5,}}>
+                                    <Icon name={'question-circle'} size={15} color={'#EDD04B'} style={{paddingBottom: 10, paddingTop: 5,}}/>
+                                    <Text style={{fontSize: 14, color: '#8D92BB', paddingBottom: 10, paddingLeft: 10, paddingTop: 7, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman',}} onPress={() => {
+                                        this.setState({
+                                            modalVisible: true,
+                                        })
+                                    }}>FORGET PASSWORD</Text>
+                                </View>
+                                {/* <Text style={{fontSize: 17, color: '#3c4c96', textAlign: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 0, paddingBottom: 10, fontFamily: 'AvenirLTStd-Roman',}} onPress={() => this.props.navigation.navigate('Register')}>Register as Shipper</Text> */}
+                            </View>
+                            <View style={{alignItems: 'center', justifyContent: 'flex-end', }}>
+                                <Spinner
+                                    isVisible={this.state.spinnerVisible}
+                                    type={'ThreeBounce'}
+                                    color='#F4D549'
+                                    size={30}/>
+                            </View>
+                        </ImageBackground>
+                    </View>
                 </View>
-                <View style={styles.spinnerView}>
+            <View style={{justifyContent: 'flex-end', backgroundColor: '#2C2E6D', marginTop: -25,}}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#F4D549',}}>
+                    <TouchableOpacity
+                        disabled={this.state.isSubmit}
+                        style={this.state.isSubmit ? {backgroundColor: '#F4D549', paddingVertical: 20, width: '50%',} : {backgroundColor: '#2C2E6D', paddingVertical: 20, width: '50%',}}
+                        onPress={(e) => this.userLogin(e)}>
+                        <Text style={this.state.isSubmit ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>LOG IN</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={this.state.isRegister ? {backgroundColor: '#F4D549', paddingVertical: 20, width: '50%',} : {backgroundColor: '#2C2E6D', paddingVertical: 20, width: '50%',}}
+                        onPress={() => {
+                            this.setState({
+                                isRegister: true,
+                            })
+                            this.props.navigation.navigate('Register', { renderFunction: setTimeout(() => {
+                                this.setState({
+                                    isRegister: false,
+                                })
+                            }, 500)})
+                        }}>
+                        <Text style={this.state.isRegister ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>REGISTER</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </KeyboardAvoidingView> : <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff', padding: 0,}}>
+                {/* <ImageBackground source={require('../assets/backgroundImg.png')} style={{width: '100%', height: '100%', justifyContent: 'center',}}>
+                <View style={[styles.loginContainer, {padding: 20,}]}>
+                    <Image resizeMode="contain" style={styles.logo} source={require('../assets/liner.png')} />
+                </View>
+                <View style={[styles.spinnerView, {padding: 20,}]}>
                     <Spinner
                         isVisible={this.state.spinnerVisible}
                         type={'9CubeGrid'}
@@ -384,7 +566,7 @@ class Login extends Component{
                         paddingLeft={20}
                         size={50}/>
                 </View>
-                <View style={styles.formContainer}>
+                <View style={[styles.formContainer, {padding: 20,}]}>
                     <TextInput
                         style={styles.input}
                         autoCapitalize="none"
@@ -416,7 +598,134 @@ class Login extends Component{
                         <Text style={styles.buttonText}>{this.state.route}</Text>
                     </TouchableOpacity>
                     <Text style={styles.forgotText} onPress={() => this.props.navigation.navigate('ForgotPassword')}>Forgot Password</Text>
-                    <Text style={{fontSize: 17, color: '#3c4c96', textAlign: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 0, paddingBottom: 10, fontFamily: 'Raleway-Bold',}} onPress={() => this.props.navigation.navigate('Register')}>Register as Shipper</Text>
+                    <Text style={{fontSize: 17, color: '#3c4c96', textAlign: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 0, paddingBottom: 10, fontFamily: 'AvenirLTStd-Roman',}} onPress={() => this.props.navigation.navigate('Register')}>Register as Shipper</Text>
+                </View>
+                </ImageBackground> */}
+                {
+                    (this.state.modalVisible) ? <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.modalVisible}>
+                        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,.4)', position: 'absolute', top: 0, right: 0, bottom: 0, left: 0}}>
+                            <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}> 
+                                <View style={{backgroundColor: '#2C2E6D', width: '80%', flexDirection: 'row', justifyContent: 'space-between',}}>
+                                    <Text style={{fontSize: 16, color: '#fff', fontFamily: 'AvenirLTStd-Heavy', paddingLeft: 20, paddingRight: 20, paddingBottom: 20, paddingTop: 25, textAlign: 'center', }}>FORGET PASSWORD</Text>
+                                    <SimIcon name="close" size={25} color="#fff" style={{paddingRight: 20, alignItems: 'flex-end', textAlign: 'right', paddingBottom: 20, paddingTop: 20,}} onPress={() => {this.setState({ modalVisible: false,})}}/>
+                                </View>
+                                <View style={{backgroundColor: '#fff', width: '80%', flexDirection: 'row', padding: 10,}}>
+                                    <TextInput
+                                        style={{color: '#2C2E6D', fontFamily: 'AvenirLTStd-Medium', fontSize: 16, padding: 20, width: '70%', borderWidth: 1, borderColor: '#D0D0D0',}}
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
+                                        underlineColorAndroid={'transparent'}
+                                        autoFocus={false}
+                                        keyboardType='default'
+                                        placeholder='Email Address'
+                                        placeholderTextColor='#A3A3A3'
+                                        value={this.state.forgetEmail}
+                                        onChangeText={(text) => this.setState({ forgetEmail: text })} />
+                                    <TouchableOpacity
+                                        disabled={this.state.isForgetSubmit}
+                                        style={this.state.isForgetSubmit ? {backgroundColor: '#F4D549', paddingVertical: 20, width: '30%',} : {backgroundColor: '#2C2E6D', paddingVertical: 20, width: '30%',}}
+                                        onPress={(e) => this.forgotPassword(e)}>
+                                        <Text style={this.state.isForgetSubmit ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black', paddingTop: 5,} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black', paddingTop: 5,}}>SEND</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{alignItems: 'center', justifyContent: 'flex-end', }}>
+                                    <Spinner
+                                        isVisible={this.state.forgetSpinnerVisible}
+                                        type={'ThreeBounce'}
+                                        color='#F4D549'
+                                        size={30}/>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal> : <View/>
+                }
+                <View style={{flex: 1, flexDirection: 'row',}}>
+                    <View style={this.state.isSubmit ? {backgroundColor: '#F4D549', flex: 1,} : {backgroundColor: '#2C2E6D', flex: 1,}}>
+                    </View>
+                    <View style={this.state.isRegister ? {backgroundColor: '#F4D549', flex: 1,} : {backgroundColor: '#2C2E6D', flex: 1,}}>
+                    </View>
+                    <View style={{position: 'absolute', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', marginTop: -35, }}>
+                        <ImageBackground source={require('../assets/backgroundImg.png')} style={{zIndex: 9999, width: '100%', height: '100%', justifyContent: 'center', }} imageStyle={{ borderRadius: 40, }}>
+                            <View style={[{padding: 20, alignItems: 'center', justifyContent: 'center',}]}>
+                                <Image resizeMode="contain" style={styles.logo} source={require('../assets/liner.png')} />
+                            </View>
+                            <View style={[{padding: 40,}]}>
+                                <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#fff', marginBottom: 20,}}>
+                                        <Text style={{fontSize: 16, color: '#fff', fontFamily: 'AvenirLTStd-Heavy', marginBottom: -15, marginRight: 5, }}>LOGIN</Text>
+                                        <TextInput
+                                            style={{width: '76%', height: 40, backgroundColor: 'transparent', marginBottom: 0, paddingTop: 10, paddingBottom: 0, paddingLeft: 0, paddingRight: 10, color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman', textAlign: 'right',}}
+                                            autoCapitalize="none"
+                                            underlineColorAndroid={'transparent'}
+                                            autoCorrect={false}
+                                            autoFocus={false}
+                                            keyboardType='email-address'
+                                            returnKeyLabel="next"
+                                            placeholder='Enter Username'
+                                            placeholderTextColor='#8D92BB'
+                                            value={this.state.email}
+                                            onChangeText={(text) => this.setState({ email: text })}  />
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#fff', marginBottom: 20,}}>
+                                        <Text style={{fontSize: 16, color: '#fff', fontFamily: 'AvenirLTStd-Heavy', marginBottom: -15, marginRight: 5, }}>PASSWORD</Text>
+                                        <TextInput
+                                            style={{width: '65%', height: 40, backgroundColor: 'transparent', marginBottom: 0, paddingTop: 10, paddingBottom: 0, paddingLeft: 0, paddingRight: 10, color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman', textAlign: 'right',}}
+                                            autoCapitalize="none"
+                                            underlineColorAndroid={'transparent'}
+                                            autoCorrect={false}
+                                            returnKeyLabel="go"
+                                            placeholder='Enter Password'
+                                            placeholderTextColor='#8D92BB'
+                                            secureTextEntry={true}
+                                            value={this.state.password}
+                                            onChangeText={(text) => this.setState({ password: text })} />
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', paddingLeft: 5,}}>
+                                    <Icon name={'question-circle'} size={15} color={'#EDD04B'} style={{paddingBottom: 10, paddingTop: 5,}}/>
+                                    <Text style={{fontSize: 14, color: '#8D92BB', paddingBottom: 10, paddingLeft: 10, paddingTop: 7, fontWeight: '600', fontFamily: 'AvenirLTStd-Roman',}} onPress={() => {
+                                        this.setState({
+                                            modalVisible: true,
+                                        })
+                                    }}>FORGET PASSWORD</Text>
+                                </View>
+                            </View>
+                            <View style={{alignItems: 'center', justifyContent: 'flex-end', }}>
+                                <Spinner
+                                    isVisible={this.state.spinnerVisible}
+                                    type={'ThreeBounce'}
+                                    color='#F4D549'
+                                    size={30}/>
+                            </View>
+                        </ImageBackground>
+                    </View>
+                </View>
+                <View style={{justifyContent: 'flex-end', backgroundColor: '#2C2E6D', marginTop: -25,}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#F4D549',}}>
+                        <TouchableOpacity
+                            disabled={this.state.isSubmit}
+                            style={this.state.isSubmit ? {backgroundColor: '#F4D549', paddingVertical: 20, width: '50%',} : {backgroundColor: '#2C2E6D', paddingVertical: 20, width: '50%',}}
+                            onPress={(e) => this.userLogin(e)}>
+                            <Text style={this.state.isSubmit ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>LOG IN</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={this.state.isRegister ? {backgroundColor: '#F4D549', paddingVertical: 20, width: '50%',} : {backgroundColor: '#2C2E6D', paddingVertical: 20, width: '50%',}}
+                            onPress={() => {
+                                this.setState({
+                                    isRegister: true,
+                                })
+                                this.props.navigation.navigate('Register', { renderFunction: setTimeout(() => {
+                                    this.setState({
+                                        isRegister: false,
+                                    })
+                                }, 500)})
+                            }}>
+                            <Text style={this.state.isRegister ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>REGISTER</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </KeyboardAvoidingView>
         );

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.facebook.infer.annotation:infer-annotation:0.17.0@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.infer.annotation/infer-annotation/0.17.0/e74d55a20c1a149e7b2103a98f15626ed228dc43/infer-annotation-0.17.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.infer.annotation/infer-annotation/0.17.0/cb33b3b43de1321732a57e0f007e153ceb70686d/infer-annotation-0.17.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

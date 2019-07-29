@@ -42,7 +42,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>16</string>
+	<string>20</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -60,18 +60,34 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your camera to upload your lorry picture</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to access your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to access your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) would like to access your location</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your photo gallery to upload your lorry picture</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>AvenirLTStd-Medium.otf</string>
+		<string>AvenirLTStd-MediumOblique.otf
+AvenirLTStd-Oblique.otf
+AvenirLTStd-Roman.otf</string>
+		<string>AvenirLTStd-Oblique.otf</string>
+		<string>AvenirLTStd-Roman.otf</string>
+		<string>AvenirLTStd-LightOblique.otf</string>
+		<string>AvenirLTStd-Light.otf</string>
+		<string>AvenirLTStd-HeavyOblique.otf</string>
+		<string>AvenirLTStd-Heavy.otf</string>
+		<string>AvenirLTStd-BookOblique.otf</string>
+		<string>AvenirLTStd-Black.otf</string>
 		<string>Raleway-Black.ttf</string>
+		<string>AvenirLTStd-BlackOblique.otf</string>
 		<string>Raleway-BlackItalic.ttf</string>
+		<string>AvenirLTStd-Book.otf</string>
 		<string>Raleway-Bold.ttf</string>
 		<string>Raleway-BoldItalic.ttf</string>
 		<string>Raleway-ExtraBold.ttf</string>
@@ -99,6 +115,11 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>AntDesign.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Fontisto.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

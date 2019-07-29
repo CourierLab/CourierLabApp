@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, TextInput, Dimensions, Text, View, Alert, PermissionsAndroid, Platform, TouchableOpacity, Modal, ScrollView, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import OctiIcon from 'react-native-vector-icons/Octicons';
+import SimIcon from 'react-native-vector-icons/SimpleLineIcons';
 import NetworkConnection from '../utils/NetworkConnection';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
@@ -11,9 +16,13 @@ let { height, width } = Dimensions.get('window');
 
 export default class Map extends Component{
     static navigationOptions = ({ navigation }) => ({
-        title: `${navigation.state.params.title}`,
+        // title: `${navigation.state.params.title}`,
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <MaterialComIcon name="map-marker-outline" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>{navigation.state.params.title}</Text>
+            </View>,
         headerRight: (
-            <Icon onPress={() => {
+            <MaterialComIcon onPress={() => {
                 console.log(_this.state.invalidAddress)
                 if(_this.state.invalidAddress){
                     Alert.alert('Unable to get the location', 'Please enter a valid location before proceed', [
@@ -29,7 +38,7 @@ export default class Map extends Component{
                     _this.props.navigation.state.params.onGoBack(_this.props.navigation.getParam('type'), _this.state.searchLocation, _this.state.lastLat, _this.state.lastLong); 
                     _this.props.navigation.goBack();
                 }
-            }} name={'check'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
+            }} name={'check-outline'} size={25} color={'#fff'} style={{paddingRight: 20,}}/>
         ),
     })
     
@@ -262,14 +271,14 @@ export default class Map extends Component{
                             </TouchableOpacity>
                         </View>
                         <TextInput
-                            style={{height: 50, backgroundColor: '#fff', margin: 10, padding: 10, color: '#3c4c96', fontSize: 20, borderColor: '#3c4c96', borderWidth: 1, fontFamily: 'Raleway-Bold',}}
+                            style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', borderColor: '#A3A9C4', borderWidth: 1, height: 40, paddingLeft: 10, paddingRight: 10,}}
                             autoCapitalize="none"
                             underlineColorAndroid={'transparent'}
                             autoCorrect={false}
                             keyboardType='default'
                             returnKeyLabel="next"
                             placeholder='Search Location'
-                            placeholderTextColor='#939ABA'
+                            placeholderTextColor='#A3A9C4'
                             value={this.state.searchLocation}
                             onChangeText={(text) => {
                                 this.setState({ searchLocation: text })
@@ -285,8 +294,8 @@ export default class Map extends Component{
                                 <ListItem 
                                     key={index}
                                     bottomDivider={true}
-                                    title={ <Text style={{fontSize: 15, fontFamily: 'Raleway-Regular', padding: 0,}}>{item.primaryText}</Text> }
-                                    subtitle={ <Text style={{fontSize: 13, fontFamily: 'Raleway-Regular', padding: 0,}}> {item.fullText}</Text> }
+                                    title={ <Text style={{fontSize: 15, fontFamily: 'AvenirLTStd-Heavy', padding: 0, color: '#3c4c96',}}>{item.primaryText}</Text> }
+                                    subtitle={ <Text style={{fontSize: 13, fontFamily: 'AvenirLTStd-Roman', padding: 0, color: '#3c4c96',}}> {item.fullText}</Text> }
                                     onPress={() => {
                                         this.setState({ 
                                             searchLocation: item.fullText,
@@ -301,9 +310,9 @@ export default class Map extends Component{
                     </View>
                 </Modal>
                 <TouchableOpacity
-                    style={{height: 50, backgroundColor: '#fff', borderColor: '#3c4c96', borderWidth: 1, padding: 10, position: 'absolute', top: 10, left: 10, right: 10, zIndex: 9999,}}
+                    style={{height: 40, backgroundColor: '#fff', borderColor: '#3c4c96', borderWidth: 1, padding: 10, position: 'absolute', top: 10, left: 10, right: 10, zIndex: 9999,}}
                     onPress={() => this.setModalVisible(true)}>
-                    <Text style={{fontSize: 20, fontFamily: 'Raleway-Bold', color: '#3c4c96', }}>{this.state.searchLocation}</Text>
+                    <Text style={{fontSize: 14, fontFamily: 'AvenirLTStd-Roman', color: '#3c4c96', }}>{this.state.searchLocation}</Text>
                 </TouchableOpacity>
             </View>
         )

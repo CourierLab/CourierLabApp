@@ -39,7 +39,8 @@ export const styles = StyleSheet.create({
         fontFamily: 'Raleway-Bold',
     },
     buttonContainer: {
-        backgroundColor: '#3c4c96',
+        backgroundColor: '#2C2E6D',
+        borderRadius: 20,
         paddingVertical: 15,
     },
     buttonText: {
@@ -152,12 +153,13 @@ export const styles = StyleSheet.create({
         borderColor: '#DBDBDB', 
     },
     pendingAcceptButton: {
-        backgroundColor: '#3c4c96', 
+        backgroundColor: '#2C2E6D', 
+        borderRadius: 20,
         paddingLeft: 10, 
         paddingRight: 10, 
         marginLeft: 20, 
         marginRight: 20, 
-        marginBottom: 40,
+        marginBottom: 20,
     },
     mapIcon: {
         marginLeft: 2, 

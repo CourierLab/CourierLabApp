@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Image, Modal, } from 'react-native';
 import { styles } from '../utils/Style';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import NetworkConnection from '../utils/NetworkConnection';
 import DeviceInfo from 'react-native-device-info';
 import MyRealm from '../utils/Realm';
 import ImagePicker from 'react-native-image-picker';
 import Spinner from 'react-native-spinkit';
+import { Card, Avatar, } from 'react-native-elements';
 
 let myApiUrl = 'http://courierlabapi.azurewebsites.net/api/v1/MobileApi';
 let paymentDetailPath = 'PaymentInfo';
@@ -17,7 +23,11 @@ let deviceVersion = DeviceInfo.getVersion();
 
 export default class PendingPaymentDetail extends Component{
     static navigationOptions = {
-        title: 'Payment Information',
+        // title: 'Payment Information',
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <FeatherIcon name="file-text" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>Payment Information</Text>
+            </View>,
     };
     
     constructor(props){
@@ -30,6 +40,7 @@ export default class PendingPaymentDetail extends Component{
             bankAccountNumber: '',
             paymentInfo: [],
             receipt: '',
+            modalVisible: false,
         };
         _this = this;
     }
@@ -70,6 +81,7 @@ export default class PendingPaymentDetail extends Component{
     getPaymentDetails(){
         this.setState({
             spinnerVisible: true,
+            modalVisible: true,
         })
         fetch(`${myApiUrl}/${paymentDetailPath}?deviceId=` + deviceId + `&userId=` + loginAsset[0].userId + `&matchedOrderId=` + this.props.navigation.getParam('matchedOrderId'), {
             method: 'GET',
@@ -92,11 +104,13 @@ export default class PendingPaymentDetail extends Component{
             }
             this.setState({
                 spinnerVisible: false,
+                modalVisible: false,
             }) 
         }).catch(err => {
             console.log(err);
             this.setState({
                 spinnerVisible: false,
+                modalVisible: false,
             })
         });
     }
@@ -138,12 +152,13 @@ export default class PendingPaymentDetail extends Component{
         if(this.state.receipt === ""){
             Alert.alert('Cannot Submit', 'Please select image.', [{
                 text: 'OK',
-                onPress: () => {},
+                onPress: () => {
+                    this.setState({
+                        spinnerVisible: false,
+                        isClicked: false,
+                    })
+                },
             }], {cancelable: false});
-            this.setState({
-                spinnerVisible: false,
-                isClicked: false,
-            })
         }else{
             var bodyData = new FormData();
             bodyData.append('matchedOrderId', this.state.paymentInfo.matchedOrderId);
@@ -178,12 +193,13 @@ export default class PendingPaymentDetail extends Component{
                 }else{
                     Alert.alert('Cannot Submit', json.message, [{
                         text: 'OK',
-                        onPress: () => {},
+                        onPress: () => {
+                            this.setState({
+                                spinnerVisible: false,
+                                isClicked: false,
+                            })
+                        },
                     }], {cancelable: false});
-                    this.setState({
-                        spinnerVisible: false,
-                        isClicked: false,
-                    })
                 }
             }).catch(err => {
                 console.log(err);
@@ -197,37 +213,151 @@ export default class PendingPaymentDetail extends Component{
 
     render(){
         return(
-            <ScrollView style={styles.container}>
+            <ScrollView style={styles.container} ref={ref => this.scrollView = ref}
+                onContentSizeChange={(contentWidth, contentHeight)=>{
+                    if(this.state.isClicked){
+                        this.scrollView.scrollToEnd({animated: true});
+                    }
+                }}>
                 {
-                    (this.state.spinnerVisible) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20,}}> 
-                        <Spinner
-                            isVisible={this.state.spinnerVisible}
-                            type={'9CubeGrid'}
-                            color='#3c4c96'
-                            paddingLeft={20}
-                            size={50}/>
-                    </View> : <View>
-                        <View>
+                    (this.state.modalVisible) ? <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.modalVisible}>
+                        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,.4)', position: 'absolute', top: 0, right: 0, bottom: 0, left: 0}}>
+                            <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}> 
+                                <Spinner
+                                    isVisible={this.state.modalVisible}
+                                    type={'ThreeBounce'}
+                                    color='#F4D549'
+                                    size={30}/>
+                            </View>
+                        </View>
+                    </Modal> : <View/>
+                }
+                {
+                    // (this.state.spinnerVisible) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20,}}> 
+                    //     <Spinner
+                    //         isVisible={this.state.spinnerVisible}
+                    //         type={'ThreeBounce'}
+                    //         color='#F4D549'
+                    //         size={30}/>
+                    // </View> : 
+                    <View>
+                        <Card containerStyle={{margin: 0, borderRadius: 20, shadowOpacity: 1, backgroundColor: '#EFEFEF', shadowColor: '#e0e0e0', shadowRadius: 3, shadowOffset: {width: 1, height: 1,},}}>
+                            <View style={{paddingTop: 10, paddingBottom: 10, paddingLeft: 0, paddingRight: 0, flexDirection: 'column', backgroundColor: '#EFEFEF',}}>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingRight: 10,}}>
+                                    <View style={{flexDirection: 'column', justifyContent: 'center',}}>
+                                        <MaterialComIcon name="script-text-outline" size={19} color="#9B9B9B" style={{paddingLeft: 0, paddingRight: 10,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', paddingRight: 20,}}>
+                                        <Text style={{fontSize: 14, color: '#9B9B9B', fontFamily: 'AvenirLTStd-Medium', }}>Order Number</Text>
+                                        <Text style={{fontSize: 16, color: '#2C2E6D', fontFamily: 'AvenirLTStd-Heavy', }}>{this.state.paymentInfo.shipperOrderNumber}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingRight: 10,}}>
+                                    <View style={{flexDirection: 'column', justifyContent: 'center',}}>
+                                        <MaterialComIcon name="barcode" size={19} color="#9B9B9B" style={{paddingLeft: 0, paddingRight: 10,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', paddingRight: 20,}}>
+                                        <Text style={{fontSize: 14, color: '#9B9B9B', fontFamily: 'AvenirLTStd-Medium', }}>Booking Number</Text>
+                                        <Text style={{fontSize: 16, color: '#2C2E6D', fontFamily: 'AvenirLTStd-Heavy', }}>{this.state.paymentInfo.bookingNumber}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingRight: 10,}}>
+                                    <View style={{flexDirection: 'column', justifyContent: 'center',}}>
+                                        <FeatherIcon name="tag" size={19} color="#9B9B9B" style={{paddingLeft: 0, paddingRight: 10,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', paddingRight: 20,}}>
+                                        <Text style={{fontSize: 14, color: '#9B9B9B', fontFamily: 'AvenirLTStd-Medium', }}>Total Amount(RM)</Text>
+                                        <Text style={{fontSize: 16, color: '#2C2E6D', fontFamily: 'AvenirLTStd-Heavy', }}>{this.state.paymentInfo.totalPrice}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingRight: 10,}}>
+                                    <View style={{flexDirection: 'column', justifyContent: 'center',}}>
+                                        <MaterialComIcon name="bank" size={19} color="#9B9B9B" style={{paddingLeft: 0, paddingRight: 10,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', paddingRight: 20,}}>
+                                        <Text style={{fontSize: 14, color: '#9B9B9B', fontFamily: 'AvenirLTStd-Medium', }}>Bank Name</Text>
+                                        <Text style={{fontSize: 16, color: '#2C2E6D', fontFamily: 'AvenirLTStd-Heavy', }}>{this.state.bankName}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingRight: 10,}}>
+                                    <View style={{flexDirection: 'column', justifyContent: 'center',}}>
+                                        <MaterialIcon name="person-outline" size={19} color="#9B9B9B" style={{paddingLeft: 0, paddingRight: 10,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', paddingRight: 20,}}>
+                                        <Text style={{fontSize: 14, color: '#9B9B9B', fontFamily: 'AvenirLTStd-Medium', }}>Bank Holder Name</Text>
+                                        <Text style={{fontSize: 16, color: '#2C2E6D', fontFamily: 'AvenirLTStd-Heavy', }}>{this.state.holderName}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingRight: 10,}}>
+                                    <View style={{flexDirection: 'column', justifyContent: 'center',}}>
+                                        <MaterialComIcon name="credit-card" size={19} color="#9B9B9B" style={{paddingLeft: 0, paddingRight: 10,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', paddingRight: 20,}}>
+                                        <Text style={{fontSize: 14, color: '#9B9B9B', fontFamily: 'AvenirLTStd-Medium', }}>Bank Account Number</Text>
+                                        <Text style={{fontSize: 16, color: '#2C2E6D', fontFamily: 'AvenirLTStd-Heavy', }}>{this.state.bankAccountNumber}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', paddingBottom: 10, paddingRight: 10,}}>
+                                    <View style={{flexDirection: 'column', justifyContent: 'center',}}>
+                                        <MaterialComIcon name="tooltip-text-outline" size={19} color="#9B9B9B" style={{paddingLeft: 0, paddingRight: 10,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', paddingRight: 20,}}>
+                                        <Text style={{fontSize: 14, color: '#9B9B9B', fontFamily: 'AvenirLTStd-Medium', }}>Reference Code</Text>
+                                        <Text style={{fontSize: 16, color: '#2C2E6D', fontFamily: 'AvenirLTStd-Heavy', }}>{this.state.paymentInfo.referenceCode}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', paddingBottom: 0, paddingRight: 10,}}>
+                                    <View style={{flexDirection: 'column',}}>
+                                        <Icon name="image" size={17} color="#9B9B9B" style={{paddingLeft: 0, paddingRight: 10,}}/>
+                                    </View>
+                                    <View style={{flexDirection: 'column', paddingRight: 20,}}>
+                                        <Text style={{fontSize: 14, color: '#9B9B9B', fontFamily: 'AvenirLTStd-Medium',}}>Payment Receipt </Text>
+                                        <View style={{flexDirection: 'row',}}>
+                                            {
+                                                (this.state.receipt !== "") ? <View style={{flexDirection: 'row',}}>
+                                                    <Image resizeMode="cover" source={{ uri: this.state.receipt }} style={{width: 40, height: 30, marginLeft: 0, marginRight: 0,}} /> 
+                                                    <TouchableOpacity
+                                                        style={{backgroundColor: '#F2BB45', marginLeft: 10, marginRight: 10, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150, }}
+                                                        onPress={(e) => this.openImage()}>
+                                                        <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
+                                                    </TouchableOpacity>
+                                                </View> 
+                                                : <TouchableOpacity
+                                                    style={{backgroundColor: '#F2BB45', marginLeft: 0, marginRight: 0, marginBottom: 0, marginTop: 0, paddingVertical: 10, width: 150,}}
+                                                    onPress={(e) => this.openImage()}>
+                                                    <Text style={{color: '#fff', textAlign: 'center', fontSize: 15, fontFamily: 'AvenirLTStd-Medium',}}>Choose Image</Text>
+                                                </TouchableOpacity>
+                                            }
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+                        </Card>
+
+                        {/* <View>
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Order Number: </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.paymentInfo.shipperOrderNumber}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'AvenirLTStd-Roman',}}>{this.state.paymentInfo.shipperOrderNumber}</Text>
 
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Booking Number: </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.paymentInfo.bookingNumber}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'AvenirLTStd-Roman',}}>{this.state.paymentInfo.bookingNumber}</Text>
 
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Total Amount(RM): </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.paymentInfo.totalPrice}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'AvenirLTStd-Roman',}}>{this.state.paymentInfo.totalPrice}</Text>
 
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank Name: </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.bankName}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'AvenirLTStd-Roman',}}>{this.state.bankName}</Text>
 
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank Holder Name: </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.holderName}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'AvenirLTStd-Roman',}}>{this.state.holderName}</Text>
 
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Bank Account Number: </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.bankAccountNumber}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'AvenirLTStd-Roman',}}>{this.state.bankAccountNumber}</Text>
 
                             <Text style={{paddingLeft: 5, paddingTop: 5, paddingBottom: 5, paddingRight: 5, color: '#3C3D39', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Reference Code: </Text>
-                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'Raleway-Regular',}}>{this.state.paymentInfo.referenceCode}</Text>
+                            <Text style={{paddingLeft: 5, paddingTop: 0, paddingBottom: 10, paddingRight: 5, color: '#3c4c96', fontSize: 20, fontFamily: 'AvenirLTStd-Roman',}}>{this.state.paymentInfo.referenceCode}</Text>
 
                             <View style={{paddingLeft: 5, paddingRight: 5,}}>
                                 <Text style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 5, paddingRight: 0, color: '#3c4c96', fontSize: 15, fontFamily: 'Raleway-Bold',}}>Payment Receipt: </Text>
@@ -249,23 +379,22 @@ export default class PendingPaymentDetail extends Component{
                                     }
                                 </View>
                             </View>
-                        </View>
+                        </View> */}
                         {
-                            (this.state.isClicked) ? <View style={{alignItems: 'center', paddingBottom: 10, marginTop: 20,}}> 
+                            (this.state.isClicked) ? <View style={{alignItems: 'center', paddingBottom: 0, marginTop: 10,}}> 
                                 <Spinner
                                     isVisible={this.state.spinnerVisible}
-                                    type={'9CubeGrid'}
-                                    color='#3c4c96'
-                                    paddingLeft={20}
-                                    size={50}/>
+                                    type={'ThreeBounce'}
+                                    color='#F4D549'
+                                    size={30}/>
                             </View> : <View/>
                         }
-                        <View style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingLeft: 10, paddingRight: 10, marginTop: 20, marginLeft: 0, marginRight: 0, marginBottom: 10,} : {backgroundColor: '#3c4c96', paddingLeft: 10, paddingRight: 10, marginTop: 20, marginLeft: 0, marginRight: 0, marginBottom: 10,}}>
+                        <View style={this.state.isClicked ? {backgroundColor: '#F4D549', borderRadius: 20, paddingLeft: 10, paddingRight: 10, marginLeft: 0, marginRight: 0, marginBottom: 10, marginTop: 20,} : {backgroundColor: '#2C2E6D', borderRadius: 20, paddingLeft: 10, paddingRight: 10, marginLeft: 0, marginRight: 0, marginBottom: 10, marginTop: 20,}}>
                             <TouchableOpacity
-                                disabled={this.state.isSubmit}
-                                style={this.state.isSubmit ? {backgroundColor: '#7D839C', paddingVertical: 15,} : styles.buttonContainer}
+                                disabled={this.state.isClicked}
+                                style={this.state.isClicked ? {backgroundColor: '#F4D549', borderRadius: 20, paddingVertical: 15,} : styles.buttonContainer}
                                 onPress={(e) => this.submitPayment()}>
-                                <Text style={styles.buttonText}>Submit Payment</Text>
+                                <Text style={this.state.isClicked ? {color: '#2C2E6D', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',} : {color: '#fff', textAlign: 'center', fontSize: 16, fontFamily: 'AvenirLTStd-Black',}}>Submit Payment</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

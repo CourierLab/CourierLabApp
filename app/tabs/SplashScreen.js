@@ -140,6 +140,7 @@ export default class SplashScreen extends React.Component {
         return (
         <View style={styles.container}>
             <Image resizeMode="contain" style={{width: width-100, height: 64,}} source={require('../assets/logo.png')} />
+            {/* <Image resizeMode="cover" source={require('../assets/backgroundScreen.png')} /> */}
         </View>
         );
     }

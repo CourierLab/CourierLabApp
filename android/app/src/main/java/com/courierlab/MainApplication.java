@@ -3,6 +3,8 @@ package com.courierlab;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
 import io.realm.react.RealmReactPackage;
@@ -34,15 +36,15 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNDeviceInfo(),
+            new VectorIconsPackage(),
             new RNGooglePlacesPackage(),
               new MapsPackage(),
             new RealmReactPackage(),
-            new VectorIconsPackage(),
             new SvgPackage(),
             new SplashScreenReactPackage(),
             new RNSpinkitPackage(),
             new ReactNativeOneSignalPackage(),
-            new RNDeviceInfo(),
             new RNCameraPackage(),
             new ImagePickerPackage()
       );

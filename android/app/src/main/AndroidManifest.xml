@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
     package="com.courierlab">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,7 +15,8 @@
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="true"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAdcGNa8bP_-NQN38IM6Ua11jN0sCnX6D4"/>
@@ -31,10 +32,10 @@
         android:windowSoftInputMode="adjustResize"
           android:launchMode="singleTask"
           android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+          <intent-filter>
+              <action android:name="android.intent.action.MAIN" />
+              <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
           <intent-filter>
               <action android:name="android.intent.action.VIEW" />
               <category android:name="android.intent.category.DEFAULT" />

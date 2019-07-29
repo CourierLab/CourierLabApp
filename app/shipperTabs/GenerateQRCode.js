@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default class GenerateQRCode extends Component{
     static navigationOptions = {
-        title: 'QR Code',
+        // title: 'QR Code',
+        headerTitle: <View style={{flexDirection: 'row',}}>
+                <MaterialComIcon name="qrcode" size={19} color="#fff" style={{paddingLeft: 10, paddingRight: 10,}}/>
+                <Text style={{color: '#fff', fontWeight: 'bold', fontFamily: 'AvenirLTStd-Black', fontSize: 15, paddingTop: 3,}}>QR Code</Text>
+            </View>,
     };
     
     constructor(props){
